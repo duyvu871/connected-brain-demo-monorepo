@@ -3,16 +3,14 @@ import Tesseract, { createScheduler, createWorker, OEM, RecognizeResult } from '
 import { fromBuffer } from 'pdf2pic';
 import { CloudStorage } from '@repo/cloud-storage';
 import { TranslateService } from '@repo/translate';
-import type {ISOLangType} from '@repo/translate'
 import * as crypto from 'node:crypto';
 import { randomRange } from '@repo/utils/true-random';
 import { constants } from './utils';
 import { socket_event } from '@repo/utils/constants';
-import isoLanguage, { getKeyByValue } from '@repo/translate/utils/isoLanguage';
 
 export class OCR {
 	private static instances: Record<string, Tesseract.Scheduler> = {};
-	public static translateService: TranslateService;
+	public static translateService: any;
 	// init translate service
 	public static initTranslateService() {
 		this.translateService = new TranslateService();
