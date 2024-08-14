@@ -11,19 +11,20 @@ export function TextareaGroup() {
   const { completion, textToTranslate,  handleChangeTextToTranslate} =
     useContext(textContext);
   const [sourceText, setSourceText] = useState<string>("");
-  const debounceTranslate = useDebounce(sourceText, 2000);
+  const debounceTranslate = useDebounce(sourceText, 200);
   const _handleChangeTextToTranslate = ({
     target,
   }: ChangeEvent<HTMLTextAreaElement>) => {
-    setSourceText(target.value);
+    handleChangeTextToTranslate(target.value);
+    // setSourceText(target.value);
   };
 
-  useEffect(() => {
-      if (debounceTranslate) {
-        setSourceText(debounceTranslate.trim());
-        handleChangeTextToTranslate(debounceTranslate.trim());
-      }
-  }, [debounceTranslate, handleChangeTextToTranslate]);
+  // useEffect(() => {
+  //     if (debounceTranslate) {
+  //       setSourceText(debounceTranslate.trim());
+  //       handleChangeTextToTranslate(debounceTranslate.trim());
+  //     }
+  // }, [debounceTranslate, handleChangeTextToTranslate]);
 
   return (
     <div className="flex flex-col md:flex-row md:gap-14 gap-5">

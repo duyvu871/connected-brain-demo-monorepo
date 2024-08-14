@@ -60,7 +60,7 @@ api.v1 = {
 		try {
 			// Make a POST request to the /translate endpoint
 			// The response type is inferred from the TranslateResponse interface
-			const response = await api.post<TranslateResponse>('/translate', {
+			const response = await api.post<TranslateResponse>('/feature/translate', {
 				text: body.text,
 				from: body.from,
 				to: body.to
