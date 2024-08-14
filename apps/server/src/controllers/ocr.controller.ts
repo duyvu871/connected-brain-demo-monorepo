@@ -40,7 +40,15 @@ export default class OCRController {
 			if (!page) {
 				throw new Error('Cannot extract text from image');
 			}
-			response_header_template(res).status(HttpStatusCode.Ok).send(ObjectUtils.extractProperties(page, ['text', 'words']));
+
+			const extracted_text = page.text;
+			const page_bbox = page.words.map((word) => ({
+				bbox: word.bbox,
+			}));
+			response_header_template(res).status(HttpStatusCode.Ok).send({
+				text: extracted_text,
+				words: page_bbox,
+			});
 		} catch (error: any) {
 			response_header_template(res).status(error.statusCode||HttpStatusCode.InternalServerError).send({message: error.message});
 		}
