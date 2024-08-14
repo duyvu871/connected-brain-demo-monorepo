@@ -1,0 +1,28 @@
+.showCardHover:hover .showCardHoverContent {
+    height: 100%;
+    transition: height 300ms;
+}
+
+.showCardHover:hover .showCardHoverImage {
+    transform: scale(1.1);
+}
+
+.showCardHoverImage {
+    transition: transform 0.5s;
+}
+
+.showCardHover {
+    transition-duration: 3s;
+}
+
+@keyframes showCardHover {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}

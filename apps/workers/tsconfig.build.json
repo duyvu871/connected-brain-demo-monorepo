@@ -1,0 +1,19 @@
+{
+	"extends": ["@repo/typescript-config/node-base.json"],
+	"compilerOptions": {
+		"target": "es6",
+		"module": "esnext",
+		"moduleResolution": "Node",
+		"esModuleInterop": true,
+		"sourceMap": true,
+		"allowJs": true,
+		"noEmit": false,
+		"baseUrl": ".",
+		"paths": {
+			"@/*": ["./*"]
+		},
+		"outDir": "./dist"
+	},
+	"include": ["src/**/*.ts", "src/**/*.d.ts"],
+	"exclude": ["node_modules"]
+}

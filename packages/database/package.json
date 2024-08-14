@@ -1,0 +1,17 @@
+{
+  "name": "@repo/database",
+  "type": "module",
+  "scripts": {
+    "dev": "tsc --watch",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "ioredis": "^5.4.1",
+    "mongoose": "^8.4.3",
+    "mongodb": "^6.4.0"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "*",
+    "typescript": "latest"
+  }
+}

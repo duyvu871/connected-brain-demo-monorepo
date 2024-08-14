@@ -1,0 +1,16 @@
+{
+  "extends": ["@repo/typescript-config/node-base.json"],
+  "compilerOptions": {
+    "tsBuildInfoFile": ".tsbuildinfo",
+    "incremental": true,
+    "allowJs": true,
+    "noEmit": false,
+    "baseUrl": ".",
+    "paths": {
+      "@translate/*": ["./src/*"]
+    },
+    "outDir": "./dist"
+  },
+  "include": ["src/**/*.ts", "src/**/*.d.ts"],
+  "exclude": ["node_modules"]
+}

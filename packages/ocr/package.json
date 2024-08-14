@@ -1,0 +1,49 @@
+{
+  "name": "@repo/ocr",
+  "type": "module",
+  "scripts": {
+    "build": "tsup && tsc-alias",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "clean": "rimraf .turbo && rimraf node_modules",
+    "clear:force": "rimraf *.js --force"
+  },
+  "files": [
+    "dist/**"
+  ],
+  "exports": {
+    ".": {
+      "require": {
+        "default": "./dist/index.cjs",
+        "types": "./dist/index.d.cts"
+      },
+      "import": {
+        "default": "./dist/index.js",
+        "types": "./dist/index.d.ts"
+      }
+    },
+    "./*": {
+      "require": {
+        "default": "./dist/*.cjs",
+        "types": "./dist/*.d.cts"
+      },
+      "import": {
+        "default": "./dist/*.js",
+        "types": "./dist/*.d.ts"
+      }
+    }
+  },
+  "dependencies": {
+    "@repo/cloud-storage": "*",
+    "pdf2pic": "^3.1.1",
+    "tesseract.js": "^5.1.0",
+    "@google-cloud/storage": "^7.11.2"
+  },
+  "devDependencies": {
+    "rimraf": "^6.0.1",
+    "tsc-alias": "^1.8.10",
+    "@repo/typescript-config": "*",
+    "typescript": "latest",
+    "tsup": "^8.2.4"
+  }
+}

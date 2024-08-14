@@ -1,0 +1,22 @@
+{
+	"extends": ["@repo/typescript-config/node-base.json"],
+	"compilerOptions": {
+		"target": "es2020",
+		"module": "ESNext",
+		"moduleResolution": "Bundler",
+		"esModuleInterop": true,
+		"sourceMap": true,
+		"allowJs": true,
+		"noEmit": false,
+		"baseUrl": ".",
+		"paths": {
+			"@/*": ["./src/*"],
+			"@translate/*": ["../../packages/translate/src/*"],
+			"@cloud-storage/*": ["../../packages/cloud-storage/src/*"],
+			"@ocr/*": ["../../packages/ocr/src/*"]
+		},
+		"outDir": "./dist",
+	},
+	"include": ["src/**/*.ts", "src/**/*.d.ts"],
+	"exclude": ["node_modules"]
+}

@@ -1,0 +1,40 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "F:\\CODE\\connected-brain\\mono-repo-connected-brain\\apps\\server\\storage\\Log\\.dcd669decdd04f05dfe6e3f78d6a74078192ffbf-audit.json",
+    "files": [
+        {
+            "date": 1722769288187,
+            "name": "F:\\CODE\\connected-brain\\mono-repo-connected-brain\\apps\\server\\storage\\Log\\log-2024-08-04-18.log",
+            "hash": "14b291b2b6acd861dd12d80701cc57fcaaafff5994d45fb9a8825f37fdd343f8"
+        },
+        {
+            "date": 1722783228106,
+            "name": "F:\\CODE\\connected-brain\\mono-repo-connected-brain\\apps\\server\\storage\\Log\\log-2024-08-04-21.log",
+            "hash": "90ef474e23f12af32cdeb77a82d53803a6bf399bebc500c231dc48dff05e0c0c"
+        },
+        {
+            "date": 1722786820776,
+            "name": "F:\\CODE\\connected-brain\\mono-repo-connected-brain\\apps\\server\\storage\\Log\\log-2024-08-04-22.log",
+            "hash": "c9e085cbb4c4f384a712c50daa0dc22bc1217380c915be03a196e904e9fd5b5f"
+        },
+        {
+            "date": 1722789896398,
+            "name": "F:\\CODE\\connected-brain\\mono-repo-connected-brain\\apps\\server\\storage\\Log\\log-2024-08-04-23.log",
+            "hash": "42ee5e64ee1825d212d156d366e7d5a9593153a8bd7bf2419d62059204ba5f49"
+        },
+        {
+            "date": 1722791770499,
+            "name": "F:\\CODE\\connected-brain\\mono-repo-connected-brain\\apps\\server\\storage\\Log\\log-2024-08-05-00.log",
+            "hash": "a313b7748484905009794e8961e472c38f5bb55153d28ca292617d03956ba881"
+        },
+        {
+            "date": 1722794401118,
+            "name": "F:\\CODE\\connected-brain\\mono-repo-connected-brain\\apps\\server\\storage\\Log\\log-2024-08-05-01.log",
+            "hash": "f6f3de42b54bebff047bc7de8355097a5be090d2546064ef311898c0e2c9b62d"
+        }
+    ],
+    "hashType": "sha256"
+}

@@ -1,0 +1,31 @@
+{
+  "name": "@repo/cloud-storage",
+  "type": "module",
+  "scripts": {
+    "build": "tsup && tsc-alias",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "clean": "rimraf .turbo && rimraf node_modules",
+    "clear:force": "rimraf *.js --force"
+  },
+  "files": [
+    "dist/**"
+  ],
+  "exports": {
+    ".": "./dist/index.cjs",
+    "./services-key/*": "./services-key/*"
+  },
+  "dependencies": {
+    "@repo/utils": "*",
+    "firebase": "^10.12.2",
+    "@google-cloud/storage": "^7.11.2",
+    "file-type": "^19.4.0"
+  },
+  "devDependencies": {
+    "rimraf": "^6.0.1",
+    "tsc-alias": "^1.8.10",
+    "@repo/typescript-config": "*",
+    "typescript": "latest",
+    "tsup": "^8.2.4"
+  }
+}

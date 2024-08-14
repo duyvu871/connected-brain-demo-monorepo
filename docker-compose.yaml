@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+  frontend:
+    build:
+      context: ./packages/web
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+  backend:
+    build:
+      context: ./packages/server
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+

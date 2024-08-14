@@ -1,0 +1,44 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "turbo build",
+    "build:web": "turbo build --filter=web",
+    "build:docs": "turbo build --filter=docs",
+    "build:worker": "turbo build --filter=worker",
+    "build:server": "turbo build --filter=server",
+    "dev": "turbo dev --filter=web --filter=server",
+    "dev:web": "turbo dev --filter=web",
+    "dev:docs": "turbo dev --filter=docs",
+    "dev:worker": "turbo dev --filter=worker",
+    "dev:server": "turbo dev --filter=server",
+    "lint": "turbo lint",
+    "type-check": "turbo type-check",
+    "clean": "turbo clean",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+  },
+  "devDependencies": {
+    "prettier": "^3.2.5",
+    "prettier-plugin-tailwindcss": "^0.5.11",
+    "turbo": "latest"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "name": "connected-brain",
+  "description": "A connected brain",
+  "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.com:duyvu871/connected-brain-monorepo.git"
+  },
+  "packageManager": "npm@10.8.1",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "dependencies": {
+    "@nextui-org/react": "^2.4.6",
+    "framer-motion": "^11.3.21",
+    "socket.io-client": "^4.7.5"
+  }
+}

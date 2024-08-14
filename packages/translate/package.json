@@ -1,0 +1,44 @@
+{
+  "name": "@repo/translate",
+  "type": "module",
+  "scripts": {
+    "build": "tsup && tsc-alias",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "clean": "rimraf .turbo && rimraf node_modules",
+    "clear:force": "rimraf *.js --force"
+  },
+  "files": [
+    "dist/**"
+  ],
+  "exports": {
+    ".": {
+      "require": {
+        "default": "./dist/index.cjs",
+        "types": "./dist/index.d.cts"
+      },
+      "import": {
+        "default": "./dist/index.js",
+        "types": "./dist/index.d.ts"
+      }
+    },
+    "./*": {
+      "require": {
+        "default": "./dist/*.cjs",
+        "types": "./dist/*.d.cts"
+      },
+      "import": {
+        "default": "./dist/*.js",
+        "types": "./dist/*.d.ts"
+      }
+    },
+    "./utils/*": "./src/utils/*.ts"
+  },
+  "devDependencies": {
+    "rimraf": "^6.0.1",
+    "tsc-alias": "^1.8.10",
+    "@repo/typescript-config": "*",
+    "typescript": "latest",
+    "tsup": "^8.2.4"
+  }
+}
