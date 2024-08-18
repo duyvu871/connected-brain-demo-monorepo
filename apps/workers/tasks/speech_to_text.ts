@@ -1,9 +1,9 @@
-import { ConvertToWavJob } from '../../server/src/services/queue/utils';
-import CloudSpeech from '../../server/src/services/google-cloud/cloud_speech.service';
-import FileStorageService from '../../server/src/services/CURD/file_storage.service';
-import SpeechToTextService from '../../server/src/services/features/speech_to_text.service';
+import { ConvertToWavJob } from '../utils/worker-utils';
+import CloudSpeech from '../../server/dist/services/google-cloud/cloud_speech.service';
+import FileStorageService from '../../server/dist/services/CURD/file_storage.service';
+import SpeechToTextService from '../../server/dist/services/features/speech_to_text.service';
 import { SentencesResponse } from 'assemblyai';
-import mongoLoader from '../../server/src/loaders/mongo.loader';
+import mongoLoader from '../../server/dist/loaders/mongo.loader';
 
 export default async function SpeechToText(data: ConvertToWavJob['job_data']) {
 	try {

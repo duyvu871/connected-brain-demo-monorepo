@@ -1,5 +1,5 @@
 import React from 'react';
-import {MantineProviderClient} from "@/components/Providers/mantine-provider.tsx";
+import {MantineProviderClient} from "@/providers/mantine-provider.tsx";
 
 interface LandingLayoutProps {
     children?: React.ReactNode;

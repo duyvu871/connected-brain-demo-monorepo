@@ -11,7 +11,11 @@ import DownloadFileAsContent from '@/components/DownloadFileAsContent.tsx';
 import { FiDownload } from 'react-icons/fi';
 import Progress from '@/containers/Apps/OCRScan/components/starter/progress.tsx';
 import { useAtom } from 'jotai/index';
-import { progress as progressData } from '@/containers/Apps/OCRScan/states/starter.ts';
+import {
+	progress as progressData,
+	selectedOcrLang,
+	selectedSourceLang,
+} from '@/containers/Apps/OCRScan/states/starter.ts';
 import {useDebounceCallback} from 'usehooks-ts';
 import { TbScanEye } from 'react-icons/tb';
 import VisualTextSegment from '@/containers/Apps/OCRScan/components/visual-text-segment.tsx';
@@ -20,6 +24,8 @@ function ExtractResultContent() {
 	const {api_route: APIRoute} = constants;
 	const {uploadedImageUrl, extractedText} = useUpload();
 	const [, setProgress] = useAtom(progressData);
+	const [sourceLang, setSelectedSourceLang] = useAtom(selectedSourceLang);
+	const [OCRLang, setSelectedOcrLang] = useAtom(selectedOcrLang);
 	const debounceProgress = useDebounceCallback(setProgress, 100, {
 		leading: true, // execute only the leading edge
 		trailing: false, // execute only the leading edge
@@ -64,7 +70,7 @@ function ExtractResultContent() {
 					<Box className="flex justify-center items-center gap-2">
 						<h2 className="text-xl text-zinc-900 font-normal">Source image</h2>
 						<span
-							className="text-xl text-zinc-500 flex justify-center items-center">Eng <LiaAngleDownSolid /></span>
+							className="text-xl text-zinc-500 flex justify-center items-center capitalize">{sourceLang} <LiaAngleDownSolid /></span>
 					</Box>
 				</Box>
 				{/*<Spacer y={3} />*/}
@@ -77,7 +83,7 @@ function ExtractResultContent() {
 					<Box className="flex justify-center items-center gap-2">
 						<h2 className="text-xl text-zinc-900 font-normal">OCR result</h2>
 						<span
-							className="text-xl text-zinc-500 flex justify-center items-center">Eng <LiaAngleDownSolid /></span>
+							className="text-xl text-zinc-500 flex justify-center items-center capitalize">{OCRLang} <LiaAngleDownSolid /></span>
 					</Box>
 				</Box>
 				<Box className="mb-3">

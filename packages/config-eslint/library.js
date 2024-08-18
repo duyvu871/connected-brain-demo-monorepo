@@ -34,6 +34,11 @@ module.exports = {
     },
   },
   "rules": {
+    "camelcase": "off",
+    "no-nested-ternary": "off",
+    "no-undef": "off",
+    // "@typescript-eslint/ban-ts-comment": "off",
+    "tsdoc/syntax": "off",
     "no-console": "off",
     "typescript-eslint/ban-ts-comment": "off",
   },

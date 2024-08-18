@@ -1,15 +1,27 @@
 {
-  "extends": "@repo/typescript-config/base.json",
   "compilerOptions": {
-    "tsBuildInfoFile": ".tsbuildinfo",
-    "incremental": true,
+    "target": "es2020",
+    "module": "ESNext",
     "allowJs": true,
     "noEmit": false,
     "baseUrl": ".",
-    "outDir": "dist"
+    "paths": {
+      "@/*": ["./src/*"],
+      "@translate/*": ["../../packages/translate/src/*"],
+      "@cloud-storage/*": ["../../packages/cloud-storage/src/*"],
+      "@ocr/*": ["../../packages/ocr/src/*"],
+    },
+    "moduleResolution": "bundler",
+    "outDir": "dist",
+    "importsNotUsedAsValues": "remove",
+    "strict": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true,
+    "allowImportingTsExtensions": true
   },
-  "include": [
-    "./src/**/*.ts",
-  ],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules",]
 }

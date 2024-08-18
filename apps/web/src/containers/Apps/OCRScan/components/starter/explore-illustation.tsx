@@ -53,7 +53,6 @@ export default function ExploreIllustration(): JSX.Element {
 								<p>10PM/FREE DRINK</p>
 								<p>WWW.YOURFASHION.COM
 									TICKET $7</p>
-
 							</Box>
 						</Box>
 						<Box className="w-full p-5 flex justify-center items-center">

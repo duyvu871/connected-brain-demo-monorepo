@@ -5,8 +5,9 @@ import { CloudStorage } from '@repo/cloud-storage';
 import { TranslateService } from '@repo/translate';
 import * as crypto from 'node:crypto';
 import { randomRange } from '@repo/utils/true-random';
-import { constants } from './utils';
+import { constants } from './utils.ts';
 import { socket_event } from '@repo/utils/constants';
+import Jimp from 'jimp';
 
 export class OCR {
 	private static instances: Record<string, Tesseract.Scheduler> = {};
@@ -144,16 +145,28 @@ export class OCR {
 		}
 	}
 
+	public static async processGrayScaleImage(
+		imageBuffer: Buffer,
+	): Promise<Buffer> {
+		try {
+			const image = await Jimp.read(imageBuffer);
+			image.greyscale();
+			return await image.getBufferAsync(Jimp.MIME_PNG);
+		} catch (err: any) {
+			console.error('ERROR OCR package:', err);
+			throw err;
+		}
+	}
+
 	public static async processImage(
 		imageBuffer: Buffer,
 		sourceLang: string = 'eng',
-		targetLang: string = 'vie',
 		onProgress?: (loggerMessage: Tesseract.LoggerMessage) => void
 	): Promise<RecognizeResult['data'] | null> {
 		try {
 			// console.log('sourceLang', sourceLang);
 			// console.log('targetLang', targetLang);
-
+			// imageBuffer = await this.processGrayScaleImage(imageBuffer);
 			const worker = await this.loadLangData(sourceLang, {
 				gzip: false, // compress the image buffer
 				langPath: constants.langPath,
@@ -165,18 +178,6 @@ export class OCR {
 			const {
 				data
 			}: RecognizeResult = await worker.recognize(imageBuffer);
-			// check if sourceLang is different from targetLang
-			// if (targetLang !== sourceLang && targetLang) {
-			// 	console.log(data.text.replace(/(\\n)/g, " "));
-			// 	const translatedText = (await this.getTranslateService().translate(data.text.replace(/(\\n)/g, " "), {
-			// 		from: sourceLang as ISOLangType,
-			// 		to: targetLang as ISOLangType,
-			// 	})).translation;
-			// 	return {
-			// 		...data,
-			// 		text: translatedText,
-			// 	};
-			// }
 
 			return data;
 		} catch (err: any) {

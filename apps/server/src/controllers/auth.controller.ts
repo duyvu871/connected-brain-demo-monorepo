@@ -5,9 +5,6 @@ import TokenService from '@/services/token.service';
 import { response_header_template } from '@/helpers/response_header_template.helper';
 import { ZodErrorResponse } from '@/helpers/ApiError';
 import { HttpStatusCode } from '@/helpers/http_status_code';
-import { Logger } from '@/logger/daily.log';
-
-const logger =  new Logger('AuthController').getLogger();
 
 export default class AuthController {
 	static Login = AsyncMiddleware.asyncHandler(async (
@@ -42,7 +39,6 @@ export default class AuthController {
 			});
 			response_header_template(res).status(HttpStatusCode.Ok).send({user});
 		} catch (error: any) {
-			logger.debug(error.message);
 			// new ZodErrorResponse(error);
 			response_header_template(res).status(HttpStatusCode.InternalServerError).send({message: error.message});
 		}

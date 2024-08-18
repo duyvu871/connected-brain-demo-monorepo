@@ -3,7 +3,6 @@ import React from 'react';
 import { createTheme, Loader, MantineProvider } from '@mantine/core';
 import RingLoader from '@ui/resource-ui/Loader/ring-loader.tsx';
 
-
 const theme = createTheme({
     components: {
         Loader: Loader.extend({

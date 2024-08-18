@@ -1,5 +1,5 @@
 import FileStorageService from '../../server/src/services/CURD/file_storage.service';
-import { ConvertToWavJob } from '../../server/src/services/queue/utils';
+import { ConvertToWavJob } from '../utils/worker-utils';
 import * as ffmpegInstaller from '@ffmpeg-installer/ffmpeg';
 import * as ffmpeg from 'fluent-ffmpeg'
 import S2t from '../../server/src/models/speech_to_text.model';

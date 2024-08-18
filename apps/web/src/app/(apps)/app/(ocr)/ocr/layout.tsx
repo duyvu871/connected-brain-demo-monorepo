@@ -2,6 +2,7 @@
 import "@/app/globals.css";
 import "@ui/styles.css";
 import '@mantine/core/styles.css';
+import 'core-js/full/promise/with-resolvers'
 import { Inter as FontSans } from "next/font/google";
 import {cn} from "@repo/utils";
 

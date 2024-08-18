@@ -3,10 +3,13 @@
 import React from 'react';
 import { Box, Center } from '@mantine/core';
 import HeaderWrapper from '@/containers/Apps/OCRScan/header-wrapper';
-import { Image } from '@nextui-org/react';
+import { Button, Image } from '@nextui-org/react';
 import UploadCard from '@/containers/Apps/OCRScan/components/starter/upload-card';
 import ExploreSection from '@/containers/Apps/OCRScan/components/starter/explore-section';
 import ExtractSection from '@/containers/Apps/OCRScan/components/starter/extract-section.tsx';
+import DialogForward from '@/containers/Apps/OCRScan/components/dialog/dialog-forward.tsx';
+import { IoArrowForward } from 'react-icons/io5';
+import Link from 'next/link';
 
 export default function StarterScreen(): React.ReactNode {
 	return (
@@ -43,6 +46,12 @@ export default function StarterScreen(): React.ReactNode {
 									industry.
 								</p>
 							</Box>
+							<Box className="flex justify-center items-center gap-4">
+								<p className="text-lg font-semibold">Try Demo below or</p>
+								<Button as={Link} className="bg-zinc-900 rounded-lg" href="/app/ocr/p" variant="bordered">
+									Start Now <IoArrowForward className="-rotate-[35]" size={20} />
+								</Button>
+							</Box>
 							<Box className="flex justify-center items-center ">
 								<UploadCard />
 							</Box>
@@ -56,6 +65,7 @@ export default function StarterScreen(): React.ReactNode {
 					<ExploreSection />
 				</Box>
 			</main>
+			<DialogForward />
 		</HeaderWrapper>
 	);
 }

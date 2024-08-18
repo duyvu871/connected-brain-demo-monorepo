@@ -14,7 +14,9 @@ import { Button } from '@nextui-org/react';
 import { useUpload } from '@/hooks/ocr/useUpload.ts';
 import { useToast } from '@/hooks/useToast.ts';
 
-const UploadForward = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
+const UploadForward = forwardRef<HTMLButtonElement, ButtonProps & {children?: React.ReactNode}>((props, ref) => {
+	const {children, ...otherProps} = props;
+
 	const {error} = useToast();
 	const {uploadImage} = useUpload();
 	const [sourceLang] = useAtom(selectedSourceLang);
@@ -25,7 +27,7 @@ const UploadForward = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) =>
 	const handleUpload = () => {
 		if (file) {
 			setOpenModal(true);
-			uploadImage(file, Array.from(sourceLang)[0] as string, Array.from(OCRLang)[0] as string);
+			 void uploadImage(file, Array.from(sourceLang)[0] as string, Array.from(OCRLang)[0] as string);
 			return;
 		}
 		error('Please upload an image');
@@ -36,9 +38,9 @@ const UploadForward = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) =>
 			className="w-10 h-10 px-0 min-w-fit bg-transparent hover:bg-zinc-800 text-zinc-900 hover:text-zinc-100 transition-all"
 			onClick={handleUpload}
 			ref={ref}
-			{...props}
+			{...otherProps}
 		>
-			<IoArrowForward size={26} />
+			{children || <IoArrowForward className="w-6 h-6" />}
 		</Button>
 	);
 });

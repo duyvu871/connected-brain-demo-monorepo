@@ -4,11 +4,15 @@
     "module": "ESNext",
     "allowJs": true,
     "noEmit": false,
-    "baseUrl": "./",
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["../../apps/server/src/*"]
+      "@/*": ["./src/*"],
+      "@translate/*": ["../../packages/translate/src/*"],
+      "@cloud-storage/*": ["../../packages/cloud-storage/src/*"],
+      "@ocr/*": ["../../packages/ocr/src/*"],
+      "@server/*": ["../../apps/server/dist/*"],
     },
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "outDir": "dist",
     "importsNotUsedAsValues": "remove",
     "strict": true,
@@ -19,5 +23,5 @@
     "allowSyntheticDefaultImports": true
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules",]
 }

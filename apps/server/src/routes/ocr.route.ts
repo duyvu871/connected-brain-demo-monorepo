@@ -9,7 +9,10 @@ import upload from '@/configs/upload';
 export const ocrRouter: Router = Router();
 console.log('ocr routing loaded: ', '/api/v1/feature/ocr');
 
-ocrRouter.route('/upload-file').post(validateHeader(OCRValidation.uploadHeaders), validateBody(OCRValidation.uploadBody), OCRController.uploadFileWithoutAuth);
+ocrRouter.route('/upload-file').post(
+	validateQuery(OCRValidation.uploadQuery),
+	upload({mimetype: /^(image\/|(application\/pdf))/i}, {fileSize:1024 * 1024 * 100}).single('file'),
+	OCRController.uploadFile);
 ocrRouter.route('/upload-url').post(validateHeader(OCRValidation.uploadHeaders), validateBody(OCRValidation.uploadBody), OCRController.uploadFileWithoutAuth);
 ocrRouter.route('/capture').post(validateBody(OCRValidation.captureBody), TranslateController.detect);
 ocrRouter.route('/upload-without-auth').post(

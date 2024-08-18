@@ -57,7 +57,7 @@ function Copy({ childrenProps, children, text, tooltipText }: CopyToClipBoardPro
 					disabled={isCopied}
 					onClick={onCopyText}
 					{...childrenProps}>
-					{children ?? <MdContentCopy />}
+					{children ?? <MdContentCopy size={16}/>}
 				</Button>
 				{/*</Tooltip>*/}
 			</CopyToClipboard>

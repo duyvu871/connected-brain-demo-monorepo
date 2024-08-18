@@ -16,7 +16,6 @@ function VisualTextSegment({image, imageType}: VisualTextSegmentProps) {
 	const imageSourceRef = useRef<HTMLImageElement>(null);
 
 	const blobURL = useMemo(() => {
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 		return (file.convertToBlobURL(image, imageType));
 	}, [image, imageType]);
 
@@ -25,13 +24,15 @@ function VisualTextSegment({image, imageType}: VisualTextSegmentProps) {
 		const textureCanvas = textureWrapRef?.current?.getContext('2d');
 		const imageSource = imageSourceRef?.current;
 		if (!textureCanvas || !imageSource) return;
-		textureCanvas.canvas.width = imageSource.width;
-		textureCanvas.canvas.height = imageSource.height;
+		if (!currentPage.words) return;
+		if (!textureWrapRef.current) return;
+		textureWrapRef.current.width = imageSource.naturalWidth;
+		textureWrapRef.current.height = imageSource.naturalHeight;
 		currentPage.words.forEach((w) => {
 			const b = w.bbox;
 			// @ts-expect-error may this property has been added
-			textureCanvas.strokeWidth = 2;
-			textureCanvas.lineWidth = 2;
+			textureCanvas.strokeWidth = 1;
+			textureCanvas.lineWidth = 1;
 			textureCanvas.strokeStyle = 'red';
 			textureCanvas.strokeRect(b.x0, b.y0, b.x1-b.x0, b.y1-b.y0);
 			textureCanvas.beginPath();
@@ -52,8 +53,8 @@ function VisualTextSegment({image, imageType}: VisualTextSegmentProps) {
 
 	return (
 		<Box className="flex-1 relative overflow-hidden">
-			{/*<canvas className="absolute max-w-full box-border border p-5 border-solid" ref={textureWrapRef}/>*/}
-			<Image alt="image source" className="max-w-full box-border border p-5 border-solid" height={700} ref={imageSourceRef} src={blobURL} width={500}/>
+			<canvas className="absolute max-w-full box-border p-5 " ref={textureWrapRef}/>
+			<Image alt="image source" className="max-w-full box-border rounded-lg p-5" height={700} ref={imageSourceRef} src={blobURL} width={500}/>
 		</Box>
 	);
 }

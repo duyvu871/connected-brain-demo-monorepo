@@ -4,17 +4,17 @@ import ApiError from '@/helpers/ApiError';
 import { HttpStatusCode } from '@/helpers/http_status_code';
 import { response_header_template } from '@/helpers/response_header_template.helper';
 import { NextFunction, Request, Response } from 'express';
-import zod, { z } from 'zod';
-import {Logger} from '@/logger/daily.log';
+// import zod, { z } from 'zod';
+// import {Logger} from '@/logger/daily.log';
 import { Types } from 'mongoose';
 import UserService from '@/services/user.service';
 
-const logger = new Logger('UserController').getLogger();
+// const logger = new Logger('UserController').getLogger();
 
 export default class UserController {
 	// get users with pagination and sorting
 	static getUsers = AsyncMiddleware.asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-		logger.info(`Get users request: ${req.query}`);
+		// logger.info(`Get users request: ${req.query}`);
 
 		const { page, limit, sortBy, populate } = req.query as { page: string, limit: string, sortBy: string, populate: string };
 		// get users

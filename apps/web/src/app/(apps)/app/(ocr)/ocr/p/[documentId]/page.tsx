@@ -1,20 +1,23 @@
 import React from 'react';
-import NextuiProvider from '@/providers/nextui-provider';
-import DefaultPageProvider from '@/providers/page-provider/default';
 import type { ToastContainerProps } from 'react-toastify';
 import { ToastContainer } from 'react-toastify';
 import { Toaster } from '@/global/contants/defaultComponentProps';
 import Playground from '@/containers/Apps/OCRScan/playground';
+import { UploadProvider } from '@/providers/ocr-scan/upload-provider.tsx';
+import { ProcessProvider } from '@/providers/ocr-scan/process-provider.tsx';
+import AppLayout from '@/providers/app-provider.tsx';
 
 function Page({ params }: { params: { documentId: string } }) {
 	return (
 		<>
-			<NextuiProvider>
-				<DefaultPageProvider>
-					<Playground id={params.documentId} />
-				</DefaultPageProvider>
-			</NextuiProvider>
+			<AppLayout>
+				<UploadProvider>
+					<ProcessProvider>
+						<Playground id={params.documentId} />
+					</ProcessProvider>
+				</UploadProvider>
 			<ToastContainer {...(Toaster as ToastContainerProps)} />
+			</AppLayout>
 		</>
 	);
 }

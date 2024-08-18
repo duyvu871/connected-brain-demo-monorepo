@@ -14,7 +14,7 @@ export default function Header(): React.ReactNode {
 	const [isStarterScreen, setIsStarterScreen] = useState(false);
 
 	useEffect(() => {
-		if (pathname === '/feature/ocr') {
+		if (pathname === '/app/ocr') {
 			setIsStarterScreen(true);
 		} else {
 			setIsStarterScreen(false);
@@ -40,11 +40,13 @@ export default function Header(): React.ReactNode {
 				<Box className="ml-auto flex items-center gap-2 sm:gap-4">
 					{
 						!isStarterScreen && (
-							<Box className="text-white text-lg font-bold">
-								<Button className="bg-zinc-800" variant="bordered">
-									<TbTextScan2 size={24}/> New Scan
-								</Button>
-							</Box>
+							<Link href="/app/ocr" passHref>
+								<Box className="text-white text-lg font-bold">
+									<Button className="bg-zinc-800" variant="bordered">
+										<TbTextScan2 size={24}/> New Scan
+									</Button>
+								</Box>
+							</Link>
 						)
 					}
 					<DialogFeedback />

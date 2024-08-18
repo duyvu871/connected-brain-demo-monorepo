@@ -37,7 +37,7 @@ const ComboboxLanguage: FC<Props> = ({ options, value, onChange }) => {
       <DialogTrigger asChild>
         <Button
           aria-expanded={open}
-          className="w-full justify-between"
+          className="w-full justify-between bg-zinc-400/0 border-zinc-700"
           role="combobox"
           variant="outline"
         >

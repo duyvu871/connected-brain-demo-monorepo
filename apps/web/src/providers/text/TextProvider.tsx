@@ -6,6 +6,7 @@ import { useCallback , useEffect, useContext, useState } from 'react';
 import { useSearchParams } from "next/navigation";
 
 import {
+  DEBOUNCE_TIME,
   languageByValue,
   // DEBOUNCE_TIME,
   MAX_TEXT_TO_TRANSLATE_LENGTH,
@@ -14,6 +15,7 @@ import {
 } from '@/lib/constants';
 import { languageContext, textContext } from '@/providers';
 import axios from '@/libs/axios/v1/axios';
+import { useDebounce } from '@uidotdev/usehooks';
 
 export const TextProvider: FC<PropsWithChildren> = ({ children }) => {
   // const router = useRouter();
@@ -24,6 +26,7 @@ export const TextProvider: FC<PropsWithChildren> = ({ children }) => {
 
   const [textToTranslateState, setTextToTranslateState] =
     useState<string>(textToTranslate);
+  const textToTranslateDebounce = useDebounce(textToTranslateState, DEBOUNCE_TIME);
   const [completion, setCompletion] = useState<string>("");
   const { fromLanguage, toLanguage } = useContext(languageContext);
 
@@ -78,14 +81,14 @@ export const TextProvider: FC<PropsWithChildren> = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (textToTranslateState.trim().length < MIN_TEXT_TO_TRANSLATE_LENGTH) {
+    if (textToTranslateDebounce.trim().length < MIN_TEXT_TO_TRANSLATE_LENGTH) {
       setCompletion("");
       return;  
     } 
       void (async () => {
-        await getCompletion(textToTranslateState);
+        await getCompletion(textToTranslateDebounce);
       })();
-  }, [fromLanguage, getCompletion, textToTranslateState, toLanguage]);
+  }, [fromLanguage, getCompletion, textToTranslateDebounce, toLanguage]);
 
   return (
     <textContext.Provider

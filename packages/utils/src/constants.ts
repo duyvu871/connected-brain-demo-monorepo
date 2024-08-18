@@ -9,6 +9,7 @@ const api_route = {
 };
 const socket_event = {
 		OCR: {
+			PROCESS_PDF: 'processPDF',
 			UPLOAD: 'ocr:upload',
 			EXTRACT: 'ocr:extract',
 			PROGRESS: 'ocr:progress',

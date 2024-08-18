@@ -1,20 +1,46 @@
 import React from 'react';
 import { useAtom } from 'jotai/index';
-import { starterAssetsPreUpload } from '@/containers/Apps/OCRScan/states/starter';
+import { openForwardedDialog, starterAssetsPreUpload } from '@/containers/Apps/OCRScan/states/starter';
 import { useToast } from '@/hooks/useToast';
+import { useAuth } from '@/hooks/useAuth.ts';
+import { routeList } from '@/global/contants/route.ts';
+import { isPDFAtom } from '@/containers/Apps/OCRScan/states/playground.ts';
+import { usePathname } from 'next/navigation';
 
 const allowedFileTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'application/pdf'];
 
-export default function SelectZone(): React.ReactNode {
+type SelectZoneProps = {
+	children?: React.ReactNode;
+}
+
+export default function SelectZone({children}:  SelectZoneProps): React.ReactNode {
+	const pathName = usePathname();
 	const { error } = useToast();
 	const [, setFile] = useAtom(starterAssetsPreUpload);
+	const [, setDialogState]= useAtom(openForwardedDialog);
+	const [, setIsPDF] = useAtom(isPDFAtom);
 
+	const { isLogin } = useAuth();
 	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
 		if (file) {
+			let isPDF = false;
 			const fileExtension = file.name.split('.').pop()?.toLowerCase();
+			if (!isLogin && fileExtension?.includes('pdf')) {
+				console.log('isLogin', isLogin);
+				setDialogState({
+					forwardUrl: `${routeList.login}?direct=${encodeURIComponent('/app/ocr')}`,
+					forwardTitle: 'Login to continue processing PDF extension',
+					isOpened: true
+				});
+				return;
+			}
+			if (isLogin && fileExtension?.includes('pdf') && pathName === '/app/ocr/p') {
+				isPDF = true;
+			}
 			const isValidFileType = allowedFileTypes.includes(file.type);
 			console.log('fileExtension', fileExtension);
+			setIsPDF(isPDF);
 			if (isValidFileType) {
 				setFile(file);
 			} else {
@@ -28,18 +54,19 @@ export default function SelectZone(): React.ReactNode {
 
 	return (
 		<div className="flex items-center justify-center w-full">
-			{/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-			<label className="flex flex-col items-center justify-center rounded-lg cursor-pointer hover:bg-zinc-700 bg-zinc-800 group transition-all"
+			<label className="flex flex-col items-center justify-center rounded-lg cursor-pointer hover:bg-zinc-700 bg-zinc-800 group transition-all w-full"
 						 htmlFor="dropzone-file">
-				<div className="flex items-center justify-center gap-1 px-2 py-1 h-10">
+				{!children ? <div className="flex items-center justify-center gap-1 px-2 py-1 h-10">
 					<svg aria-hidden="true"
 							 className="w-5 h-5 group-hover:text-zinc-100 transition-all text-gray-500 dark:text-gray-400"
 							 fill="none" viewBox="0 0 20 16" xmlns="http://www.w3.org/2000/svg">
-						<path d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"
-									strokeWidth="2" />
+						<path
+							d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+							stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"
+							strokeWidth="2" />
 					</svg>
 					<p className="group-hover:text-zinc-100 transition-all ">Image</p>
-				</div>
+				</div> : children}
 				<input
 					accept=".png, .jpeg, .jpg, .gif, .pdf, image/*, application/pdf"
 					className="hidden"
@@ -48,6 +75,7 @@ export default function SelectZone(): React.ReactNode {
 					type="file"
 				/>
 			</label>
+			<div className="" />
 		</div>
 	);
 }
