@@ -3,7 +3,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsc --watch",
-    "build": "tsc"
+    "build": "tsup && tsc-alias"
   },
   "dependencies": {
     "ioredis": "^5.4.1",
