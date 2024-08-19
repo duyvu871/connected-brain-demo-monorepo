@@ -75,7 +75,7 @@ const ChatHistoryItem = ({
 
 	const directToSection = (sectionId: string) => {
 		if (!isEditing) {
-			router.push(`/feature/chatbot-assistant?id=${sectionId}`);
+			router.push(`/app/chatbot?id=${sectionId}`);
 		}
 	};
 
@@ -344,7 +344,7 @@ function ChatHistory({ classnames }: ChatHistoryProps) {
 									'hover:bg-zinc-700',
 									chatHistoryCollapsed ? 'w-[88px] p-0' : '',
 								)}
-								onClick={() => router.push('/feature/chatbot-assistant')}>
+								onClick={() => router.push('/app/chatbot')}>
 								<HiOutlineDocumentPlus className="w-6 h-6" />
 								<span
 									className={cn(

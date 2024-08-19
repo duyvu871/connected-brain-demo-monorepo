@@ -163,7 +163,7 @@ function ChatbotProvider({ children }: { children: React.ReactNode }) {
 			return;
 		}
 		return data;
-	}, [errorShowToast]);
+	}, []);
 
 	const createSectionMessage = async (message: string, mediaContent: string[] = []) => {
 		insertMessage(message, mediaContent, 'user', 'preview-created-user');
@@ -277,7 +277,7 @@ function ChatbotProvider({ children }: { children: React.ReactNode }) {
 				clearMessages();
 			}
 		}
-	}, [chat_id, getChatHistory, userSession]);
+	}, [chat_id, userSession]);
 
 	useLayoutEffect(() => {
 		if (userSession) {
@@ -288,7 +288,7 @@ function ChatbotProvider({ children }: { children: React.ReactNode }) {
 				}
 			})();
 		}
-	}, [getSections, userSession]);
+	}, [userSession?.id]);
 
 	return (
 		<ChatbotContext.Provider

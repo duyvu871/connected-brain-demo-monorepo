@@ -53,9 +53,10 @@ const ChatMessage = forwardRef<
 				</div> : null}
 			<div className={messageListClass}>
 				<div className={cn(
-					'h-fit max-w-full w-[calc(100vw_-_43px)] sm:w-full rounded-xl p-5',
+					'h-fit max-w-full rounded-xl p-5',
 					{
-						'bg-zinc-800 text-zinc-300 w-[calc(100vw_-_70px)] sm:w-full': !isAssistant,
+						'bg-zinc-800 text-zinc-300 w-[calc(100vw_-_70px)] min-[450px]:w-full': !isAssistant,
+						'w-[calc(100vw_-_43px)] sm:w-full': isAssistant,
 					}
 				)}>
 					<div

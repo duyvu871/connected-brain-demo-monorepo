@@ -7,8 +7,8 @@ import {
 	Sheet,
 	SheetHeader,
 	SheetContent,
-	SheetTrigger,
-} from "@ui/shadcn-ui/ui/sheet";
+	SheetTrigger, SheetOverlay,
+} from '@ui/shadcn-ui/ui/sheet';
 import { cn } from '@repo/utils';
 import { Logo } from '@ui/Icons';
 import React from 'react';
@@ -21,6 +21,7 @@ export function SheetMenu() {
 	const [theme] = useAtom(storageTheme);
 	return (
 		<Sheet>
+			<SheetOverlay className="z-[180]"/>
 			<SheetTrigger asChild className="lg:hidden">
 				<Button className="h-8 border-zinc-700" size="icon" variant="outline">
 					<MenuIcon size={20} />

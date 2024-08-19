@@ -30,7 +30,7 @@ function AppChatbot() {
 							}}
 						/>
 					</Suspense>
-					<div className="w-full md:p-5">
+					<div className="flex-grow md:p-5 w-0">
 						<div className="w-full h-full md:border border-zinc-800 md:rounded-xl">
 							<Suspense fallback={<SkeletonChatSection />}>
 								<LazyChatSection />
