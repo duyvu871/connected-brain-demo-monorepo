@@ -3,9 +3,8 @@
 import React, {forwardRef, useState} from 'react';
 import type { LinkProps } from 'next/link';
 import Link from 'next/link';
-import './menu_trigger.css';
+import '@ui/navbar/menu_trigger.css';
 import '@ui/styles/UnderlineAnimate.css';
-
 import * as NavigationMenuRadix from '@radix-ui/react-navigation-menu';
 import { HiOutlineChatBubbleLeftRight } from 'react-icons/hi2';
 import { FaMicrophone } from 'react-icons/fa';
@@ -28,6 +27,7 @@ import {
 import UnderlineHover from '@ui/text/underline-hover';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@ui/shadcn-ui/ui/accordion';
 
+
 const iconClass = 'w-10 text-xl text-gray-400 transition-all';
 
 // const components: { title: string; href: string; description: string, icon: React.ReactNode }[] = [];
@@ -35,25 +35,25 @@ const iconClass = 'w-10 text-xl text-gray-400 transition-all';
 const featureList1: { title: string; href: string; description: string, icon: React.ReactNode }[] = [
 	{
 		title: 'conservation',
-		href: '/service/conservation',
+		href: '/app/conservation',
 		description: 'A platform for connecting brain to handle native language processing',
 		icon: <HiOutlineChatBubbleLeftRight className={iconClass} />,
 	},
 	{
 		title: 'assistant',
-		href: '/service/assistant',
+		href: '/app/chatbot',
 		description: 'Answer questions, find information, and help you get things done.',
 		icon: <RiRobot3Line className={iconClass} />,
 	},
 	{
 		title: 'OCR',
-		href: '/service/ocr',
+		href: '/app/ocr',
 		description: 'Extract text from images and documents.',
 		icon: <LuPenLine className={iconClass} />,
 	},
 	{
 		title: 'speech to text',
-		href: '/service/speech-to-text',
+		href: '/app/speech-to-text',
 		description: 'Convert spoken language into written text.',
 		icon: <FaMicrophone className={iconClass} />
 		,
@@ -63,7 +63,7 @@ const featureList1: { title: string; href: string; description: string, icon: Re
 const featureList2: { title: string; href: string; description: string, icon: React.ReactNode }[] = [
 	{
 		title: 'identify the speaker',
-		href: '/service/identify-speaker',
+		href: '/app/identify-speaker',
 		description: 'Identify the speaker in a conversation via audio file.',
 		icon: <LuUserCheck2 className={iconClass} />,
 	},
@@ -92,7 +92,8 @@ export function NavigationMenuDemo(): JSX.Element {
 						translateX: '-100%',
 					}}
 				>
-					<div className="p-4 flex flex-col justify-center items-start">
+					<div className="fixed w-screen h-screen z-[30] bg-zinc-900 bg-opacity-50" onClick={() => setIsOpenDropDown(false)}/>
+					<div className="relative z-40 p-4 flex flex-col justify-center items-start gap-4">
 						<div className="w-full pr-4">
 							<Accordion className="w-full" collapsible type="single">
 								<AccordionItem value="item-1">
@@ -124,8 +125,8 @@ export function NavigationMenuDemo(): JSX.Element {
 						<Link className="block" href="/auth/method?type=login" passHref>
 							{/*<NavigationMenuLink className={cn(navigationMenuTriggerStyle(), 'font-bold')}>*/}
 							<Button
-								className="font-normal border-gray-400 hover:text-gray-300"
-								variant="secondary">
+								className="font-normal border-gray-400 text-zinc-700 hover:text-gray-900 bg-zinc-100 hover:bg-zinc-200 transition-colors"
+								variant='default'>
 								Login
 							</Button>
 							{/*</NavigationMenuLink>*/}
@@ -178,7 +179,8 @@ export function NavigationMenuDemo(): JSX.Element {
 														 }}
 												>
 													<NavigationMenuLink asChild>
-														<Link className="flex select-none flex-row justify-end rounded-md leading-none no-underline outline-none transition-colors " href={feature.href}
+														<Link className="flex select-none flex-row justify-end rounded-md leading-none no-underline outline-none transition-colors "
+																	href={feature.href}
 																	passHref>
 															<div
 																className="flex flex-row justify-center items-center gap-2 p-3 transition-all rounded-lg hover:bg-black/20">
@@ -346,10 +348,16 @@ export function NavigationMenuDemo(): JSX.Element {
 						{/*<NavbarMobileDropdown />*/}
 						<div className="flex justify-center items-center px-1.5 py-1 border-[1px] border-gray-800 rounded-lg">
 							<label className="hamburger" htmlFor="navbar-hamburger">
-								<input className="outline-none" onChange={(e) => {
-									setIsOpenDropDown(e.target.checked);
-								}} type="checkbox" />
-								<svg className="w-[26px] h-[26px]" id="navbar-hamburger" viewBox="0 0 32 32">
+								<input
+									className="outline-none"
+									id="navbar-hamburger"
+									onChange={(e) => {
+										console.log(e.target.checked);
+										setIsOpenDropDown(e.target.checked);
+									}}
+									type="checkbox"
+								/>
+								<svg className="w-[26px] h-[26px]" viewBox="0 0 32 32">
 									<path className="line line-top-bottom"
 												d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22" />
 									<path className="line" d="M7 16 27 16" />

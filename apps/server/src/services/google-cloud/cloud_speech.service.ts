@@ -1,9 +1,7 @@
-import speech, { SpeechClient } from '@google-cloud/speech';
 import { getDownloadURL, getMetadata, ref, uploadBytesResumable } from 'firebase/storage';
 import { storage } from '@/configs/firebase';
 import { Storage } from '@google-cloud/storage';
 import { AssemblyAI, ParagraphsResponse, SentencesResponse, Transcript } from 'assemblyai';
-import FileStorageService from '@/services/CURD/file_storage.service';
 
 interface UploadFileProps {
 	file: File|Uint8Array|Blob|Buffer;
@@ -40,6 +38,12 @@ export default class CloudSpeech {
 		}
 		return this.client;
 	}
+
+public static async getTemporaryToken(): Promise<string> {
+		const client = this.getInstance();
+		// 1 hour
+		return await client.realtime.createTemporaryToken({ expires_in: 3600 });
+}
 
 	public static async recognizeAudio(audio: Uint8Array|string|Buffer): Promise<{transcriptId: string, text: string}> {
 		console.log(audio);

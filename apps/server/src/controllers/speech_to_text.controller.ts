@@ -9,8 +9,8 @@ import AppConfig from '@/configs/app.config';
 import path from 'path';
 import S2TValidation from '@/validations/s2t.validation';
 import { z } from 'zod';
-import { ZodErrorResponse } from '@/helpers/ApiError';
 import { deFlattenObject, flattenObject } from '@/utils/base';
+import CloudSpeech from '@/services/google-cloud/cloud_speech.service';
 
 export default class SpeechToTextController {
 		public static upload_file = AsyncMiddleware.asyncHandler(async (req: Request, res: Response) => {
@@ -112,5 +112,9 @@ export default class SpeechToTextController {
 					job_data: { magicNumber }
 				});
 			response_header_template(res).status(HttpStatusCode.Ok).send({message: 'background task added'});
+		});
+
+		public static get_token = AsyncMiddleware.asyncHandler(async (req: Request, res: Response) => {
+			response_header_template(res).status(HttpStatusCode.Ok).send({token: CloudSpeech.getTemporaryToken()});
 		});
 }

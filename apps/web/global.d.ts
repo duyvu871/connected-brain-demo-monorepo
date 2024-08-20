@@ -1,4 +1,7 @@
 declare global {
+	interface Window {
+		webkitAudioContext: typeof AudioContext;
+	}
 	/**
 	 * Creates a new type that includes all properties of `U` except for the
 	 * property named `T`.

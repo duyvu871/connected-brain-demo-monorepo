@@ -6,8 +6,17 @@ import StarterScreen from '@/containers/Apps/OCRScan/starter-screen';
 import { UploadProvider } from '@/providers/ocr-scan/upload-provider.tsx';
 import { ProcessProvider } from '@/providers/ocr-scan/process-provider.tsx';
 import AppLayout from '@/providers/app-provider.tsx';
+import { redirect } from 'next/navigation';
+import { headers } from 'next/headers';
+import { getServerAuthSession } from '@/lib/nextauthOptions.ts';
 
-function Page() {
+async function Page() {
+	const session = await getServerAuthSession();
+	const header = headers();
+	const pathname = header.get('x-pathname');
+	if (!session?.user) {
+		return redirect('/auth/method?type=login');
+	}
 	return (
 		<>
 			<AppLayout>

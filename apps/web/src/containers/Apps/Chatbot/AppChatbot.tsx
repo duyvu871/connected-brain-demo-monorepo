@@ -15,7 +15,7 @@ function AppChatbot() {
 	return (
 		<>
 			<div className="w-full h-full relative">
-				<div className="w-full h-[calc(100svh_-_57px)] flex">
+				<div className="w-full h-[calc(100vh_-_57px)] flex">
 					<Suspense
 						fallback={
 							<SkeletonChatHistory

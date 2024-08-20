@@ -35,3 +35,7 @@ s2tRouter.route('/transcript/list').get(
 s2tRouter.route('/background_task_test').post(SpeechToTextController.background_task_test);
 // s2tRouter.route('/get-transcript/:id').post(validateBody(AuthValidation.loginBody), AuthController.Login);
 
+s2tRouter.route('/token').get(
+	validateHeader(UserValidation.getUserHeaders),
+	authenticate,
+	SpeechToTextController.get_token);

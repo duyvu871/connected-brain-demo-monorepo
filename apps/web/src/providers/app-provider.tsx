@@ -7,6 +7,7 @@ import { MantineProviderClient } from '@/providers/mantine-provider.tsx';
 import { AuthProvider } from '@/providers/AuthContext.tsx';
 import { Provider as JotaiProvider } from 'jotai';
 import ReduxProviders from '@/providers/ReduxProviders.tsx';
+import 'react-toastify/dist/ReactToastify.css';
 
 type AppProviderProps = {
 	children: React.ReactNode;

@@ -1,0 +1,1 @@
+export default new URL('./audio-processor.js', import.meta.url).href;
