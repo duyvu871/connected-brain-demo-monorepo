@@ -23,8 +23,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { registerSchema } from '@/lib/zod/userValidate';
 import { useForm } from 'react-hook-form';
 import { useCallback, useEffect } from 'react';
+import { useToast } from '@/hooks/useToast.ts';
 
 export function RegisterForm(props: PaperProps) {
+	const toast = useToast();
 	const router = useRouter();
 	const { register } = useAuth();
 	const {
@@ -44,6 +46,7 @@ export function RegisterForm(props: PaperProps) {
 			console.log(value);
 		}, (errors) => {
 			console.log(errors);
+			toast.error(Object.values(errors).join('\n'));
 		});
 	};
 

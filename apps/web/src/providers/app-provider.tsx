@@ -8,6 +8,8 @@ import { AuthProvider } from '@/providers/AuthContext.tsx';
 import { Provider as JotaiProvider } from 'jotai';
 import ReduxProviders from '@/providers/ReduxProviders.tsx';
 import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, type ToastContainerProps } from 'react-toastify';
+import { Toaster } from 'global/contants/defaultComponentProps.ts';
 
 type AppProviderProps = {
 	children: React.ReactNode;
@@ -22,6 +24,7 @@ export default function AppProvider({children}: AppProviderProps) {
 						<JotaiProvider>
 							<ReduxProviders>
 								{children}
+								<ToastContainer {...(Toaster as ToastContainerProps)} />
 							</ReduxProviders>
 						</JotaiProvider>
 					</MantineProviderClient>

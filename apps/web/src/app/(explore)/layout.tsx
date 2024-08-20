@@ -5,6 +5,9 @@ import type { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google";
 import {cn} from "@repo/utils";
 import WebVitals from '@/app/_components/web-vitals.tsx';
+import { getServerAuthSession } from '@/lib/nextauthOptions.ts';
+import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 const fontSans = FontSans({
 	subsets: ['latin', 'vietnamese'],
@@ -29,11 +32,17 @@ export const metadata: Metadata = {
 	// metadataBase: new URL("./public/graphics/feature_1.png"),
 };
 
-export default function RootLayout({
+export default async function RootLayout({
 																		 children,
 																	 }: {
 	children: React.ReactNode;
-}): JSX.Element {
+}) {
+	const session = await getServerAuthSession();
+	const header = headers();
+	const pathname = header.get('x-pathname');
+	if (!session?.user) {
+		return redirect('/auth/method?type=login');
+	}
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<body className={cn(fontSans.className, "")}>

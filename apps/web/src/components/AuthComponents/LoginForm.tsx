@@ -21,8 +21,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { loginSchema } from '@/lib/zod/userValidate';
 import type { LoginFormType } from '@/types/form.type';
 import { useAuth } from '@/hooks/useAuth';
+import { useToast } from '@/hooks/useToast.ts';
 
 export function LoginForm(props: PaperProps) {
+	const toast = useToast();
 	const searchParams = useSearchParams();
 	const direct = searchParams.get('direct');
 	const router = useRouter();
@@ -45,6 +47,7 @@ export function LoginForm(props: PaperProps) {
 			console.log(value);
 		}, (errors) => {
 			console.log(errors);
+			toast.error(Object.values(errors).join('\n'));
 		});
 	};
 

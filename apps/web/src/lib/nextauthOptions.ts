@@ -31,8 +31,7 @@ export const nextauthOptions: AuthOptions = {
 			},
 			// @ts-expect-error
 			async authorize(credentials: Record<'password' | 'username' | 'role', string>) {
-				// @ts-expect-error
-				return await signIn(credentials) as UserSessionPayload;
+					return await signIn(credentials as any) as unknown as UserSessionPayload;
 			},
 		}),
 		// ...add more providers here
@@ -42,14 +41,16 @@ export const nextauthOptions: AuthOptions = {
 		newUser: '/auth/method?type=register',
 	},
 	callbacks: {
-		jwt({ token, account, user }) {
+		// eslint-disable-next-line @typescript-eslint/require-await
+		async jwt({ token, account, user }) {
 			if (user) {
 				token.user_data = user?.userPayload;
 				token.accessToken = user?.accessToken;
 			}
 			return token;
 		},
-		session({ session, token }) {
+		// eslint-disable-next-line @typescript-eslint/require-await
+		async session({ session, token }) {
 			session.user = token.user_data as UserInterface;
 			// @ts-expect-error
 			session.token = token.accessToken;

@@ -6,6 +6,7 @@ import { signIn, signOut, useSession } from 'next-auth/react';
 import { APIs, routeList } from '@/global/contants/route';
 import { usePathname, useRouter } from 'next/navigation';
 import type { StandardResponse } from 'types/api.type';
+import { useToast } from '@/hooks/useToast.ts';
 
 type UserRegisterPayload = Pick<UserInterface, 'username' | 'password' | 'email' | 'phone'>;
 type UserLoginPayload = Pick<UserInterface, 'email' | 'password'>;
@@ -87,6 +88,7 @@ const AuthContext = createContext<AuthContextProps>(initialValue);
  *	</AuthProvider>
  **/
 const AuthProvider = ({ children }: AuthProviderProps) => {
+	const toast = useToast();
 	const router = useRouter();
 	const pathname = usePathname();
 	const session = useSession();
@@ -99,18 +101,24 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 			email: userPayload.email,
 			password: userPayload.password,
 			role: 'user',
-			redirect: true,
-			callbackUrl: redirect,
+			redirect: false,
+			// callbackUrl: redirect,
 		});
-		// router.push(redirect);
-		setUser(user);
-		setIsLogin(true);
+		console.log(signInResponse);
+		if (signInResponse?.status !== 200) {
+			toast.error(signInResponse?.error ?? 'Login failed');
+			return;
+		}
+		toast.success('Login success');
+		router.push(redirect);
+		// setUser(user);
+		// setIsLogin(true);
 	};
 
 	const logout = async (redirect?: string) => {
 		const signOutResponse = await signOut({ redirect: true, callbackUrl: redirect || routeList.home });
-		setUser(null);
-		setIsLogin(false);
+		// setUser(null);
+		// setIsLogin(false);
 	};
 
 	const register = async (userPayload: UserRegisterPayload, redirect: string = routeList.login) => {
@@ -122,15 +130,14 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 			body: JSON.stringify(userPayload),
 		});
 		const JsonParseData: StandardResponse<UserSessionPayload> = await signInResponse.json();
-		if (!JsonParseData.error) {
-			router.push(redirect || routeList.login);
+		if (JsonParseData.error) {
+			toast.error(JsonParseData.error);
 			return;
-		} 
-			console.log(JsonParseData.error);
-			// error();
-		
-		setUser(user);
-		setIsLogin(true);
+		}
+		toast.success('Register success');
+		router.push(redirect || routeList.login);
+		// setUser(user);
+		// setIsLogin(true);
 	};
 
 	useLayoutEffect(() => {

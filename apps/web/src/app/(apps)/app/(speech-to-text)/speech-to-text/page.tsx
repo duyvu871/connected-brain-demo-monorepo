@@ -21,7 +21,6 @@ async function Page() {
         <MainSidebarLayout customHeader={<></>}>
           <Playground />
         </MainSidebarLayout>
-        <ToastContainer {...(Toaster as ToastContainerProps)} />
       </AppLayout>
     );
 }
