@@ -15,6 +15,7 @@ import PDFParser from 'pdf-parse';
 export default class OCRController {
 	public static uploadFileWithoutAuth = AsyncMiddleware.asyncHandler(async (req: Request, res: Response) => {
 		try {
+			const clientId = req.query.clientId as string;
 			const file = req.file as Express.Multer.File;
 			const file_data = file.buffer;
 			let source_lang = req.query.source as string;
@@ -36,7 +37,7 @@ export default class OCRController {
 				(progress) => {
 					// const eventLabel = OCR.getLabelStatus(progress.status);
 					// eventLabel && global.__io.emit(eventLabel, progress);
-					global.__io.emit('ocr:extract-status', progress);
+					global.__io.emit(`ocr:extract-status:${clientId}`, progress);
 				}
 			);
 			if (!page) {

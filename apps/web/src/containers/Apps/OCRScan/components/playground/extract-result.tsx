@@ -20,10 +20,12 @@ import {useDebounceCallback} from 'usehooks-ts';
 import { isPDFAtom } from '@/containers/Apps/OCRScan/states/playground.ts';
 import VisualTextSegment from '@/containers/Apps/OCRScan/components/visual-text-segment.tsx';
 import dynamic from 'next/dynamic';
+import { useSession } from 'next-auth/react';
 
 const PDFViewer = dynamic(() => import('@/containers/Apps/OCRScan/components/playground/pdf-result.tsx'), { ssr: false });
 function ExtractResultContent() {
-
+	const {data: UserSession} = useSession();
+	const user = UserSession?.user;
 	const {api_route: APIRoute} = constants;
 	const {uploadedImageUrl, extractedText} = useUpload();
 	const [, setProgress] = useAtom(progressData);
@@ -47,7 +49,7 @@ function ExtractResultContent() {
 		socket.on("connect", () => {
 			console.log("socket connected");
 		});
-		socket.on("ocr:extract-status", (data: {status: string; progress: number}) => {
+		socket.on(`ocr:extract-status:${user?.id.toString() ?? ''}`, (data: {status: string; progress: number}) => {
 			// console.log("ocr:extract-status", data);
 			setProgress({
 				progress: data.progress,
@@ -65,11 +67,11 @@ function ExtractResultContent() {
 
 	return (
 		<Box className="flex flex-col justify-center items-center gap-5">
-			<Box className="flex flex-col justify-center lg:flex-row w-full" ref={extractResultRef}>
-				<Box className="p-5 bg-zinc-300">
+			<Box className="flex flex-col justify-center items-center lg:flex-row w-full rounded-xl border border-zinc-800" ref={extractResultRef}>
+				<Box className="p-5 bg-zinc-950">
 					<Box className="w-72 sm:w-[350px] flex justify-center items-center my-4 mb-6">
 						<Box className="flex justify-center items-center gap-2">
-							<h2 className="text-xl text-zinc-900 font-normal">Source image</h2>
+							<h2 className="text-xl text-zinc-300 font-normal">Source image</h2>
 							<span
 								className="text-xl text-zinc-500 flex justify-center items-center capitalize">{sourceLang} <LiaAngleDownSolid /></span>
 						</Box>
@@ -82,10 +84,11 @@ function ExtractResultContent() {
 							</Box>
 					}
 				</Box>
-				<Box className="p-5 bg-zinc-100">
+				<Box className="w-80 h-[1px] lg:h-80 lg:w-[1px] bg-zinc-700/50"/>
+				<Box className="p-5 bg-zinc-950">
 					<Box className="w-72 sm:w-[350px] flex justify-center items-center my-4 mb-6">
 						<Box className="flex justify-center items-center gap-2">
-							<h2 className="text-xl text-zinc-900 font-normal">OCR result</h2>
+							<h2 className="text-xl text-zinc-300 font-normal">OCR result</h2>
 							<span
 								className="text-xl text-zinc-500 flex justify-center items-center capitalize">{OCRLang} <LiaAngleDownSolid /></span>
 						</Box>
@@ -94,13 +97,13 @@ function ExtractResultContent() {
 						<Progress />
 					</Box>
 					<Card
-						className="bg-zinc-100 p-3"
+						className="bg-zinc-900 p-3"
 						classNames={{
 							base: 'bg-zinc-100'
 						}}
 					>
-						<Box className="flex flex-col gap-2 w-72 h-fit sm:w-[350px] sm:h-[370px] overflow-y-scroll">
-							<Box className="flex-grow text-zinc-900 p-1 text-sm">
+						<Box className="flex flex-col gap-2 w-72 h-[200px] sm:w-[350px] sm:h-[370px] overflow-y-scroll">
+							<Box className="flex-grow text-zinc-200 p-1 text-sm">
 								<pre>{extractedText}</pre>
 							</Box>
 						</Box>

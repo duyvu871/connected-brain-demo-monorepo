@@ -5,6 +5,7 @@ import useImageFromFile from '@/hooks/client/useImagePreview.ts';
 import { currentTesseractPage } from '@/containers/Apps/OCRScan/states/starter';
 import { useAtom } from 'jotai';
 import { pageStore } from '@/containers/Apps/OCRScan/states/playground.ts';
+import { useSession } from 'next-auth/react';
 
 export interface UploadContextType {
 	uploading: boolean;
@@ -34,6 +35,8 @@ export const UploadContext = createContext<UploadContextType>({
 
 export const UploadProvider = ({ children }: {children: React.ReactNode}) => {
 	const {resolveImageUrl} = useImageFromFile();
+	const {data: UserSession} = useSession();
+	const clientId = UserSession?.user?.id.toString() ?? '';
 	// upload info
 	const [uploading, setUploading] = useState(false);
 	const [uploadedImage, setUploadedImage] = useState<string | null>(null);
@@ -57,7 +60,7 @@ export const UploadProvider = ({ children }: {children: React.ReactNode}) => {
 			setUploadedImageUrl(await resolveImageUrl(file) as string);
 			setUploadStatus('uploading');
 			const response = await axios.v1.ocr.extractWithoutAuth(file, {
-				params: { source, target },
+				params: { source, target, clientId },
 				onUploadProgress: (progressEvent) => {
 					if (progressEvent.lengthComputable && progressEvent.total) {
 						setUploadProgress(Math.round(((progressEvent.loaded * 100)/(progressEvent.total))));
@@ -93,7 +96,7 @@ export const UploadProvider = ({ children }: {children: React.ReactNode}) => {
 			setUploadedImageUrl(await resolveImageUrl(file) as string);
 			setUploadStatus('uploading');
 			const response = await axios.v1.ocr.extractWithoutAuth(file, {
-				params: { source, target },
+				params: { source, target, clientId },
 				onUploadProgress: (progressEvent) => {
 					if (progressEvent.lengthComputable && progressEvent.total) {
 						setUploadProgress(Math.round(((progressEvent.loaded * 100)/(progressEvent.total))));

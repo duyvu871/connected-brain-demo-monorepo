@@ -1,0 +1,147 @@
+import React, { useEffect, useRef, useState } from 'react';
+import { Center, Flex, ScrollArea, Stack } from '@mantine/core';
+import { transcript } from '@/containers/Apps/SpeechToText/states/transcript';
+import useUID from '@/hooks/useUID';
+import { time } from '@repo/utils';
+import { Howl } from 'howler';
+import { audioFile, audioInstance } from '@/containers/Apps/SpeechToText/states/jotai';
+import { HiMiniPause, HiMiniPlay } from 'react-icons/hi2';
+import { atom, useAtom } from 'jotai';
+
+const { formatMillisecondsToMinutesSeconds } = time;
+
+interface TranscriptListItemProps {
+	speaker: string;
+	words: string;
+	start: number;
+	end: number;
+	color?: string;
+	audioId?: string;
+}
+
+const audioItemActive = atom<string | null>(null as string | null);
+
+const TranscriptListItem: React.FC<TranscriptListItemProps> = (props) => {
+	const [instance] = useAtom(audioInstance);
+	const [isPlaying, setIsPlaying] = useState<boolean>(false);
+	const [audioActive, setAudioActive] = useAtom(audioItemActive);
+	const audioInstanceRef = useRef<Howl | null>(instance);
+	const playSegment = () => {
+		const instance = global as (typeof globalThis & {
+			audioInstance?: Howl;
+		});
+		const audioInstance = instance?.audioInstance;
+		if (!audioInstance) return;
+		audioInstanceRef.current = audioInstance;
+
+		if (audioActive !== props.audioId) {
+			audioInstanceRef.current?.stop();
+		}
+		if (isPlaying) {
+
+			setAudioActive(null);
+			return;
+		}
+		if (!audioInstance) return;
+		if (!props.audioId) return;
+
+		setAudioActive(props.audioId);
+		audioInstance.play(props.audioId);
+		audioInstance.once('end', () => {
+			setAudioActive(null);
+		});
+		
+	};
+
+	useEffect(() => {
+		if (audioActive === props.audioId) {
+			setIsPlaying(true);
+		} else {
+			audioInstanceRef.current?.stop();
+			setIsPlaying(false);
+		}
+	}, [audioActive]);
+
+	return (
+		<Flex align="start" className="flex-grow h-fit w-full gap-1" direction="column" justify="center">
+			<Flex align="center" className="w-full" justify="space-between">
+				<p className="text-green-400/85 text-bold text-sm">{props.speaker ?? 'Speaker'}</p>
+				<p className="text-gray-500 text-bold text-xs">{formatMillisecondsToMinutesSeconds(props.start)}</p>
+			</Flex>
+			{/*<Tooltip*/}
+			{/*	className={'dark'}*/}
+			{/*	content={*/}
+			{/*		<Flex className="px-[2px]">*/}
+			{/*			<Box>*/}
+			{/*				/!*<Button size={'sm'}>*!/*/}
+			{/*				/!*	<HiMiniPlay />*!/*/}
+			{/*				/!*</Button>*!/*/}
+			{/*			</Box>*/}
+			{/*		</Flex>*/}
+			{/*	}*/}
+			{/*>*/}
+			<Flex align="start" justify="start">
+				<button onClick={playSegment}>{isPlaying ? <HiMiniPause className="text-red-500" /> :
+					<HiMiniPlay />}</button>
+				<p className="text-xs text-gray-300 pl-2">{props.words ?? 'Words'}</p>
+			</Flex>
+			{/*</Tooltip>*/}
+		</Flex>
+	);
+};
+
+function TranscriptList() {
+	const [genID] = useUID();
+	const [transcript_data, setTranscriptData] = useAtom(transcript);
+	const [currentFile] = useAtom(audioFile);
+	const [, setAudioInstance] = useAtom(audioInstance);
+	useEffect(() => {
+		if (currentFile) {
+			// @ts-ignore
+			window.audioInstance = new Howl({
+				src: [currentFile.url],
+				autoplay: false,
+				html5: true, // use html5 audio
+				sprite: {
+					...transcript_data?.transcript.reduce((acc, item, index) => {
+						return {
+							...acc,
+							[`audio-${currentFile.name}-${index}`]: [item.start, item.end - item.start],
+						};
+					}, {}),
+				},
+				onplay: () => {
+					console.log('onplay');
+				},
+				onpause: () => {
+					console.log('onpause');
+				},
+				onend: () => {
+					console.log('onend');
+				},
+				onseek: () => {
+				},
+			});
+		}
+	}, [currentFile]);
+	return (
+		<Center className="flex-grow w-full overflow-hidden">
+			<ScrollArea className="h-full w-full" scrollHideDelay={500} scrollbarSize={6} type="scroll">
+				<Stack align="start" className="gap-5">
+					{transcript_data?.transcript.map((item, index) => (
+						<TranscriptListItem
+							audioId={`audio-${currentFile.name}-${index}`}
+							end={item.end}
+							key={genID()}
+							speaker={item.speaker}
+							start={item.start}
+							words={item.text}
+						/>
+					))}
+				</Stack>
+			</ScrollArea>
+		</Center>
+	);
+}
+
+export default TranscriptList;

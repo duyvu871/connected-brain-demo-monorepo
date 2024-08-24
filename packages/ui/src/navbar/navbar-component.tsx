@@ -145,7 +145,7 @@ export function NavigationMenuDemo(): JSX.Element {
 				<NavigationMenuList className="flex gap-3 pl-3 sm:pl-8 md:pl-16">
 					<Link href="/" passHref>
 						<div className="flex flex-row justify-center items-center gap-2">
-							<Icons.Logo className="h-[40px] w-[40px] fill-blue-400" />
+							<Icons.Logo className="h-[40px] w-[40px] fill-zinc-200" />
 							<span className="flex flex-col justify-center items-start font-bold text-lg capitalize leading-4">
 							<span className="">Connected</span>
 							<span>Brain</span>

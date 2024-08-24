@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "set NODE_ENV=development&&set PORT=3001&&node dist/app.js",
-    "dev": "set NODE_ENV=development&&set PORT=3001&&tsup --watch --onSuccess \"node dist/app.js\"",
+    "start": "set NODE_ENV=development&&set PORT=3001&&npm run start:concurrently",
+    "dev": "set NODE_ENV=development&&set PORT=3001&&tsup --watch --onSuccess \"npm run start:concurrently\"",
+    "start:concurrently": "concurrently \"node dist/worker.js\" \" node dist/app.js\"",
     "build": "tsup && tsc-alias",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build1": "npm run clear && tsc --project tsconfig.build.json && tsc-alias",

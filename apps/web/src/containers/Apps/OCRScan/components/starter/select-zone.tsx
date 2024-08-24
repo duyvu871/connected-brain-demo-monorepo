@@ -23,19 +23,20 @@ export default function SelectZone({children}:  SelectZoneProps): React.ReactNod
 	const { isLogin } = useAuth();
 	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
+		// console.log(file)
 		if (file) {
 			let isPDF = false;
 			const fileExtension = file.name.split('.').pop()?.toLowerCase();
-			if (!isLogin && fileExtension?.includes('pdf')) {
+			if (isLogin && fileExtension?.includes('pdf') && pathName !== '/app/ocr/p') {
 				console.log('isLogin', isLogin);
 				setDialogState({
-					forwardUrl: `${routeList.login}?direct=${encodeURIComponent('/app/ocr')}`,
-					forwardTitle: 'Login to continue processing PDF extension',
+					forwardUrl: `/app/ocr/p`,
+					forwardTitle: 'Continue with playground app to continue processing PDF extension',
 					isOpened: true
 				});
 				return;
 			}
-			if (isLogin && fileExtension?.includes('pdf') && pathName === '/app/ocr/p') {
+			if (isLogin && fileExtension?.includes('pdf') && pathName !== '/app/ocr/p') {
 				isPDF = true;
 			}
 			const isValidFileType = allowedFileTypes.includes(file.type);

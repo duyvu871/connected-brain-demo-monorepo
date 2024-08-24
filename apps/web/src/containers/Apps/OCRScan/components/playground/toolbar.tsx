@@ -15,8 +15,8 @@ function Toolbar() {
 	const [OCRLang, setSelectedOcrLang] = useAtom(selectedOcrLang);
 
 	return (
-		<form className="grid w-full items-start gap-6 p-4 pt-0 max-w-[400px]">
-			<fieldset className="grid gap-6 rounded-lg border border-zinc-700 p-4">
+		<form className="grid w-full items-start gap-5 max-w-[400px]">
+			<fieldset className="grid gap-6 rounded-lg border border-zinc-800 p-4">
 				<legend className="-ml-1 px-1 text-sm font-medium">
 					Settings
 				</legend>

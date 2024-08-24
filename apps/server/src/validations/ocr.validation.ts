@@ -50,6 +50,7 @@ export default class OCRValidation {
 			.startsWith('Bearer ', 'Authorization header must start with "Bearer "'),
 	});
 	public static uploadQuery = z.object({
+		clientId: z.string().optional(),
 		source: TranslateValidation.translateIsoCode("target"),
 		target: TranslateValidation.translateIsoCode("target"),
 	});

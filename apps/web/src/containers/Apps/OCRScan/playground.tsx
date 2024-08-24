@@ -16,13 +16,12 @@ function Playground({ id }: { id?: string }): React.ReactElement {
 	}, [id, setDocId]);
 
 	return (
-		<HeaderWrapper>
-			<main className="flex-1 flex max-h-svh md:pt-16">
-				<Box className="flex-1 flex flex-col gap-3 border-t lg:border-t-0 p-4 pb-2 pt-3 lg:pt-0">
+		// <HeaderWrapper>
+				<Box className="w-full min-h-[calc(100vh_-_57px)] lg:h-[calc(100vh_-_57px)] relative flex">
 					<MainApp />
 				</Box>
-			</main>
-		</HeaderWrapper>
+
+		// </HeaderWrapper>
 	);
 }
 

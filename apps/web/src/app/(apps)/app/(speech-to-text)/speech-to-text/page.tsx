@@ -1,7 +1,5 @@
 import React from 'react';
-import Playground from '@/containers/Apps/Speech-to-text/playground.tsx';
-import { ToastContainer, type ToastContainerProps } from 'react-toastify';
-import { Toaster } from 'global/contants/defaultComponentProps.ts';
+import Playground from '@/containers/Apps/SpeechToText/playground.tsx';
 import AppLayout from '@/providers/app-provider.tsx';
 import MainSidebarLayout from '@/layouts/main-sidebar.tsx';
 import { getServerAuthSession } from '@/lib/nextauthOptions';

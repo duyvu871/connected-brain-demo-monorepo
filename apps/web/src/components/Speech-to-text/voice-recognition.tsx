@@ -112,8 +112,11 @@ function VoiceRecognition() {
 					ShowError(data.error ?? "Error getting token");
 					return;
 				}
+				const client = new assemblyai.AssemblyAI({ apiKey: '0bdf7fbca1fb45c785c95840da99147f' });
 
-				const rt = new assemblyai.RealtimeService({ token: data.token });
+				const rt = client.realtime.transcriber({
+					endUtteranceSilenceThreshold: 500
+				})
 				setRT(rt);
 
 				const texts: Record<string, string> = {};

@@ -175,14 +175,14 @@ export function CollapseMenuButton({
 					</TooltipContent>
 				</Tooltip>
 			</TooltipProvider>
-			<DropdownMenuContent align="start" side="right" sideOffset={25}>
-				<DropdownMenuLabel className="max-w-[190px] truncate">
+			<DropdownMenuContent align="start" className="bg-zinc-900 border-zinc-700" side="right" sideOffset={25}>
+				<DropdownMenuLabel className="max-w-[190px] truncate font-bold">
 					{label}
 				</DropdownMenuLabel>
 				<DropdownMenuSeparator />
 				{submenus.map(({ href, label }, index) => (
 					<DropdownMenuItem asChild key={'submenu-item-inner' + genID()}>
-						<Link className="cursor-pointer" href={href}>
+						<Link className="cursor-pointer hover:bg-zinc-800 transition-colors" href={href}>
 							<p className="max-w-[180px] truncate">{label}</p>
 						</Link>
 					</DropdownMenuItem>

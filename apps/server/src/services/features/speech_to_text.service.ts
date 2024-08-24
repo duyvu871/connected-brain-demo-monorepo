@@ -81,7 +81,7 @@ export default class SpeechToTextService {
 				resolve(audit.audio.path);
 			});
 			writeStream.on("error", (err) => {
-				console.error(err);
+				console.error('stream write', err);
 				reject(err);
 			});
 		});

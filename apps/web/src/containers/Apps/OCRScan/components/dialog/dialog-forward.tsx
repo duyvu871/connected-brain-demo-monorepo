@@ -29,10 +29,10 @@ function DialogForward() {
 					<>
 						<ModalHeader className="flex flex-col gap-1 bg-zinc-950" />
 						<ModalBody className="flex justify-center items-center w-full">
-							<Link href={dialogState.forwardUrl} passHref>
-								<Button className="bg-zinc-800 hover:bg-xinc-700" variant="default">
+							<Link className="bg-zinc-800 hover:bg-xinc-700 max-w-72 rounded-xl p-2" href={dialogState.forwardUrl} passHref>
+								{/*<Button className="bg-zinc-800 hover:bg-xinc-700 max-w-72" variant="default">*/}
 									{dialogState.forwardTitle}
-								</Button>
+								{/*</Button>*/}
 							</Link>
 						</ModalBody>
 						<ModalFooter />

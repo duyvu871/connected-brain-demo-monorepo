@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "connected-brain",
+  "private_key_id": "91dc576d1ff388c63336e90ef2ccec8d9fde7181",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDFUYjrPT4pTrMn\nFgiZ5kC7q4mg+oDeLj7Lry1QQHJT1pA6dsuY8IwNHTJXrPlv0zZ2jWY1N543/syZ\nROOAg7D4OgJ88siCwV/NToqRtQdS8b/tcYqMtE9EuNiSa8nX5tr3fiWzmxNJeefa\nbQn4T4jeD5GO3v1xKKatRnMm6jS99oJZId8HV10PqE13I+5wDCCkb6qASlVHwksK\n+wG91rLwjjaAzO/y6IoNFOpbvoi9ahjPaTmNSL/q+wEkwTOP9BXzljR5s+3GBakF\nwtct0vYmiE5FAjks418eU9ZXGYtatiCinRQS3JomQwMYlVysJhZWGXZZdD8ESGxO\nrHqtxmjnAgMBAAECggEAEKd6mnxPUFY7qctiy3aTNSPb2HH8SYR2uWNePD1MSQY9\noymesphvAbZapurLHOSjXqs9mrVIjepcI32chB7ZY4Il7pzhTqP6rY35BSZV6WrN\nK8HfE1Quspq1cNpXLXlnNud3UCsBHD0FVDrK0iIIZ9HBk+D/XDs1oj9lfb3b2MKd\nMYpCMSSjvijHEwpa9Am9bDBk4p2YQ0e7S8gi2O0uZSaNj/P24B2+CNpX/mvw/HIQ\n9Xv8T2xuNg3KlBfMY6RvtnCHHTfxjMtOMh0ql2KUs+k7PQqZbpvfHOyP2qZlX9yP\nMYwyKj6zlLz28tXCen6cwQVvZDs3i58wYvZfMiW3BQKBgQDqeIr1Q88g5ws7mVFR\nWqqhewf3Qh8c03hSaOTHLYxlUl/tqr/mc/tICWuI7bjTFiohNMyxbt7pxEtU00p8\n1lK3R6TdRRuUBDdrjdSE0ouSL0iYH5sjA98KqAWv4dVyuBCOZuOl8/+XgVH31NIH\nvQej9ZZx+oENbm2hVbeQKusZMwKBgQDXb7DRxZ9hZokojWQA9ifhI/+uebuNMw6X\nBvVFadph35PQWEhgYi5j+s346pbHnYdQFvgtKK0xABCrsuPATtLB+NOUcjb8xMwi\ng42/h5WZrLG3Yg+GeR093RX/zdu1rQoup/TGYUgoUcAd8rdmapFTjE6zfPseM4tU\nO65asaZ5fQKBgQC5nwKLVspkhuSqox7wY/HPcyIESlFtNbD8tNPhJxsNn6AX/GR9\nofYdum9qcKAwZEyoCy+9jENnF6J3nepLWDUVqd9H2Q0TKh9hw1+qYzBhY5N58xOT\nLd5mhkwySHv9nOBmi+fPGpKOs69bnx1DSRACaktXInUGWBTsc3ql5IRIZwKBgQDE\nWpQ6XXiKeb4BK/09sx1d4kWjbGg4pZRiqoDaJ0RXeENs3Un6LwJBNdKNUKLkhPtT\nT9warLxNsNWA6KcUG8OT74pH/mGHuIal3mlPa/A6BGBl2AZ2deTlAaCPab0atQBW\nzdYXCYuO1BPaN+JYgkC6eWMxzHPEbw5KU6ryFoC4sQKBgFMsfizhnTyEVoOJYTsp\nKvnxJAZuO7vjeXVTc2TvJtfqmAUNMNtPxDntoyv7PdwRLOcnkvqUKZMISPgAK1/J\nY90PQhq72FoE8XHidVldnCncypc1jGug/pITn1S2Efzv5s9ifi+6xXb6kYe2h5XF\nZKdOEBC7qr+UDNANaYrIc2n1\n-----END PRIVATE KEY-----\n",
+  "client_email": "connected-brain-s2t@connected-brain.iam.gserviceaccount.com",
+  "client_id": "115662519381452415849",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/connected-brain-s2t%40connected-brain.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

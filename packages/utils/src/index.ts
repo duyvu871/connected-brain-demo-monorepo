@@ -10,3 +10,4 @@ export * as typeUtils from './type-utils';
 export * as dateUtils from './date-utils';
 export * as constants from './constants';
 export * as colorsTheme from './colors-theme';
+export * as time from './time';

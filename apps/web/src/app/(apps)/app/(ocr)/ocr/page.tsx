@@ -9,6 +9,8 @@ import AppLayout from '@/providers/app-provider.tsx';
 import { redirect } from 'next/navigation';
 import { headers } from 'next/headers';
 import { getServerAuthSession } from '@/lib/nextauthOptions.ts';
+import MainSidebarLayout from '@/layouts/main-sidebar.tsx';
+import PlaygroundHeader from '@/containers/Apps/OCRScan/playground-header.tsx';
 
 async function Page() {
 	const session = await getServerAuthSession();
@@ -20,12 +22,14 @@ async function Page() {
 	return (
 		<>
 			<AppLayout>
+				<MainSidebarLayout customHeader={<PlaygroundHeader />}>
 					<UploadProvider>
-						<ProcessProvider>
-							<StarterScreen />
-						</ProcessProvider>
-					</UploadProvider>
-				<ToastContainer {...(Toaster as ToastContainerProps)} />
+							<ProcessProvider>
+								<StarterScreen />
+							</ProcessProvider>
+						</UploadProvider>
+					<ToastContainer {...(Toaster as ToastContainerProps)} />
+				</MainSidebarLayout>
 			</AppLayout>
 		</>
 	);

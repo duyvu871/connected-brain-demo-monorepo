@@ -56,6 +56,8 @@ module.exports = {
   ignorePatterns: ["node_modules/", "dist/"],
   // add rules configurations here
   rules: {
+    "import/no-extraneous-dependencies": "off",
+    "@typescript-eslint/no-floating-promises": "off",
     "jsx-a11y/label-has-associated-control": "off",
     "jsx-a11y/media-has-caption": "off",
     "jsx-a11y/no-static-element-interactions": "off",

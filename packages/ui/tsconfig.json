@@ -3,10 +3,11 @@
   "include": ["."],
   "compilerOptions": {
     "outDir": "dist",
-    "rootDir": "src",
+//    "rootDir": "src",
     "baseUrl": "./",
     "paths": {
-      "@ui/*": ["./src/*"]
+      "@ui/*": ["./src/*"],
+      "web/*": ["../../apps/web/src/*"]
     }
   },
   "exclude": ["dist", "build", "node_modules"]

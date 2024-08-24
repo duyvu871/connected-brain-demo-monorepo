@@ -1,11 +1,16 @@
 import React from 'react';
 import { cn } from '@repo/utils';
+import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 import { Button } from '@ui/shadcn-ui/ui/button';
 
 const borderDashStyle = 'border-0 border-dashed border-gray-800';
 const roundedOneFourth = 'relative after:border-0 after:border-dashed after:border-gray-800 after:rounded-[100%_0%_0%_100%_/_100%_0%_100%_0%] after:w-10 after:h-10 after:content-normal after:absolute after:bottom-0 after:right-0';
 
 function Background(): JSX.Element {
+
+	const userSession = useSession();
+
 	return (
 		<div className="px-4 md:px-20 pt-10 select-none  ">
 			<div className="flex flex-col">
@@ -95,11 +100,14 @@ function Background(): JSX.Element {
 										'border-r-[1px] border-l-[1px] p-8 ',
 									)}>
 								<span className="capitalize text-gray-400 text-2xl flex justify-center items-center font-semibold">
-									<Button className="capitalize flex justify-center items-center p-6 px-4 font-extrabold rounded-2xl rounded-tr-[0] rounded-bl-[0] text-xl bg-gray-200 text-[#626467] text-gray-800 transition-colors hover:bg-opacity-90"
-													variant="outline">
-										Start Now
-										{/*<IoIosArrowRoundForward className={'text-4xl'} />*/}
-									</Button>
+									<Link href={userSession.status === 'authenticated' ? '/explore' : '/auth/method?type=register'} passHref>
+											<Button
+												className="capitalize flex justify-center items-center p-6 px-4 font-extrabold rounded-2xl rounded-tr-[0] rounded-bl-[0] text-xl bg-gray-200 text-zinc-800 transition-colors hover:bg-opacity-90"
+												variant="outline">
+												Start Now
+														{/*<IoIosArrowRoundForward className={'text-4xl'} />*/}
+											</Button>
+									</Link>
 								</span>
 								</div>
 							</div>

@@ -11,3 +11,4 @@ export const dateIsBetween = (startDate: string, endDate: string): boolean => {
 
     return start < now && now < end;
 };
+

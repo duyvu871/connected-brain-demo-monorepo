@@ -6,7 +6,7 @@ import * as Icons from "@ui/Icons";
 
 function Footer(): React.ReactNode {
     return (
-        <footer className="dark:bg-gray-900 text-white ">
+        <footer className="dark:bg-zinc-950 text-white ">
             <div className="mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8">
                 <div className="md:flex md:justify-between md:items-start gap-2">
                     <div className="mb-6 md:mb-0 h-full py-5">
@@ -16,7 +16,7 @@ function Footer(): React.ReactNode {
                             passHref
                         >
                             <div className="flex flex-row justify-center items-center gap-2">
-                                <Icons.Logo className="h-[40px] w-[40px] fill-blue-400" />
+                                <Icons.Logo className="h-[40px] w-[40px] fill-zinc-50" />
                                 <span className="flex flex-col justify-center items-start font-bold text-lg capitalize leading-4">
                                   <span className="">Connected</span>
                                   <span>Brain</span>
@@ -30,7 +30,7 @@ function Footer(): React.ReactNode {
                             <h2 className="mb-6 text-sm font-semibold text-gray-200 uppercase dark:text-white">
                                 Resources
                             </h2>
-                            <ul className="text-gray-500 dark:text-gray-400 font-medium">
+                            <ul className="text-gray-500 dark:text-zinc-400 font-medium">
                                 <li className="mb-4">
                                     <a className="hover:underline" href="/">
                                         Connected Brain
@@ -45,7 +45,7 @@ function Footer(): React.ReactNode {
                             <h2 className="mb-6 text-sm font-semibold text-gray-200 uppercase dark:text-white">
                                 Follow us
                             </h2>
-                            <ul className="text-gray-500 dark:text-gray-400 font-medium">
+                            <ul className="text-zinc-500 dark:text-zinc-400 font-medium">
                                 <li className="mb-4">
                                     <Link className="hover:underline " href="#" passHref>
                                         Github
@@ -59,10 +59,10 @@ function Footer(): React.ReactNode {
                             </ul>
                         </div>
                         <div>
-                            <h2 className="mb-6 text-sm font-semibold text-gray-200 uppercase dark:text-white">
+                            <h2 className="mb-6 text-sm font-semibold text-zinc-200 uppercase dark:text-white">
                                 Legal
                             </h2>
-                            <ul className="text-gray-500 dark:text-gray-400 font-medium">
+                            <ul className="text-zinc-500 dark:text-zinc-400 font-medium">
                                 <li className="mb-4">
                                     <Link className="hover:underline" href="#">
                                         Privacy Policy
@@ -76,38 +76,38 @@ function Footer(): React.ReactNode {
                             </ul>
                         </div>
                     </div>
-                    <div className="md:hidden border-b-[1px] border-gray-800 w-full  my-3 mb-0" />
+                    <div className="md:hidden border-b-[1px] border-zinc-800 w-full  my-3 mb-0" />
                     <div className="w-full flex flex-col justify-center items-start md:max-w-xs">
-            <span className="text-md text-gray-200 mb-5 mt-4 md:mt-0">
+            <span className="text-md text-zinc-200 mb-5 mt-4 md:mt-0">
               Subscribe to our newsletter
             </span>
-                        <span className="text-xs text-gray-500 dark:text-gray-400 mb-2">
+                        <span className="text-xs text-zinc-500 dark:text-zinc-400 mb-2">
               Stay updated on new releases and features, guides, and case
               studies
             </span>
                         <div
                             className={cn(
-                                "w-full flex justify-between items-center gap-2 rounded-lg p-1 border-[1px] border-gray-800",
-                                `bg-[${colorsTheme.colors.input}]`
+                                "w-full flex justify-between items-center gap-2 rounded-lg p-1 border-[1px] border-zinc-800",
+                                `bg-zinc-800`
                             )}
                         >
                             <input
                                 className={cn(
                                     "w-full px-1 outline-none bg-opacity-0",
-                                    `bg-gray-600`
+                                    `bg-zinc-800`
                                 )}
                                 placeholder="Your email"
                                 type="email"
                             />
-                            <button className="w-fit px-2 p-1 bg-gray-600 transition-all rounded-md text-white font-semibold hover:bg-gray-500 dark:bg-blue-500">
+                            <button className="w-fit px-2 p-1 bg-zinc-600 transition-all rounded-md text-white font-semibold hover:bg-gray-500 dark:bg-zinc-500">
                                 Subscribe
                             </button>
                         </div>
                     </div>
                 </div>
-                <hr className="my-6 border-0 border-b-[1px] border-gray-800 sm:mx-auto dark:border-gray-700 lg:my-8" />
+                <hr className="my-6 border-0 border-b-[1px] border-zinc-800 sm:mx-auto dark:border-zinc-700 lg:my-8" />
                 <div className="sm:flex sm:items-center sm:justify-between">
-          <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">
+          <span className="text-sm text-zinc-500 sm:text-center dark:text-zinc-400">
             © 2024{" "}
               <a className="hover:underline" href="/">
               ConnectedBrain™
@@ -116,7 +116,7 @@ function Footer(): React.ReactNode {
           </span>
                     <div className="flex mt-4 sm:justify-center sm:mt-0">
                         <Link
-                            className="text-gray-500 hover:text-gray-900 dark:hover:text-white"
+                            className="text-zinc-500 hover:text-zinc-900 dark:hover:text-white"
                             href="#"
                         >
                             <svg
@@ -135,7 +135,7 @@ function Footer(): React.ReactNode {
                             <span className="sr-only">Facebook page</span>
                         </Link>
                         <Link
-                            className="text-gray-500 hover:text-gray-900 dark:hover:text-white ms-5"
+                            className="text-zinc-500 hover:text-zinc-900 dark:hover:text-white ms-5"
                             href="#"
                         >
                             <svg
@@ -150,7 +150,7 @@ function Footer(): React.ReactNode {
                             <span className="sr-only">Discord community</span>
                         </Link>
                         <Link
-                            className="text-gray-500 hover:text-gray-900 dark:hover:text-white ms-5"
+                            className="text-zinc-500 hover:text-zinc-900 dark:hover:text-white ms-5"
                             href="#"
                         >
                             <svg
@@ -169,7 +169,7 @@ function Footer(): React.ReactNode {
                             <span className="sr-only">Twitter page</span>
                         </Link>
                         <Link
-                            className="text-gray-500 hover:text-gray-900 dark:hover:text-white ms-5"
+                            className="text-zinc-500 hover:text-zinc-900 dark:hover:text-white ms-5"
                             href="#"
                         >
                             <svg
@@ -188,7 +188,7 @@ function Footer(): React.ReactNode {
                             <span className="sr-only">GitHub account</span>
                         </Link>
                         <Link
-                            className="text-gray-500 hover:text-gray-900 dark:hover:text-white ms-5"
+                            className="text-zinc-500 hover:text-zinc-900 dark:hover:text-white ms-5"
                             href="#"
                         >
                             <svg

@@ -43,7 +43,7 @@ export function LoginForm(props: PaperProps) {
 		// handle form submission
 		return handleSubmit((value) => {
 			// call login function
-			login(value, direct ?? '/explore');
+			login(value, direct || '/explore');
 			console.log(value);
 		}, (errors) => {
 			console.log(errors);
