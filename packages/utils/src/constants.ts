@@ -3,6 +3,9 @@ const api_route = {
 		feature: {
 			OCR: {
 				socket: '/socket/v1/feature/ocr',
+			},
+			SPEECH_TO_TEXT: {
+				socket: '/socket/v1/feature/s2t',
 			}
 		}
 	}
@@ -24,6 +27,16 @@ const socket_event = {
 			LOADING_TESSERACT_CORE: 'ocr:loading_tesseract_core',
 			DONE: 'ocr:done',
 		},
+	SPEECH_TO_TEXT: {
+		PROCESS_AUDIO: 'processAudio',
+		UPLOAD: 'speech_to_text:upload',
+		EXTRACT: 'speech_to_text:extract',
+		PROGRESS: 'speech_to_text:progress',
+		STATUS: 'speech_to_text:status',
+		CANCEL: 'speech_to_text:cancel',
+		RESULT: 'speech_to_text:result',
+		DONE: 'speech_to_text:done',
+	}
 };
 
 export { api_route, socket_event };

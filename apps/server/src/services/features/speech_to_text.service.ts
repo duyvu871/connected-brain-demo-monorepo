@@ -6,9 +6,21 @@ import ApiError from '@/helpers/ApiError';
 import { HttpStatusCode } from '@/helpers/http_status_code';
 import { MakeRequired } from '@/types/helper';
 import { Request } from 'express';
+import { Server } from 'socket.io';
+import { api_route, socket_event } from '@repo/utils/constants';
 // import { storage } from '@/configs/firebase';
 
 export default class SpeechToTextService {
+	public static connection(io: Server) {
+		console.log('S2T socket connected', api_route.API.feature.SPEECH_TO_TEXT.socket);
+		io.of(api_route.API.feature.SPEECH_TO_TEXT.socket).on('connection', (socket) => {
+			console.log('user connected to speech to text');
+			socket.on('disconnect', () => {
+				console.log('user disconnected');
+			});
+		});
+
+	}
 	// create database repo to store audio record
 	public static async create_database_repo(originName: string, user: string|ObjectId): Promise<NonNullable<IS2t>> {
 		const newRepo = await S2t.create({

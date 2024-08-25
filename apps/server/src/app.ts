@@ -5,7 +5,7 @@ import helmet from 'helmet';
 import path from 'path';
 import dotenv from 'dotenv';
 import * as console from "node:console";
-import env, { loadEnv } from '@/configs/env';
+import { loadEnv } from '@/configs/env';
 import * as process from 'node:process';
 import * as http from 'node:http';
 import * as io from 'socket.io';
