@@ -47,7 +47,9 @@ export function LoginForm(props: PaperProps) {
 			console.log(value);
 		}, (errors) => {
 			console.log(errors);
-			toast.error(Object.values(errors).join('\n'));
+			toast.error(Object.values(errors).map(item => {
+				return item.message;
+			}).join('\n'));
 		});
 	};
 
