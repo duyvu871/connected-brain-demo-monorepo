@@ -49,7 +49,7 @@ export function LoginForm(props: PaperProps) {
 			console.log(errors);
 			toast.error(Object.values(errors).map(item => {
 				return item.message;
-			}).join('\n'));
+			}).join(', '));
 		});
 	};
 
@@ -103,14 +103,15 @@ export function LoginForm(props: PaperProps) {
 				</Stack>
 				<Group justify="space-between" mt="lg">
 					<Checkbox label="Remember me" />
-					<Anchor component="button" onClick={handleForgotPassword} size="sm">
+					<div className="text-xs cursor-pointer text-zinc-400 hover:text-zinc-500 hover:underline transition-colors" onClick={handleForgotPassword}>
 						Forgot password?
-					</Anchor>
+					</div>
 				</Group>
 				<Group justify="space-between" mt="xl">
-					<Anchor c="dimmed" component="button" onClick={handleRegister} size="xs" type="button">
+					<div className="text-xs cursor-pointer text-zinc-400 hover:text-zinc-500 hover:underline transition-colors"
+							 onClick={handleRegister}>
 						{'Don\'t have an account? Register'}
-					</Anchor>
+					</div>
 					<Button radius="md" type="submit">
 						{upperFirst('login')}
 					</Button>
