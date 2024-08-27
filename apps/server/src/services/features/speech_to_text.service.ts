@@ -8,6 +8,7 @@ import { MakeRequired } from '@/types/helper';
 import { Request } from 'express';
 import { Server } from 'socket.io';
 import { api_route, socket_event } from '@repo/utils/constants';
+import path from 'path';
 // import { storage } from '@/configs/firebase';
 
 export default class SpeechToTextService {
@@ -34,7 +35,8 @@ export default class SpeechToTextService {
 	// create audit and place to storage
 	public static async create_audit(id: string|ObjectId) {
 		//create directory
-		const directoryPath = `${AppConfig.path.storage}/Assets/s2t/${id.toString()}`
+
+		const directoryPath = path.join(process.cwd(), `/storage/Assets/s2t/${id.toString()}`)
 		const relativePath =  `/storage/Assets/s2t/${id.toString()}`
 		const createStorageDirectory = await FileStorageService.create_directory(directoryPath);
 		//create audit file
@@ -70,7 +72,7 @@ export default class SpeechToTextService {
 	) => {
 		return new Promise((resolve, reject) => {
 			const writeStream = FileStorageService.create_write_stream(
-				AppConfig.app_root + audit.audio.path,
+				path.join(process.cwd(), audit.audio.path)
 			);
 
 			const file = req.file as Express.Multer.File;
