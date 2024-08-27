@@ -10,7 +10,7 @@ function StarterScreen() {
 	return (
 		<Flex className="gap-5" direction="column">
 			<Flex align="center" className="gap-5" direction="column" justify="center">
-				<Title className="text-3xl" fw="bold" order={1}>Start {activeTab}</Title>
+				<Title className="text-3xl text-zinc-100" fw="bold" order={1}>Start {activeTab}</Title>
 				<Title className="text-gray-400" fw="normal" order={3}>
 					Click the button below to begin recording your audio.
 				</Title>
@@ -19,7 +19,7 @@ function StarterScreen() {
 				<Tabs
 					aria-label="Dynamic tabs"
 					classNames={{
-						tabList: 'bg-zinc-800',
+						tabList: 'bg-zinc-900',
 						cursor: 'dark:bg-zinc-700',
 					}}
 					onSelectionChange={setActiveTab as any}

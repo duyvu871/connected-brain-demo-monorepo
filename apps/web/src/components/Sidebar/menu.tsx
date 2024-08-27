@@ -19,6 +19,7 @@ import useUID from "@/hooks/useUID";
 import { signOut } from 'next-auth/react';
 import { useAtom } from 'jotai/index';
 import { theme as storageTheme } from '@/states/global/theme.ts';
+import ConfirmDialog from '@/components/Navigate/confirm-dialog.tsx';
 
 interface MenuProps {
 	isOpen: boolean | undefined;
@@ -118,25 +119,28 @@ export function Menu({ isOpen }: MenuProps) {
 						<TooltipProvider disableHoverableContent>
 							<Tooltip delayDuration={100}>
 								<TooltipTrigger asChild>
-									<Button
-										className="w-full justify-center h-10 mt-5 dark:bg-zinc-50 bg-zinc-900 text-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-200 hover:bg-zinc-800 border-zinc-200 dark:border-zinc-200"
-										onClick={() => {
-											void signOut();
-										}}
-										variant="default"
+									<ConfirmDialog
+										description="Are you sure you want to sign out?"
+										onConfirm={() => {void signOut();}}
+										title="Sign out"
 									>
+										<Button
+											className="w-full justify-center h-10 mt-5 dark:bg-zinc-50 bg-zinc-900 text-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-200 hover:bg-zinc-800 border-zinc-200 dark:border-zinc-200"
+											variant="default"
+										>
                     <span className={cn(isOpen === false ? "" : "mr-4")}>
                       <LogOut className="text-zinc-950" size={18} />
                     </span>
-										<p
-											className={cn(
-												"whitespace-nowrap text-zinc-950",
-												isOpen === false ? "opacity-0 hidden" : "opacity-100"
-											)}
-										>
-											Sign out
-										</p>
-									</Button>
+											<p
+												className={cn(
+													"whitespace-nowrap text-zinc-950",
+													isOpen === false ? "opacity-0 hidden" : "opacity-100"
+												)}
+											>
+												Sign out
+											</p>
+										</Button>
+									</ConfirmDialog>
 								</TooltipTrigger>
 								{isOpen === false && (
 									<TooltipContent className="bg-zinc-800 bg-opacity-70 backdrop-blur" side="right">Sign out</TooltipContent>

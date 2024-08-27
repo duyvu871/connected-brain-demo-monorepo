@@ -13,8 +13,8 @@ function TranscriptFeatureTab() {
 					aria-label="Options"
 					className="w-full"
 					classNames={{
-						tabList: 'w-full bg-gray-800',
-						cursor: 'dark:bg-gray-700',
+						tabList: 'w-full bg-zinc-950 rounded-lg border border-zinc-800',
+						cursor: 'dark:bg-zinc-900 rounded-lg',
 					}}
 					onSelectionChange={setSelected as any}
 					selectedKey={selected}

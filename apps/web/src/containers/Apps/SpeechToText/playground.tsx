@@ -51,8 +51,8 @@ function AppS2T() {
 	}, [currentSection]);
 	return (
 		<DynamicContentLoaded>
-			<Center className="bg-zinc-950 h-[calc(100vh_-_57px)]" p="md">
-				<Flex align="center" className="gap-5" direction="row" h="100%" justify="center" w="100%">
+			<Center className="bg-zinc-950 h-[calc(100vh_-_59px)]">
+				<Flex align="center" className="gap-0" direction="row" h="100%" justify="center" w="100%">
 					<Flex align="center" className="rounded-[2rem] gap-5 flex-grow-[7]" direction="column" h="100%"
 								justify="center">
 						{
@@ -66,7 +66,7 @@ function AppS2T() {
 										<Flex align="center" className="gap-5 flex-grow w-full h-full"
 													direction="row"
 													justify="center">
-											<Flex className="w-full h-full bg-zinc-800 rounded-2xl ">
+											<Flex className="w-full h-full bg-zinc-950 rounded-xl ">
 												<TranscriptWrapper />
 											</Flex>
 										</Flex>
@@ -76,8 +76,8 @@ function AppS2T() {
 						}
 					</Flex>
 					{
-						isSectionLoad ? <Center className="max-w-md min-w-96 flex-grow-[3]" h="100%" w="1/2">
-							<Flex align="center" className="flex-grow h-full bg-zinc-800 rounded-2xl p-5 gap-5" direction="column"
+						isSectionLoad ? <Center className="max-w-md min-w-96 flex-grow-[3] border-0 border-l border-zinc-800" h="100%" w="1/2">
+							<Flex align="center" className="flex-grow h-full bg-zinc-950 rounded-2xl p-5 gap-3" direction="column"
 										justify="start">
 								<TranscriptSearch />
 								<TranscriptFeatureTab />

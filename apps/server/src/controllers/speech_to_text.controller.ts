@@ -11,6 +11,8 @@ import S2TValidation from '@/validations/s2t.validation';
 import { z } from 'zod';
 import { deFlattenObject, flattenObject } from '@/utils/base';
 import CloudSpeech from '@/services/google-cloud/cloud_speech.service';
+import { ConvertToWavTask } from '@/tasks/convert_to_wav';
+import SpeechToText from '@/tasks/speech_to_text';
 
 export default class SpeechToTextController {
 		public static upload_file = AsyncMiddleware.asyncHandler(async (req: Request, res: Response) => {

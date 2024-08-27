@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useRef } from 'react';
+import React, { memo, useCallback, useEffect, useRef } from 'react';
 import { Center, Flex } from '@mantine/core';
 import { Tooltip } from '@nextui-org/react';
 import { cn } from '@repo/utils';
@@ -38,8 +38,8 @@ function TranscriptPlayer() {
 	const transcriptItemRef = useRef<Record<string, HTMLDivElement>>({});
 
 	const { start: startInterval, stop: stopInterval } = useInterval(
-		() => setCurrentTime((s) => s + 1000),
-		1000,
+		() => setCurrentTime((s) => s + 200),
+		200,
 	);
 
 	useEffect(() => {
@@ -79,16 +79,17 @@ function TranscriptPlayer() {
 					setCurrentTime(0);
 				},
 				onseek: (soundId) => {
-					// console.log('onseek', soundId);
-					const currentSeek = soundRef.current?.seek() as number * 1000;
-					setCurrentTime(currentSeek);
-					const findActiveSentence = transcriptList?.transcript.findIndex((sentence) => {
-						return currentSeek >= sentence.start && currentSeek <= sentence.end;
-					});
-					// console.log('findActiveSentence: ', findActiveSentence);
-					if (findActiveSentence !== -1 && `audio-${currentFile.name}-${findActiveSentence}` !== activeSentence) {
-						setActiveTranscriptSentence(`audio-${currentFile.name}-${findActiveSentence}`);
-					}
+					// // console.log('onseek', soundId);
+					// const currentSeek = soundRef.current?.seek() as number * 1000;
+					// console.log('currentSeek', currentSeek);
+					// // setCurrentTime(currentSeek);
+					// const findActiveSentence = transcriptList?.transcript.findIndex((sentence) => {
+					// 	return currentSeek >= sentence.start && currentSeek <= sentence.end;
+					// });
+					// // console.log('findActiveSentence: ', findActiveSentence);
+					// if (findActiveSentence !== -1 && `audio-${currentFile.name}-${findActiveSentence}` !== activeSentence) {
+					// 	// setActiveTranscriptSentence(`audio-${currentFile.name}-${findActiveSentence}`);
+					// }
 				},
 			});
 			setAudioPlayerInstance(soundRef.current);
@@ -168,9 +169,9 @@ function TranscriptPlayer() {
 			<Tooltip className="dark" classNames={{ content: 'text-md' }} content="Edit">
 				<Center
 					className={cn(
-						'border-solid border-[2px] border-gray-600/70 w-8 h-8 rounded-full bg-gray-400/40 hover:bg-gray-400/70 transition-all cursor-pointer',
+						'w-8 h-8 rounded-full hover:bg-gray-400/70 transition-all cursor-pointer',
 						{
-							'bg-gray-400/70': enableEdit,
+							'': enableEdit,
 						},
 					)}
 					onClick={toggleEdit}
@@ -217,7 +218,7 @@ function TranscriptPlayer() {
 			<Tooltip className="dark" classNames={{ content: 'text-md' }} content="Share">
 				<Center
 					className={cn(
-						'border-solid border-[2px] border-gray-600/70 w-8 h-8 rounded-full bg-gray-400/40 hover:bg-gray-400/70 transition-all cursor-pointer')}
+						'w-8 h-8 rounded-full hover: transition-all cursor-pointer')}
 				>
 					<PiShareFill className="text-green-400" size={20} />
 				</Center>

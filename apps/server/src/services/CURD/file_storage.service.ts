@@ -127,7 +127,7 @@ export default class FileStorageService {
 	public static async convert_to_wav(file_name: string) {
 			const file = ffmpeg(file_name);
 			const output_file = file_name.replace('.mp3', '.wav');
-			return await new Promise((resolve, reject) => {
+			return new Promise((resolve, reject) => {
 				file
 					.inputFormat('mp3')
 					.audioCodec('pcm_s16le')

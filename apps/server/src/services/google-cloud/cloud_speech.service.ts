@@ -163,7 +163,7 @@ public static async getTemporaryToken(): Promise<string> {
 		> {
 		try {
 			const storage = new Storage({
-				keyFilename: './services-config/connected-brain-91dc576d1ff3.json',
+				keyFilename: './services-config/connected-brain-3772997d6ba0.json',
 			});
 			const bucket = storage.bucket(bucketName);
 			const destination = fileName ? `${specialPath}/${fileName}` : fileName;

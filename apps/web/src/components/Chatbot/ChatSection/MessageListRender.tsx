@@ -49,14 +49,14 @@ const ChatMessage = forwardRef<
 			'gap-2': !isAssistant,
 		})} ref={ref} {...props}>
 			{isAssistant ? <div className="h-8 w-8 rounded-full pt-5">
-					<Logo className='h-8 w-8 fill-blue-400' />
+					<Logo className='h-8 w-8 fill-zinc-100' />
 				</div> : null}
 			<div className={messageListClass}>
 				<div className={cn(
 					'h-fit max-w-full rounded-xl p-5',
 					{
-						'bg-zinc-800 text-zinc-300 w-[calc(100vw_-_70px)] min-[450px]:w-full': !isAssistant,
-						'w-[calc(100vw_-_43px)] sm:w-full': isAssistant,
+						'bg-zinc-800 text-zinc-300 w-[calc(100vw_-_70px)] w-fit sm:max-w-[calc(100%_*_3_/_4)] md:max-w-[60%]': !isAssistant,
+						'w-[calc(100vw_-_43px)]': isAssistant,
 					}
 				)}>
 					<div

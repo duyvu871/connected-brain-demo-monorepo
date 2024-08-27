@@ -1,5 +1,5 @@
 'use client';
-import React, { Suspense } from 'react';
+import React, { lazy, Suspense } from 'react';
 
 import SkeletonChatHistory from '@/components/SkeletonLoad/ChatHistory';
 import SkeletonChatSection from '@/components/SkeletonLoad/ChatSection';
@@ -7,7 +7,7 @@ import '@/styles/markdownParser.css';
 import ChatHistory from '@/components/Chatbot/ChatHistory';
 import HistoryModal from '@/components/Chatbot/Modals/HistoryModal';
 
-const LazyChatSection = React.lazy(
+const LazyChatSection = lazy(
 	() => import('@/components/Chatbot/ChatSection/index'),
 );
 

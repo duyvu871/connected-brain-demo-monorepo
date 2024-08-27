@@ -39,7 +39,7 @@ function LaunchScreen() {
 		<div className="w-full h-full flex justify-center items-center">
 			<div className="flex flex-col justify-center items-center gap-5">
 				<div className="w-full flex justify-center items-center my-10">
-					<Logo className="w-28 h-28 text-blue-400 fill-blue-400" />
+					<Logo className="w-28 h-28 text-blue-400 fill-zinc-100" />
 				</div>
 				<div className="flex justify-center items-center text-3xl my-5">
 					<span>Xin chào👋! Tôi có thể giúp gì cho bạn?</span>

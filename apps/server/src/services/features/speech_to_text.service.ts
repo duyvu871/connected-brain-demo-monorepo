@@ -19,7 +19,6 @@ export default class SpeechToTextService {
 				console.log('user disconnected');
 			});
 		});
-
 	}
 	// create database repo to store audio record
 	public static async create_database_repo(originName: string, user: string|ObjectId): Promise<NonNullable<IS2t>> {

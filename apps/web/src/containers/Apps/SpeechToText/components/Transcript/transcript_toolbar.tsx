@@ -5,7 +5,7 @@ import TranscriptPlayerTimeline from '@/containers/Apps/SpeechToText/components/
 
 function TranscriptToolbar() {
 	return (
-		<Flex align="center" className="flex-col-reverse pb-2 lg:flex-row lg:pb-0 h-fit w-full max-w-3xl rounded-[1rem] bg-gray-600/50 pl-10 pr-5 select-none"
+		<Flex align="center" className="flex-col-reverse pb-2 xl:flex-row h-fit w-full max-w-3xl pl-10 pr-5 py-5 gap-5 select-none"
 					justify="space-between">
 			<TranscriptPlayer />
 			<TranscriptPlayerTimeline />

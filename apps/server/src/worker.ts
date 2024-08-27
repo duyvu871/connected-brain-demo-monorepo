@@ -8,9 +8,12 @@ import dotenv from 'dotenv';
 import { ConvertToWavTask } from '@/tasks/convert_to_wav';
 import SpeechToText from '@/tasks/speech_to_text';
 import { loadEnv } from '@/configs/env';
+import path from 'path';
+
+const isProduction = process.env.NODE_ENV === 'production';
 
 const DOTENV = dotenv.config({
-	path: process.cwd() + '/.env',
+	path: path.resolve(__dirname, isProduction ? '../.env' : '../.env.example') //process.cwd() + '/.env',
 });
 
 loadEnv(DOTENV.parsed);
@@ -40,9 +43,11 @@ export async function workerHandler(job: Job<WorkerJob>){
 const redisInstance = new Redis({
 	host: process.env.REDIS_HOST,
 	port: parseInt(process.env.REDIS_PORT as string),
-	password: process.env.REDIS_PASSWORD,
-	username: process.env.REDIS_USERNAME,
 	maxRetriesPerRequest: null,
+	...(isProduction ? {
+		password: process.env.REDIS_PASSWORD,
+		username: process.env.REDIS_USERNAME
+	} : {}),
 });
 
 const workerQueue = new Worker('background_task', workerHandler, {

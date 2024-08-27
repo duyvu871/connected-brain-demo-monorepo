@@ -46,11 +46,15 @@ export default async function SpeechToText(data: ConvertToWavJob['job_data']) {
 			transcript: transcripts_parse.sentences,
 			status: 'done'
 		});
-		global.__io.emit(`s2t:transcript:${data.id}`, transcripts_parse.sentences);
+		console.log('global', global.__io);
+		// global.__io.emit(`s2t:transcript:${data.id}`, transcripts_parse.sentences);
 		return 'DONE';
 	}
 	catch (error: any) {
 		console.error(error);
+		await SpeechToTextService.update_audit(data.id, {
+			status: 'error'
+		});
 		return 'ERROR';
 	}
 }

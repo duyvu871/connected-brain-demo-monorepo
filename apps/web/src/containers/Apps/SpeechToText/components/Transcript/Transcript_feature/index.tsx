@@ -4,7 +4,7 @@ import { transcriptActiveFeature } from '@/containers/Apps/SpeechToText/states/t
 
 const FeatureComponents = {
 	Transcript: lazy(() => import('./transcript_list')),
-	Notes: lazy(() => import('./transcript_note')),
+	Notes: lazy(() => import('./transcript-note-area')),
 	Speaker: lazy(() => import('./transcript_speaker')),
 };
 

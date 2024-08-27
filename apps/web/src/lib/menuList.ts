@@ -54,16 +54,16 @@ export function getMenuList(pathname: string): Group[] {
 			groupLabel: "Apps",
 			menus: [
 				{
-					href: "",
+					href: "/app/chatbot",
 					label: "Chatbot",
 					active: pathname.includes("/app/chatbot"),
 					icon: MessageSquareQuote,
 					submenus: [
-						{
-							href: "/app/chatbot",
-							label: "New Session",
-							active: false
-						},
+						// {
+						// 	href: "/app/chatbot",
+						// 	label: "New Session",
+						// 	active: false
+						// },
 					]
 				},
 				{
