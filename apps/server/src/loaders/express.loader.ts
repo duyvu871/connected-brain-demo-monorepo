@@ -9,6 +9,7 @@ import AppConfig from "@/configs/app.config";
 // import morgan from 'morgan';
 import * as process from 'node:process';
 import { morganMiddleware } from '@/configs/morgan';
+import path from 'path';
 
 export default ({app}: {app: Express}) => {
     // if (process.env.NODE_ENV === 'development') {
@@ -34,7 +35,8 @@ export default ({app}: {app: Express}) => {
     app.use(bodyParser.text()); // parse text/plain
     app.use(cookieParser()); // parse cookies
     app.use(flash()); // flash messages
-    app.use('/storage', express.static(AppConfig.path.storage)); // serve static files
+    app.use('/storage', express.static(path.join(process.cwd(), '/storage'))); // serve static files
+    console.log('storage path: ', path.join(process.cwd(), '/storage'));
     console.log(AppConfig.path.storage);
     LoadRoutes({app}); // load routes
 };

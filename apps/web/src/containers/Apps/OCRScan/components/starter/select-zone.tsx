@@ -36,7 +36,7 @@ export default function SelectZone({children}:  SelectZoneProps): React.ReactNod
 				});
 				return;
 			}
-			if (isLogin && fileExtension?.includes('pdf') && pathName !== '/app/ocr/p') {
+			if (isLogin && fileExtension?.includes('pdf')) {
 				isPDF = true;
 			}
 			const isValidFileType = allowedFileTypes.includes(file.type);

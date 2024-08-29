@@ -18,6 +18,8 @@ export default class OCRController {
 			const clientId = req.query.clientId as string;
 			const file = req.file as Express.Multer.File;
 			const file_data = file.buffer;
+			// console.log(`ocr:extract-status:${clientId}`);
+
 			let source_lang = req.query.source as string;
 			let target_lang = req.query.target as string;
 			if (
@@ -63,6 +65,7 @@ export default class OCRController {
 	public static uploadFile = AsyncMiddleware.asyncHandler(async (req: Request, res: Response) => {
 		try {
 			const file = req.file as Express.Multer.File;
+			const clientId = req.query.clientId as string;
 			const file_data = file.buffer;
 			const file_extension = file.originalname.split('.').pop();
 			const file_type = file.mimetype;
@@ -119,8 +122,6 @@ export default class OCRController {
 					if (err) console.log(err)
 					else console.log(info);
 				});
-
-
 			} else {
 				const page = await OCR.processImage(
 					file_data,
@@ -128,7 +129,7 @@ export default class OCRController {
 					(progress) => {
 						// const eventLabel = OCR.getLabelStatus(progress.status);
 						// eventLabel && global.__io.emit(eventLabel, progress);
-						global.__io.emit('ocr:extract-status', progress);
+						global.__io.emit(`ocr:extract-status:${clientId}`, progress);
 					}
 				);
 				if (!page) {

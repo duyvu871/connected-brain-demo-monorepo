@@ -4,10 +4,10 @@ module.exports = {
 			name: 'connected-brain-front-end',
 			script: 'npm run start',  // Assuming corrected package.json script
 			cwd: '/home/adc300/connected-brain/connected-brain-demo-monorepo/apps/web/', // Change to your web app directory
-			watch: [
-				'src',  // Example, adjust as needed
-				'public',
-			],
+			// watch: [
+			// 	'src',  // Example, adjust as needed
+			// 	'public',
+			// ],
 			out_file: "./front-end-out.log",
 			error_file: "./front-end-error.log",
 			log_date_format: "DD-MM HH:mm:ss Z",
@@ -23,9 +23,9 @@ module.exports = {
 		{
 			name: 'connected-brain-back-end',
 			script: 'npm run start',  // Use the package.json start script
-			watch: [
-				'src', // Watch your source code for changes
-			],
+			// watch: [
+			// 	'src', // Watch your source code for changes
+			// ],
 			cwd: '/home/adc300/connected-brain/connected-brain-demo-monorepo/apps/server', // Change to your server app directory
 			out_file: "./back-end-out.log",
 			error_file: "./back-end-error.log",

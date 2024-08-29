@@ -5,18 +5,11 @@ module.exports = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  webpack: (config, { isServer }) => {
-    if (!isServer) {
-      config.module.rules.push({
-        test: /\.worker\.ts$/,
-        loader: 'worker-loader',
-        options: {
-          filename: 'static/[name].worker.js',
-          publicPath: '/_next/static/',
-        },
-      });
-    }
-
+  experimental: {
+    esmExternals: "loose", // required for the canvas to work
+  },
+  webpack: (config) => {
+    config.externals = [...config.externals, { canvas: "canvas" }]; // required for the canvas to work
     return config;
   },
 };

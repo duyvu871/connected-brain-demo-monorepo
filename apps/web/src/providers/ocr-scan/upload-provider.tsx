@@ -6,6 +6,7 @@ import { currentTesseractPage } from '@/containers/Apps/OCRScan/states/starter';
 import { useAtom } from 'jotai';
 import { pageStore } from '@/containers/Apps/OCRScan/states/playground.ts';
 import { useSession } from 'next-auth/react';
+import { useAuth } from '@/hooks/useAuth.ts';
 
 export interface UploadContextType {
 	uploading: boolean;
@@ -35,8 +36,8 @@ export const UploadContext = createContext<UploadContextType>({
 
 export const UploadProvider = ({ children }: {children: React.ReactNode}) => {
 	const {resolveImageUrl} = useImageFromFile();
-	const {data: UserSession} = useSession();
-	const clientId = UserSession?.user?.id.toString() ?? '';
+	const {user} = useAuth();
+	const clientId = user?.id.toString() ?? '';
 	// upload info
 	const [uploading, setUploading] = useState(false);
 	const [uploadedImage, setUploadedImage] = useState<string | null>(null);

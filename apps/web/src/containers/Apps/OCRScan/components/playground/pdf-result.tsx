@@ -13,29 +13,32 @@ import {
 import { paginationState } from '@/containers/Apps/OCRScan/states/playground.ts';
 import Pagination from '@/containers/Apps/OCRScan/components/playground/pagination.tsx';
 import { useUpload } from '@/hooks/ocr/useUpload.ts';
+import { getPDFDocument } from '@/lib/pdf/get-pdf-document.ts';
+import createPDFPage from '@/lib/pdf/create-pdf-page.ts';
+import renderPDFToCanvas from '@/lib/pdf/render-pdf-to-canvas.ts';
 
-pdfjs.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.4.168/build/pdf.worker.mjs'//new URL('pdfjs-dist/legacy/build/pdf.worker.min.mjs', import.meta.url).toString()
+pdfjs.GlobalWorkerOptions.workerSrc = '/workers/pdf.worker.mjs'//'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.4.168/build/pdf.worker.mjs'//new URL('pdfjs-dist/legacy/build/pdf.worker.min.mjs', import.meta.url).toString()
 
 const PdfViewer: React.FC = () => {
 	const {uploadImageAndStoreByIndex} = useUpload();
-	const [file, setFile] = useAtom(starterAssetsPreUpload);
+	const [file] = useAtom(starterAssetsPreUpload);
 	const [state, setPaginationState] = useAtom(paginationState);
-	const [sourceLang, setSelectedSourceLang] = useAtom(selectedSourceLang);
-	const [OCRLang, setSelectedOcrLang] = useAtom(selectedOcrLang);
+	const [sourceLang] = useAtom(selectedSourceLang);
+	const [OCRLang] = useAtom(selectedOcrLang);
 	const [currentPageExtracted] = useAtom(currentTesseractPage);
 
 	const [pdfData, setPdfData] = useState<PDFDocumentProxy | null>(null);
-	const [currentPage, setCurrentPage] = useState(1);
+	const [, setCurrentPage] = useState(1);
 	const [blobURL, setBlobURL] = useState<string | null>(null);
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const imageSourceRef = useRef<HTMLImageElement>(null);
 	const renderTaskRef = useRef<any>(null);
 	const wrapperRef = useRef<HTMLDivElement>(null);
 	const contextRef = useRef<CanvasRenderingContext2D | null>(null);
+
 	useEffect(() => {
 		if (currentPageExtracted) {
-			const canvas = canvasRef.current;
-			const context = canvas?.getContext('2d');
+			const context = contextRef.current;
 			if (!context) return;
 			renderBbox(context, currentPageExtracted.words);
 		}
@@ -58,7 +61,6 @@ const PdfViewer: React.FC = () => {
 						siblingCount: 1,
 						totalCount: awaitedPdf.numPages,
 					});
-					void renderPage(awaitedPdf, 1);
 					// void renderPage(pdf, 1);
 				} catch (error) {
 					console.error('Lỗi khi tải PDF:', error);
@@ -67,6 +69,38 @@ const PdfViewer: React.FC = () => {
 			fileReader.readAsArrayBuffer(file);
 		}
 	}, [file, setPaginationState]);
+
+	const renderPDF = useCallback((page: number) => {
+		if (!file) return;
+		const fileReader = new FileReader();
+		fileReader.onload = async (e) => {
+			const typedArray = new Uint8Array(e.target?.result as ArrayBuffer);
+			const pdfDocument = await getPDFDocument(typedArray);
+			const pdfPage = await createPDFPage(pdfDocument as PDFDocumentProxy, page);
+			const viewport = pdfPage.getViewport({ scale: 1.0 });
+			// Create the canvas
+			const canvas = document.createElement("canvas");
+			canvas.width =  viewport.width || viewport.viewBox[2];
+			canvas.height =  viewport.height || viewport.viewBox[3];
+			canvas.className = 'absolute max-w-full box-border p-5';
+			contextRef.current = canvas.getContext('2d');
+			if (wrapperRef.current) {
+				const wrapperWidth = wrapperRef.current.clientWidth;
+				wrapperRef.current.style.height = `${wrapperWidth * (viewport.height/viewport.width)}px`;
+			}
+			// Render the pdf to canvas
+			const pdfCanvas = await renderPDFToCanvas(pdfPage, canvas);
+			// then add the canvas with pdf to the div element
+			wrapperRef.current?.replaceChildren(pdfCanvas);
+			const currentPageFile = await canvasToFile(canvas, `page-${page}.png`);
+			await uploadImageAndStoreByIndex(
+				currentPageFile,
+				Array.from(sourceLang)[0] as string,
+				Array.from(OCRLang)[0] as string,
+				state.currentPage - 1)
+		}
+		fileReader.readAsArrayBuffer(file);
+	}, [file])
 
 	const renderPage = async (pdf: PDFDocumentProxy, pageNumber: number) => {
 		let pdfProxy = pdf;
@@ -140,10 +174,11 @@ const PdfViewer: React.FC = () => {
 		if (pdfData) {
 			if (newPage >= 1 && newPage <= pdfData.numPages) {
 				setCurrentPage(newPage);
-				void renderPage(pdfData, newPage);
+				// void renderPage(pdfData, newPage);
+				renderPDF(newPage);
 			}
 		}
-	}, [pdfData]);
+	}, [pdfData, renderPDF]);
 
 	useEffect(() => {
 		handlePageChange(state.currentPage);

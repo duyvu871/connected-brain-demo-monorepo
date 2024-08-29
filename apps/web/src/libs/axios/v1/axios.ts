@@ -90,7 +90,7 @@ api.v1 = {
 			formData.append('file', file);
 			const response = await apiTemplate<TesseractPage>(
 				api,
-				'/feature/ocr/upload-without-auth',
+				'/feature/ocr/upload-file',
 				formData,
 				{
 				method: 'post',

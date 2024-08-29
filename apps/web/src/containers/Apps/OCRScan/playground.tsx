@@ -20,7 +20,6 @@ function Playground({ id }: { id?: string }): React.ReactElement {
 				<Box className="w-full min-h-[calc(100vh_-_57px)] lg:h-[calc(100vh_-_57px)] relative flex">
 					<MainApp />
 				</Box>
-
 		// </HeaderWrapper>
 	);
 }

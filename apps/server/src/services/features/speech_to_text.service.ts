@@ -140,6 +140,4 @@ export default class SpeechToTextService {
 		const auditJson = JSON.parse(auditContent);
 		auditJson.transcript.push(transcript);
 	}
-
-
 }

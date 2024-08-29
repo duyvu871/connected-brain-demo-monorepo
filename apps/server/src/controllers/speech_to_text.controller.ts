@@ -26,17 +26,14 @@ export default class SpeechToTextController {
 				const audit = await SpeechToTextService.create_audit(db_repo._id ?? 'error_audit_created');
 				// const audio_file = await SpeechToTextService.create_audio_file(file_data, audit);
 				const audio_file = await SpeechToTextService.create_audio_stream(req, audit);
-				// console.log(audio_file);
+				const absolute_path = path.join(process.cwd(), audit.audio.path);
 				const convert_to_wav = await BackgroundTaskService.add_task<WorkerJob>(
 					'background_task',
 					'convert_to_wav',
 					{
 						type: 'convert_to_wav',
 						job_data: {
-							file_name: path.join(
-								AppConfig.app_root,
-								audit.audio.path,
-							),
+							file_name: absolute_path,
 							id: String(db_repo._id)
 						}
 					});
@@ -46,10 +43,7 @@ export default class SpeechToTextController {
 					{
 						type: 'speech_to_text',
 						job_data: {
-							file_name: path.join(
-								AppConfig.app_root,
-								audit.audio.path//.replace('.mp3', '.wav')
-							),
+							file_name: absolute_path,
 							id: String(db_repo._id)
 						}
 					});

@@ -20,12 +20,11 @@ import {useDebounceCallback} from 'usehooks-ts';
 import { isPDFAtom } from '@/containers/Apps/OCRScan/states/playground.ts';
 import VisualTextSegment from '@/containers/Apps/OCRScan/components/visual-text-segment.tsx';
 import dynamic from 'next/dynamic';
-import { useSession } from 'next-auth/react';
+import { useAuth } from '@/hooks/useAuth.ts';
 
 const PDFViewer = dynamic(() => import('@/containers/Apps/OCRScan/components/playground/pdf-result.tsx'), { ssr: false });
 function ExtractResultContent() {
-	const {data: UserSession} = useSession();
-	const user = UserSession?.user;
+	const {user} = useAuth();
 	const {api_route: APIRoute} = constants;
 	const {uploadedImageUrl, extractedText} = useUpload();
 	const [, setProgress] = useAtom(progressData);
@@ -40,7 +39,6 @@ function ExtractResultContent() {
 
 	const extractResultRef = useRef<HTMLDivElement>(null);
 	useEffect(() => {
-		extractResultRef?.current?.scrollIntoView({ behavior: 'smooth' });
 		const socket = io(process.env.NEXT_PUBLIC_API_BASE_URL, {
 			transports: ["websocket"], // use websocket only
 			addTrailingSlash: false, // remove trailing slash
@@ -48,14 +46,15 @@ function ExtractResultContent() {
 		});
 		socket.on("connect", () => {
 			console.log("socket connected");
-		});
-		socket.on(`ocr:extract-status:${user?.id.toString() ?? ''}`, (data: {status: string; progress: number}) => {
-			// console.log("ocr:extract-status", data);
-			setProgress({
-				progress: data.progress,
-				label: data.status,
+			socket.on(`ocr:extract-status:${user?.id.toString() ?? ''}`, (data: {status: string; progress: number}) => {
+				console.log("ocr:extract-status", data);
+				setProgress({
+					progress: data.progress,
+					label: data.status,
+				});
 			});
-		})
+		});
+		extractResultRef?.current?.scrollIntoView({ behavior: 'smooth' });
 
 		return () => {
 			console.log("socket disconnected");
@@ -63,7 +62,7 @@ function ExtractResultContent() {
 				socket.close();
 			}
 		}
-	}, [APIRoute.API.feature.OCR.socket, setProgress]);
+	}, []);
 
 	return (
 		<Box className="flex flex-col justify-center items-center gap-5">
