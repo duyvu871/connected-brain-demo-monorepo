@@ -1,4 +1,5 @@
 import { exec } from 'child_process';
+import process from 'node:process';
 
 interface ConvertOptions {
 	inputPath: string;
@@ -12,7 +13,7 @@ interface ConvertOptions {
 export const pdfToImage = (options: ConvertOptions): Promise<void> => {
 	const { inputPath, outputPath, density, pages, format, quality } = options;
 
-	let command = `magick convert -alpha off -limit memory 2G`;
+	let command = process.env.NODE_ENV === 'production' ? 'convert -alpha off -limit memory 2G' : `magick convert -alpha off -limit memory 2G`;
 	if (quality) command += ` -quality ${quality}`;
 	if (density) command += ` -density ${density}`;
 	if (pages) {
