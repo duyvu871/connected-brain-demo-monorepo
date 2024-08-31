@@ -10,7 +10,7 @@ function Progress() {
 		<ProgressNextui
 			className="max-w-md"
 			classNames={{
-				label: "text-zinc-800 capitalize",
+				label: "text-zinc-600 capitalize",
 			}}
 			color="success"
 			formatOptions={{style: "percent"}}

@@ -9,6 +9,7 @@ import { useSession } from 'next-auth/react';
 import { useAuth } from '@/hooks/useAuth.ts';
 import type { UploadPDFResponse } from 'types/apps/ocr/api.type.ts';
 import { useToast } from '@/hooks/useToast';
+import { useAtomCallback } from 'jotai/utils';
 
 export interface UploadContextType {
 	uploading: boolean;
@@ -163,10 +164,11 @@ export const UploadProvider = ({ children }: {children: React.ReactNode}) => {
 				params: { source, target, clientId },
 				onUploadProgress: handleUploadProgress
 			});
-			// console.log(response)
+			console.log(response)
+			setPdfUploadStore(response as UploadPDFResponse);
 			if (response) {
 				setUploadStatus('done');
-				handleUploadSuccess(response as UploadPDFResponse, 'pdf');
+				// handleUploadSuccess(response as UploadPDFResponse, 'pdf');
 				ToastSuccess('PDF uploaded successfully');
 				setUploadedImage(file.name);
 			} else {
@@ -180,8 +182,9 @@ export const UploadProvider = ({ children }: {children: React.ReactNode}) => {
 		setImageLoading(false);
 	}
 
-	const getExtractFromPDFPage = async (page: number) => {
+	const getExtractFromPDFPage = useAtomCallback(async (get, set, page: number) => {
 		try {
+			const pdfUploadStore = get(pdfPageStore);
 			console.log('getExtractFromPDFPage', page, pdfUploadStore);
 			if (!pdfUploadStore) return;
 			setImageExtracted(`${process.env.NEXT_PUBLIC_API_BASE_URL}/${pdfUploadStore.path}/output-${page.toString().padStart(3, '0')}.png`);
@@ -199,7 +202,7 @@ export const UploadProvider = ({ children }: {children: React.ReactNode}) => {
 		} catch (error) {
 			setOcrError('An error occurred while extracting text from the PDF');
 		}
-	}
+	})
 
 	const resetUpload = () => {
 		setUploadStatus(null);
@@ -211,6 +214,12 @@ export const UploadProvider = ({ children }: {children: React.ReactNode}) => {
 		setUploadError(null);
 		setOcrError(null);
 	}
+
+	useEffect(() => {
+		if (pdfUploadStore) {
+			void getExtractFromPDFPage(0);
+		}
+	}, [pdfUploadStore]);
 
 	useEffect(() => {
 		(async () => {

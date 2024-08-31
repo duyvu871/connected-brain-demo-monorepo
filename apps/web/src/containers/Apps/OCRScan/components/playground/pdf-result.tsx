@@ -52,22 +52,6 @@ const PdfViewer: React.FC = () => {
 		if (!file) return;
 		void getExtractFromPDFPage(page - 1);
 	}, [file]);
-
-	const renderBbox = (canvas: CanvasRenderingContext2D, words: Tesseract.Word[]) => {
-		words.forEach((w) => {
-			const b = w.bbox;
-			// @ts-expect-error may this property has been added
-			canvas.strokeWidth = 1;
-			canvas.lineWidth = 1;
-			canvas.strokeStyle = 'red';
-			canvas.strokeRect(b.x0, b.y0, b.x1-b.x0, b.y1-b.y0);
-			canvas.beginPath();
-			canvas.moveTo(w.baseline.x0, w.baseline.y0);
-			canvas.lineTo(w.baseline.x1, w.baseline.y1);
-			canvas.strokeStyle = 'green';
-			canvas.stroke();
-		})
-	}
 	
 	const handlePageChange = useCallback((newPage: number) => {
 		if (pdfData) {
