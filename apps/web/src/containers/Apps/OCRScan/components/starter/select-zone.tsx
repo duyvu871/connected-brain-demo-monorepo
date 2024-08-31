@@ -4,7 +4,7 @@ import { openForwardedDialog, starterAssetsPreUpload } from '@/containers/Apps/O
 import { useToast } from '@/hooks/useToast';
 import { useAuth } from '@/hooks/useAuth.ts';
 import { routeList } from '@/global/contants/route.ts';
-import { isPDFAtom } from '@/containers/Apps/OCRScan/states/playground.ts';
+import { isPDFAtom, pdfPageStore } from '@/containers/Apps/OCRScan/states/playground.ts';
 import { usePathname } from 'next/navigation';
 
 const allowedFileTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'application/pdf'];
@@ -19,6 +19,7 @@ export default function SelectZone({children}:  SelectZoneProps): React.ReactNod
 	const [, setFile] = useAtom(starterAssetsPreUpload);
 	const [, setDialogState]= useAtom(openForwardedDialog);
 	const [, setIsPDF] = useAtom(isPDFAtom);
+	const [, setPDFStore] = useAtom(pdfPageStore);
 
 	const { isLogin } = useAuth();
 	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,6 +44,7 @@ export default function SelectZone({children}:  SelectZoneProps): React.ReactNod
 			console.log('fileExtension', fileExtension);
 			setIsPDF(isPDF);
 			if (isValidFileType) {
+				setPDFStore(null);
 				setFile(file);
 			} else {
 				error('Invalid file type. Please select a correct file.');

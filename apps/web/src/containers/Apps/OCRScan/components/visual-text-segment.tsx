@@ -19,6 +19,14 @@ function VisualTextSegment({image, imageType}: VisualTextSegmentProps) {
 		return (file.convertToBlobURL(image, imageType));
 	}, [image, imageType]);
 
+	const clearTexture = useCallback(() => {
+		const textureCanvas = textureWrapRef?.current?.getContext('2d');
+		if (!textureCanvas) return;
+		if (!textureWrapRef.current) return;
+		console.log(textureWrapRef.current.width, textureWrapRef.current.height);
+		textureCanvas.clearRect(0, 0, textureWrapRef.current.width, textureWrapRef.current.height);
+	}, []);
+
 	const placementTexture = useCallback(() => {
 		if (!currentPage) return;
 		const textureCanvas = textureWrapRef?.current?.getContext('2d');
@@ -31,8 +39,8 @@ function VisualTextSegment({image, imageType}: VisualTextSegmentProps) {
 		currentPage.words.forEach((w) => {
 			const b = w.bbox;
 			// @ts-expect-error may this property has been added
-			textureCanvas.strokeWidth = 1;
-			textureCanvas.lineWidth = 1;
+			textureCanvas.strokeWidth = 2;
+			textureCanvas.lineWidth = 2;
 			textureCanvas.strokeStyle = 'red';
 			textureCanvas.strokeRect(b.x0, b.y0, b.x1-b.x0, b.y1-b.y0);
 			textureCanvas.beginPath();
@@ -44,17 +52,27 @@ function VisualTextSegment({image, imageType}: VisualTextSegmentProps) {
 	}, [currentPage]);
 
 	useEffect(() => {
-		console.log(currentPage);
 		placementTexture();
 		return () => {
 			URL.revokeObjectURL(blobURL);
 		}
-	}, [blobURL, placementTexture]);
+	}, [blobURL, clearTexture, currentPage, placementTexture]);
 
 	return (
 		<Box className="flex-1 relative overflow-hidden">
-			<canvas className="absolute max-w-full box-border p-5 " ref={textureWrapRef}/>
-			<Image alt="image source" className="max-w-full box-border rounded-lg p-5" height={700} ref={imageSourceRef} src={blobURL} width={500}/>
+			<canvas className="absolute max-w-full box-border" ref={textureWrapRef}/>
+			<Image
+				alt="image source"
+				className="max-w-full box-border rounded-lg"
+				height={700}
+				onLoad={() => {
+					clearTexture();
+				}}
+				ref={imageSourceRef}
+				src={blobURL}
+				unoptimized
+				width={500}
+			/>
 		</Box>
 	);
 }

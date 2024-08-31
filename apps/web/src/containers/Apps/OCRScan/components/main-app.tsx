@@ -7,12 +7,10 @@ import ExtractResult from '@/containers/Apps/OCRScan/components/playground/extra
 export default function MainApp(): JSX.Element {
 	return (
 		<Box className="h-full w-full flex flex-col-reverse sm:flex-row gap-5 justify-center items-start p-5">
-			<div className="flex-grow max-w-[400px] w-full sm:w-fit sm:max-w-full">
-				<div className="flex flex-col gap-4">
+			<div className="flex-grow flex items-start max-w-[400px] w-full sm:w-fit sm:max-w-full h-full">
 					<ExtractResult />
-				</div>
 			</div>
-			<div className="flex-grow max-w-[400px] w-full">
+			<div className="flex-grow max-w-[400px] w-full h-full">
 				<Toolbar />
 			</div>
 		</Box>

@@ -61,7 +61,7 @@ export class OCR {
 	}
 	// create worker with lang and options
 	public static async loadLangData(lang: string, options: Partial<Tesseract.WorkerOptions>) {
-		return await createWorker(lang, OEM.DEFAULT, options);
+		return await createWorker(lang, OEM.TESSERACT_LSTM_COMBINED, options);
 	}
 	// add worker to scheduler
 	public static addToScheduler(worker: Tesseract.Worker, scheduler?: Tesseract.Scheduler) {
@@ -159,7 +159,7 @@ export class OCR {
 	}
 
 	public static async processImage(
-		imageBuffer: Buffer,
+		imageLike: Buffer | string,
 		sourceLang: string = 'eng',
 		onProgress?: (loggerMessage: Tesseract.LoggerMessage) => void
 	): Promise<RecognizeResult['data'] | null> {
@@ -177,7 +177,7 @@ export class OCR {
 			this.addToScheduler(worker);
 			const {
 				data
-			}: RecognizeResult = await worker.recognize(imageBuffer);
+			}: RecognizeResult = await worker.recognize(imageLike);
 
 			return data;
 		} catch (err: any) {

@@ -14,8 +14,11 @@ import { Button } from '@nextui-org/react';
 import { useUpload } from '@/hooks/ocr/useUpload.ts';
 import { useToast } from '@/hooks/useToast.ts';
 
-const UploadForward = forwardRef<HTMLButtonElement, ButtonProps & {children?: React.ReactNode}>((props, ref) => {
-	const {children, ...otherProps} = props;
+const UploadForward = forwardRef<HTMLButtonElement, ButtonProps & {
+	children?: React.ReactNode
+	uploadAction?: (file: File, source: string, target: string) => Promise<void>
+}>((props, ref) => {
+	const {children, uploadAction, ...otherProps} = props;
 
 	const {error} = useToast();
 	const {uploadImage} = useUpload();
@@ -27,10 +30,14 @@ const UploadForward = forwardRef<HTMLButtonElement, ButtonProps & {children?: Re
 	const handleUpload = () => {
 		if (file) {
 			setOpenModal(true);
-			 void uploadImage(file, Array.from(sourceLang)[0] as string, Array.from(OCRLang)[0] as string);
-			return;
+			if (uploadAction) {
+				void uploadAction(file, Array.from(sourceLang)[0] as string, Array.from(OCRLang)[0] as string);
+				return;
+			} 
+				void uploadImage(file, Array.from(sourceLang)[0] as string, Array.from(OCRLang)[0] as string);
+				return;
 		}
-		error('Please upload an image');
+		error('Please upload an image of PDF file');
 	};
 
 	return (

@@ -14,7 +14,7 @@ export default function PlaygroundHeader() {
 	const [isStarterScreen, setIsStarterScreen] = useState(false);
 
 	useEffect(() => {
-		if (pathname === '/app/ocr') {
+		if (pathname !== '/app/ocr/p' && pathname !== '/app/ocr/') {
 			setIsStarterScreen(true);
 		} else {
 			setIsStarterScreen(false);
@@ -25,7 +25,7 @@ export default function PlaygroundHeader() {
 		<>
 			{
 				!isStarterScreen && (
-					<Link href="/app/ocr" passHref>
+					<Link href="/app/ocr/p" passHref>
 						<Box className="text-white text-lg font-bold">
 							<Button className="bg-zinc-800" variant="bordered">
 								<TbTextScan2 size={24} /> New Scan
@@ -35,7 +35,6 @@ export default function PlaygroundHeader() {
 				)
 			}
 			<DialogFeedback />
-			<DropdownMenuUser />
 		</>
 	);
 }

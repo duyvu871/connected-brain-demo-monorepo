@@ -8,7 +8,7 @@ export default class UserValidation {
 		static getUserHeaders = z.object({
 			authorization: z
 				.string({
-					required_error: 'Authorization header is required',
+					required_error: 'No authorization header provided',
 					invalid_type_error: 'Invalid authorization header',
 				})
 				.startsWith('Bearer ', 'Authorization header must start with "Bearer "'),

@@ -4,8 +4,10 @@ import { pdfjs } from 'react-pdf';
 // can be a path to the file or can be an external link
 // that contains the PDF
 export const getPDFDocument = async (data: any) => {
-	pdfjs.GlobalWorkerOptions.workerSrc =
-		window.location.origin + "/workers/pdf.worker.mjs";
+	if (!pdfjs.GlobalWorkerOptions.workerSrc) {
+		pdfjs.GlobalWorkerOptions.workerSrc =
+			window.location.origin + "/workers/pdf.worker.mjs";
+	}
 
 	return new Promise((resolve, reject) => {
 		pdfjs

@@ -11,6 +11,7 @@ import { headers } from 'next/headers';
 import { getServerAuthSession } from '@/lib/nextauthOptions.ts';
 import MainSidebarLayout from '@/layouts/main-sidebar.tsx';
 import PlaygroundHeader from '@/containers/Apps/OCRScan/playground-header.tsx';
+// import Playground from '@/containers/Apps/OCRScan/playground.tsx';
 
 async function Page() {
 	const session = await getServerAuthSession();

@@ -1,7 +1,10 @@
 import type { AxiosInstance, AxiosError, AxiosRequestConfig } from 'axios';
 import axios from 'axios';
 import type { TranslateResponse } from '@repo/translate';
-import type {Page as TesseractPage} from "tesseract.js"
+import type { Page as TesseractPage} from "tesseract.js"
+import type { UploadPDFResponse } from 'types/apps/ocr/api.type.ts';
+import axiosWithAuth from '@/libs/axios/v1/axiosWithAuth.ts';
+import axiosNextAuth from '@/libs/axios/v1/axiosWithAuth.ts';
 
 // Interface to define the shape of the `api.v1` object 
 // This improves code clarity and type checking 
@@ -11,10 +14,14 @@ interface ApiV1 {
 		callback?: (error: AxiosError | null, translation?: string) => void
 	) => Promise<string | undefined>;
 	ocr: {
-		// upload: (file: File, callback?: (error: AxiosError | null, filename?: string) => void) => Promise<string | undefined>;
+		upload: (type: 'PDF'|'PNG'|'JPG'|'JPEG', file: File, options?: AxiosRequestConfig, callback?: (error: AxiosError | null, data?: UploadPDFResponse) => void)
+			=> Promise<UploadPDFResponse | TesseractPage | undefined>;
+		getExtractFromPDFPage: (clientId: string, fileId: string, page: number, callback?: (error: AxiosError | null, data?: TesseractPage) => void)
+			=> Promise<TesseractPage | undefined>;
 		// extract: (image: string, callback?: (error: AxiosError | null, text?: string) => void) => Promise<string | undefined>;
 		// uploadAndExtract: (file: File, callback?: (error: AxiosError | null, text?: string) => void) => Promise<string | undefined>;
-		extractWithoutAuth: (file: File, options: AxiosRequestConfig, callback?: (error: AxiosError | null, pageData?: TesseractPage) => void) => Promise<TesseractPage | undefined>;
+		extractWithoutAuth: (file: File, options: AxiosRequestConfig, callback?: (error: AxiosError | null, data?: TesseractPage) => void)
+			=> Promise<TesseractPage | undefined>;
 	}
 	// ... Other methods for API v1 (products, ...) 
 }
@@ -44,7 +51,7 @@ const apiTemplate = async <T>(
 		const response = await api[options.method]<T>(path, data, options.configs);
 		if (callback) callback(null, response.data);
 		return response;
-		// @ts-expect-error Catch any errors during the API call
+		// @ts-ignore
 	} catch (error: AxiosError | null) {
 		if (callback) {
 			callback(error, undefined);
@@ -72,7 +79,7 @@ api.v1 = {
 			}
 			// If no callback, return the translation directly
 			return response.data.translation;
-		// @ts-expect-error Catch any errors during the API call
+			// @ts-ignore
 		} catch (error: AxiosError | null) { // Capture any errors during the API call
 			// If callback is provided, invoke it with the error
 			if (callback) {
@@ -85,14 +92,29 @@ api.v1 = {
 		}
 	},
 	ocr: {
-		extractWithoutAuth: async (file, options, callback ) => {
+		extractWithoutAuth: async (file, options, callback) => {
 			const formData = new FormData();
 			formData.append('file', file);
+			const config = {
+				method: 'post',
+				configs: {
+					headers: {
+						'Content-Type': 'multipart/form-data',
+					},
+					...options,
+				}
+			} as const;
 			const response = await apiTemplate<TesseractPage>(
 				api,
-				'/feature/ocr/upload-file',
+				'/feature/ocr/upload-without-auth',
 				formData,
-				{
+				config, callback);
+			return response?.data;
+		},
+		upload: async (type, file, options, callback) => {
+			const formData = new FormData();
+			formData.append('file', file);
+			const config = {
 				method: 'post',
 				configs: {
 					headers: {
@@ -100,9 +122,29 @@ api.v1 = {
 					},
 					...options,
 				},
-			}, callback);
+			} as const;
+			if (type === 'PDF') {
+				const response = await apiTemplate<UploadPDFResponse>(axiosWithAuth, `${API_ENDPOINT}/api/v1/feature/ocr/upload-file`, formData, config, callback);
+				return response?.data;
+			}
+			// @ts-ignore
+			const response = await apiTemplate<TesseractPage>(api, '/feature/ocr/upload-without-auth', formData, config, callback);
 			return response?.data;
-		}
+		},
+		getExtractFromPDFPage: async (clientId, fileId, page, callback) => {
+			const config = {
+				method: 'get',
+				configs: {}
+			} as const;
+			const response = await apiTemplate<TesseractPage>(
+				axiosNextAuth,
+				`${API_ENDPOINT}/api/v1/feature/ocr/get-extract/${fileId}/${page}?clientId=${clientId}`,
+				{},
+				config,
+				callback
+			);
+			return response?.data;
+		},
 	},
 };
 

@@ -1,5 +1,6 @@
 import { atom } from 'jotai';
 import type { Page as TesseractPage } from 'tesseract.js';
+import type { UploadPDFResponse } from 'types/apps/ocr/api.type.ts';
 
 type PaginationState = {
 	currentPage: number;
@@ -21,3 +22,5 @@ export const paginationState = atom<PaginationState>({
 export const currentTesseractPage = atom<TesseractPage | null>(null as TesseractPage | null);
 export const pageStore = atom<TesseractPage[]>([]);
 export const isPDFAtom = atom<boolean>(false);
+export const pdfPageStore = atom<UploadPDFResponse|null>(null);
+export const currentImageExtracted = atom<string | null>(null);

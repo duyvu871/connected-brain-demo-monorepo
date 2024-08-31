@@ -16,8 +16,19 @@ export interface OCRRepoDTO {
 	path: string;
 	auditPath: string;
 	pages: string;
+	numPages: number;
 	status: 'processing' | 'done' | 'error';
 }
+
+export interface PageImageInterface {
+	page: number;
+	image: string;
+}
+
+const pageImageSchema = new Schema<PageImageInterface>({
+	page: { type: Number, required: true },
+	image: { type: String, required: true },
+});
 
 const OCRSchema = new Schema<OCRRepoInterface>({
 	user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
@@ -25,7 +36,8 @@ const OCRSchema = new Schema<OCRRepoInterface>({
 	originName: { type: String, required: true},
 	path: { type: String, default: "" },
 	auditPath: { type: String, default: "" },
-	pages: { type: String, default: ""},
+	pages: [pageImageSchema],
+	numPages: { type: Number, default: 0 },
 	status: { type: String, enum: ['processing', 'done', 'error'], default: "processing" }
 }, {
 	timestamps: true,
@@ -41,6 +53,6 @@ OCRSchema.pre('save', function(next) {
 	next();
 });
 
-const OcrModel = connection.model<OCRRepoInterface, OCRInterfaceModel>('SpeechToText', OCRSchema, env.MONGODB_DB_NAME);
+const OcrModel = connection.model<OCRRepoInterface, OCRInterfaceModel>('OCR', OCRSchema, env.MONGODB_DB_NAME);
 
 export default OcrModel;

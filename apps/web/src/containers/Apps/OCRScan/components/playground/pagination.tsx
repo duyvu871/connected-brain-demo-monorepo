@@ -18,11 +18,11 @@ const PaginateIndex = forwardRef<HTMLDivElement, PaginateIndexProps>((props, ref
 				ref={ref}
 				{...rest}
 				className={cn(
-					"flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border",
-					"border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400",
-					"dark:hover:bg-gray-700 dark:hover:text-white cursor-pointer",
+					"flex items-center justify-center px-4 h-10 leading-tight text-zinc-500 bg-white border",
+					"border-zinc-300 hover:bg-zinc-100 hover:text-zinc-700 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-400",
+					"dark:hover:bg-zinc-700 dark:hover:text-white cursor-pointer",
 					{
-						"dark:bg-gray-700 dark:text-white hover:bg-blue-100 hover:text-blue-700": isActive
+						"dark:bg-zinc-700 dark:text-white hover:bg-blue-100 hover:text-blue-700": isActive
 					}
 				)}
 			>
@@ -72,9 +72,9 @@ const Pagination = () => {
 			<li>
 				<div
 					className={cn(
-						'flex items-center justify-center px-4 h-10 ms-0 leading-tight text-gray-500 bg-white border border-e-0',
-						" border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700",
-						"dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white cursor-pointer"
+						'flex items-center justify-center px-4 h-10 ms-0 leading-tight text-zinc-500 bg-white border border-e-0',
+						" border-zinc-300 rounded-s-lg hover:bg-zinc-100 hover:text-zinc-700 dark:bg-zinc-800 dark:border-zinc-700",
+						"dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-white cursor-pointer"
 					)}
 					onClick={onPrevious}
 				>
@@ -113,8 +113,8 @@ const Pagination = () => {
 			<li>
 				<div
 					className={cn(
-						'flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 cursor-pointer',
-						"rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+						'flex items-center justify-center px-4 h-10 leading-tight text-zinc-500 bg-white border border-zinc-300 cursor-pointer',
+						"rounded-e-lg hover:bg-zinc-100 hover:text-zinc-700 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-white"
 					)}
 					onClick={onNext}
 				>

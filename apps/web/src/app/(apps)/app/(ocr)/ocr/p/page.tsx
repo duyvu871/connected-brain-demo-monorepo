@@ -1,5 +1,6 @@
-"use client";
+
 import React from 'react';
+import { redirect } from 'next/navigation';
 import type { ToastContainerProps } from 'react-toastify';
 import { ToastContainer } from 'react-toastify';
 import { Toaster } from '@/global/contants/defaultComponentProps';
@@ -9,6 +10,8 @@ import { UploadProvider } from '@/providers/ocr-scan/upload-provider.tsx';
 import { ProcessProvider } from '@/providers/ocr-scan/process-provider.tsx';
 import MainSidebarLayout from '@/layouts/main-sidebar.tsx';
 import PlaygroundHeader from '@/containers/Apps/OCRScan/playground-header.tsx';
+// import UploadScreen from '@/containers/Apps/OCRScan/components/playground/upload-screen.tsx';
+// import PlaygroundFeature from '@/containers/Apps/OCRScan/components/playground-feature.tsx';
 
 function Page() {
 	return (
@@ -17,7 +20,7 @@ function Page() {
 				<MainSidebarLayout customHeader={<PlaygroundHeader />}>
 					<UploadProvider>
 						<ProcessProvider>
-							<Playground id="playground" />
+							<Playground />
 						</ProcessProvider>
 					</UploadProvider>
 				</MainSidebarLayout>

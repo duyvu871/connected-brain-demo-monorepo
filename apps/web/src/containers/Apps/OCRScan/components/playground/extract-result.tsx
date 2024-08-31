@@ -18,15 +18,16 @@ import {
 import {useDebounceCallback} from 'usehooks-ts';
 // import PdfViewer from '@/containers/Apps/OCRScan/components/playground/pdf-result.tsx';
 import { isPDFAtom } from '@/containers/Apps/OCRScan/states/playground.ts';
-import VisualTextSegment from '@/containers/Apps/OCRScan/components/visual-text-segment.tsx';
+// import VisualTextSegment from '@/containers/Apps/OCRScan/components/visual-text-segment.tsx';
 import dynamic from 'next/dynamic';
 import { useAuth } from '@/hooks/useAuth.ts';
+import ViewExtracted from '@/containers/Apps/OCRScan/components/playground/view-extracted.tsx';
 
-const PDFViewer = dynamic(() => import('@/containers/Apps/OCRScan/components/playground/pdf-result.tsx'), { ssr: false });
+// const PDFViewer = dynamic(() => import('@/containers/Apps/OCRScan/components/playground/pdf-result.tsx'), { ssr: false });
 function ExtractResultContent() {
 	const {user} = useAuth();
 	const {api_route: APIRoute} = constants;
-	const {uploadedImageUrl, extractedText} = useUpload();
+	const {extractedText} = useUpload();
 	const [, setProgress] = useAtom(progressData);
 	const [isPDF] = useAtom(isPDFAtom);
 	const [sourceLang, setSelectedSourceLang] = useAtom(selectedSourceLang);
@@ -46,8 +47,7 @@ function ExtractResultContent() {
 		});
 		socket.on("connect", () => {
 			console.log("socket connected");
-			socket.on(`ocr:extract-status:${user?.id.toString() ?? ''}`, (data: {status: string; progress: number}) => {
-				console.log("ocr:extract-status", data);
+			socket.on(`ocr:extract-status:${user?.id.toString() || ''}`, (data: {status: string; progress: number}) => {
 				setProgress({
 					progress: data.progress,
 					label: data.status,
@@ -62,11 +62,10 @@ function ExtractResultContent() {
 				socket.close();
 			}
 		}
-	}, []);
+	}, [user?.id]);
 
 	return (
-		<Box className="flex flex-col justify-center items-center gap-5">
-			<Box className="flex flex-col justify-center items-center lg:flex-row w-full rounded-xl border border-zinc-800" ref={extractResultRef}>
+		<Box className="h-full flex flex-col justify-center items-start lg:flex-row w-full rounded-xl border border-zinc-800 overflow-hidden" ref={extractResultRef}>
 				<Box className="p-5 bg-zinc-950">
 					<Box className="w-72 sm:w-[350px] flex justify-center items-center my-4 mb-6">
 						<Box className="flex justify-center items-center gap-2">
@@ -75,15 +74,9 @@ function ExtractResultContent() {
 								className="text-xl text-zinc-500 flex justify-center items-center capitalize">{sourceLang} <LiaAngleDownSolid /></span>
 						</Box>
 					</Box>
-					{/*<Spacer y={3} />*/}
-					{isPDF
-						? <PDFViewer />
-						: <Box className="relative overflow-auto w-72 h-80 sm:w-[350px] sm:h-[450px]">
-								<VisualTextSegment image={uploadedImageUrl ?? "/placeholder.svg"} imageType="url" />
-							</Box>
-					}
+					<ViewExtracted />
 				</Box>
-				<Box className="w-80 h-[1px] lg:h-80 lg:w-[1px] bg-zinc-700/50"/>
+				<Box className="w-full h-[1px] lg:h-full lg:w-[1px] bg-zinc-700/50"/>
 				<Box className="p-5 bg-zinc-950">
 					<Box className="w-72 sm:w-[350px] flex justify-center items-center my-4 mb-6">
 						<Box className="flex justify-center items-center gap-2">
@@ -127,7 +120,6 @@ function ExtractResultContent() {
 					</Box>
 				</Box>
 			</Box>
-		</Box>
 	);
 }
 

@@ -7,8 +7,7 @@ import { selectedOcrLang, selectedSourceLang } from '@/containers/Apps/OCRScan/s
 import SelectZone from '@/containers/Apps/OCRScan/components/starter/select-zone.tsx';
 import { CloudUploadIcon} from 'lucide-react';
 import DocPreUpload from '@/containers/Apps/OCRScan/components/starter/doc-pre-upload.tsx';
-import UploadForward from '@/containers/Apps/OCRScan/components/starter/upload-forward.tsx';
-import { IoIosReturnLeft } from 'react-icons/io';
+import UploadButton from '@/containers/Apps/OCRScan/components/playground/upload-button.tsx';
 
 function Toolbar() {
 	const [sourceLang, setSelectedSourceLang] = useAtom(selectedSourceLang);
@@ -68,9 +67,7 @@ function Toolbar() {
 					</div>
 					</div>
 				<div className="grid gap-3">
-					<UploadForward className="w-full bg-zinc-800 text-zinc-100">
-						Process <IoIosReturnLeft size={24} />
-					</UploadForward>
+					<UploadButton />
 				</div>
 			</fieldset>
 		</form>

@@ -1,10 +1,12 @@
 import { useAtom } from 'jotai';
 import { starterAssetsPreUpload } from '@/containers/Apps/OCRScan/states/starter';
-import { useEffect, useState } from 'react';
+import React, { cloneElement, forwardRef, ReactNode, useEffect, useState } from 'react';
 import { cn, file as fileUtils } from '@repo/utils';
 import { Box } from '@mantine/core';
 import { CiFileOn } from 'react-icons/ci';
 import { IoCloseSharp } from 'react-icons/io5';
+import type { FileExtIcon } from '@/lib/fileExtIcon.ts';
+import { fileExtIcon } from '@/lib/fileExtIcon.ts';
 
 type DocPreUploadProps = {
 	classNames?: {
@@ -14,11 +16,13 @@ type DocPreUploadProps = {
 	};
 }
 
+
 export default function DocPreUpload(props: DocPreUploadProps): JSX.Element {
 	const { classNames } = props;
 
 	const [file, setFile] = useAtom(starterAssetsPreUpload);
 	const [fileSize, setFileSize] = useState<string>('');
+	const Icon = fileExtIcon[file?.name.split('.').pop() as FileExtIcon || 'default'] || CiFileOn;
 
 	useEffect(() => {
 		if (file) {
@@ -32,7 +36,7 @@ export default function DocPreUpload(props: DocPreUploadProps): JSX.Element {
 			{Boolean(file) && (
 				<Box className={cn('flex items-center justify-between border border-zinc-700 rounded-lg p-2', classNames?.wrapper)}>
 					<Box className="flex items-center gap-2">
-						<CiFileOn className="text-zinc-700" size={30} />
+						<Icon className="text-zinc-700" size={30} />
 						<Box className={cn(classNames?.fileInfo)}>
 							<p
 								className="text-sm text-zinc-700 font-medium max-w-24 sm:max-w-52 md:max-w-72 whitespace-break-spaces">

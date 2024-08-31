@@ -1,23 +1,28 @@
 'use client';
-import React, { createContext, useState } from 'react';
+import React, { createContext, useCallback, useEffect, useState } from 'react';
 import axios from '@/libs/axios/v1/axios.ts';
 import useImageFromFile from '@/hooks/client/useImagePreview.ts';
-import { currentTesseractPage } from '@/containers/Apps/OCRScan/states/starter';
+import { currentTesseractPage, starterAssetsPreUpload } from '@/containers/Apps/OCRScan/states/starter';
 import { useAtom } from 'jotai';
-import { pageStore } from '@/containers/Apps/OCRScan/states/playground.ts';
+import { currentImageExtracted, pageStore, pdfPageStore } from '@/containers/Apps/OCRScan/states/playground.ts';
 import { useSession } from 'next-auth/react';
 import { useAuth } from '@/hooks/useAuth.ts';
+import type { UploadPDFResponse } from 'types/apps/ocr/api.type.ts';
+import { useToast } from '@/hooks/useToast';
 
 export interface UploadContextType {
 	uploading: boolean;
 	uploadedImage: string | null;
 	uploadedImageUrl: string | null;
 	uploadProgress: number;
+	pdfUploadStore: UploadPDFResponse | null;
 	setUploadedImageUrl: (image: string) => void;
 	extractedText: string | null;
 	uploadImage: (file: File, source: string, target: string) => Promise<void>;
 	resetUpload: () => void;
 	uploadImageAndStoreByIndex: (file: File, source: string, target: string, index: number) => Promise<void>;
+	getExtractFromPDFPage: (page: number) => Promise<void>;
+	uploadPDF: (file: File, source: string, target: string) => Promise<void>;
 	// setUploading: (uploading: boolean) => void;
 };
 
@@ -26,11 +31,14 @@ export const UploadContext = createContext<UploadContextType>({
 	uploadedImage: null,
 	uploadedImageUrl: null,
 	uploadProgress: 0,
+	pdfUploadStore: null,
 	setUploadedImageUrl: () => {},
 	extractedText: null,
 	uploadImage: async () => {},
 	resetUpload: () => {},
 	uploadImageAndStoreByIndex: async () => {},
+	getExtractFromPDFPage: async () => {},
+	uploadPDF: async () => {},
 	// setUploading: () => {},
 });
 
@@ -38,6 +46,7 @@ export const UploadProvider = ({ children }: {children: React.ReactNode}) => {
 	const {resolveImageUrl} = useImageFromFile();
 	const {user} = useAuth();
 	const clientId = user?.id.toString() ?? '';
+	const {error: ToastError, success: ToastSuccess} = useToast();
 	// upload info
 	const [uploading, setUploading] = useState(false);
 	const [uploadedImage, setUploadedImage] = useState<string | null>(null);
@@ -51,8 +60,29 @@ export const UploadProvider = ({ children }: {children: React.ReactNode}) => {
 	const [ocrLoading, setOcrLoading] = useState(false);
 	const [ocrError, setOcrError] = useState<string | null>(null);
 	const [tesseractPageStore, setTesseractPageStore] = useAtom(pageStore);
+
+	const [pdfUploadStore, setPdfUploadStore] = useAtom(pdfPageStore);
+	const [, setImageExtracted] = useAtom(currentImageExtracted);
+
 	// ocr states
 	const [, setCurrentPage] = useAtom(currentTesseractPage);
+	const [file, ] = useAtom(starterAssetsPreUpload);
+
+	const handleUploadProgress = (progressEvent: any) => {
+		if (progressEvent.lengthComputable && progressEvent.total) {
+			setUploadProgress(Math.round(((progressEvent.loaded * 100)/(progressEvent.total))));
+		}
+	}
+
+	const handleUploadSuccess = (response: any, type: 'image'|'pdf') => {
+		if (type === 'image') {
+			setCurrentPage(response);
+			setExtractedText(response.text);
+		} else {
+			setPdfUploadStore(response);
+		}
+	}
+
 	const uploadImage = async (file: File, source: string, target: string) => {
 		resetUpload();
 		setUploading(true);
@@ -62,17 +92,12 @@ export const UploadProvider = ({ children }: {children: React.ReactNode}) => {
 			setUploadStatus('uploading');
 			const response = await axios.v1.ocr.extractWithoutAuth(file, {
 				params: { source, target, clientId },
-				onUploadProgress: (progressEvent) => {
-					if (progressEvent.lengthComputable && progressEvent.total) {
-						setUploadProgress(Math.round(((progressEvent.loaded * 100)/(progressEvent.total))));
-					}
-				}
+				onUploadProgress: handleUploadProgress
 			});
 
 			if (response) {
 				setUploadStatus('done');
-				setCurrentPage(response);
-				setExtractedText(response.text);
+				handleUploadSuccess(response, 'image');
 				setUploadedImage(file.name);
 			} else {
 				setUploadStatus('error');
@@ -126,29 +151,54 @@ export const UploadProvider = ({ children }: {children: React.ReactNode}) => {
 		setUploading(false);
 		setImageLoading(false);
 	}
-	const extractText = async () => {
-		setOcrError(null);
-		setOcrLoading(true);
+
+	const uploadPDF = async (file: File, source: string, target: string) => {
+		resetUpload();
+		setUploading(true);
+		setImageLoading(true);
 		try {
-			const response = await fetch('/api/ocr', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({
-					image: uploadedImage,
-				}),
+			// setUploadedImageUrl(await resolveImageUrl(file) as string);
+			setUploadStatus('uploading');
+			const response = await axios.v1.ocr.upload('PDF', file, {
+				params: { source, target, clientId },
+				onUploadProgress: handleUploadProgress
 			});
-			const data = await response.json();
-			if (response.ok) {
-				setExtractedText(data.text);
+			// console.log(response)
+			if (response) {
+				setUploadStatus('done');
+				handleUploadSuccess(response as UploadPDFResponse, 'pdf');
+				ToastSuccess('PDF uploaded successfully');
+				setUploadedImage(file.name);
 			} else {
-				setOcrError(data.message);
+				setUploadStatus('error');
+				setUploadError("An error occurred while uploading the PDF");
 			}
 		} catch (error) {
-			setOcrError('An error occurred while extracting text from the image');
+			setUploadError('An error occurred while uploading the PDF');
 		}
-		setOcrLoading(false);
+		setUploading(false);
+		setImageLoading(false);
+	}
+
+	const getExtractFromPDFPage = async (page: number) => {
+		try {
+			console.log('getExtractFromPDFPage', page, pdfUploadStore);
+			if (!pdfUploadStore) return;
+			setImageExtracted(`${process.env.NEXT_PUBLIC_API_BASE_URL}/${pdfUploadStore.path}/output-${page.toString().padStart(3, '0')}.png`);
+			const response = await axios.v1.ocr.getExtractFromPDFPage(
+				clientId,
+				pdfUploadStore.id,
+				page,
+			);
+			if (response) {
+				setCurrentPage(response);
+				setExtractedText(response.text);
+			} else {
+				setOcrError('An error occurred while extracting text from the PDF');
+			}
+		} catch (error) {
+			setOcrError('An error occurred while extracting text from the PDF');
+		}
 	}
 
 	const resetUpload = () => {
@@ -162,17 +212,26 @@ export const UploadProvider = ({ children }: {children: React.ReactNode}) => {
 		setOcrError(null);
 	}
 
+	useEffect(() => {
+		(async () => {
+			if (file) setUploadedImageUrl(await resolveImageUrl(file) as string);
+		})()
+	}, [file]);
+
 	return (
 		<UploadContext.Provider value={{
 			uploading,
 			uploadedImage,
 			uploadedImageUrl,
+			pdfUploadStore,
 			uploadProgress,
 			setUploadedImageUrl,
 			uploadImageAndStoreByIndex,
 			extractedText,
 			uploadImage,
-			resetUpload
+			resetUpload,
+			getExtractFromPDFPage,
+			uploadPDF
 		}}>
 			{children}
 		</UploadContext.Provider>
