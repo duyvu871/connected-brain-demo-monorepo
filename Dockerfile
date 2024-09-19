@@ -1,17 +1,30 @@
+# Use Node.js 18 as the base image
 FROM node:18
 
+# Set the working directory in the container
 WORKDIR /app
 
+# Copy the entire project code into the container
 COPY . .
 
+# Install dependencies for both client and server
 WORKDIR /app/connected-brain-demo-monorepo/apps/web/
 RUN npm install
 WORKDIR /app/connected-brain-demo-monorepo/apps/server/
 RUN npm install
 
+# Update apt package lists
+RUN apt-get update
+
+# Install ImageMagick
+RUN apt-get install -y imagemagick
+
+# Install PM2 globally
 RUN npm install -g pm2
 
+# Expose ports for client and server
 EXPOSE 3000
 EXPOSE 3001
 
+# Start the application with PM2
 CMD ["pm2-runtime", "start", "ecosystem.config.js"]
