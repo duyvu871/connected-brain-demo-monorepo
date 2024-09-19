@@ -12,7 +12,7 @@ const DurationTime: FC<any> = () => {
 	return (
 		<Flex align="start" className=" flex-grow" direction="column" justify="center">
 			<Box className="text-green-400 text-3xl font-semibold">{formatMillisecondsToMinutesSeconds(duration)}</Box>
-			<Box className="text-gray-300/70 text-sm">Minutes processed</Box>
+			<Box className="text-zinc-300/70 text-sm">Minutes processed</Box>
 		</Flex>
 	);
 };

@@ -7,7 +7,7 @@
     "baseUrl": "./",
     "paths": {
       "@ui/*": ["./src/*"],
-      "web/*": ["../../apps/web/src/*"]
+      "@/*": ["../../apps/web/src/*"]
     }
   },
   "exclude": ["dist", "build", "node_modules"]

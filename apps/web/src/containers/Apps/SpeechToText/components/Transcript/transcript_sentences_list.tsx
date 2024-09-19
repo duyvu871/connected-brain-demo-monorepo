@@ -59,7 +59,7 @@ export default function TranscriptSentencesList() {
 					{currentTranscript?.transcript.map((item, index) => (
 						<div className="flex justify-start" key={`sentence-${genUID()}`}>
 							<div>
-								<p className="text-gray-500 text-bold text-xs">{formatMillisecondsToMinutesSeconds(item.start)}</p>
+								<p className="text-zinc-500 text-bold text-xs">{formatMillisecondsToMinutesSeconds(item.start)}</p>
 							</div>
 							<div>
 								<p
@@ -93,7 +93,7 @@ export default function TranscriptSentencesList() {
 						},
 					}}>
 					<div
-						className="w-fit p-2 rounded-full bg-gray-700/70 backdrop-blur border border-zinc-600"
+						className="w-fit p-2 rounded-full bg-zinc-700/70 backdrop-blur border border-zinc-600"
 						onClick={scrollToSentence}>
 						<IoIosArrowDown />
 					</div>

@@ -13,7 +13,7 @@ function MainSidebar() {
 		<Center className="w-fit xl:w-44 transition-all" h="100%">
 			<ContentSidebar className="hidden xl:flex" />
 			<Center className="pl-3">
-				<Center className="xl:[display:none!important] bg-gray-800 py-4 px-1 rounded-lg cursor-pointer"
+				<Center className="xl:[display:none!important] bg-zinc-800 py-4 px-1 rounded-lg cursor-pointer"
 								onClick={openDrawer}>
 					<IoIosArrowForward />
 				</Center>

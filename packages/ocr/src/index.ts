@@ -145,7 +145,7 @@ export class OCR {
 		}
 	}
 
-	public static async processGrayScaleImage(
+	public static async processzincScaleImage(
 		imageBuffer: Buffer,
 	): Promise<Buffer> {
 		try {
@@ -166,7 +166,7 @@ export class OCR {
 		try {
 			// console.log('sourceLang', sourceLang);
 			// console.log('targetLang', targetLang);
-			// imageBuffer = await this.processGrayScaleImage(imageBuffer);
+			// imageBuffer = await this.processzincScaleImage(imageBuffer);
 			const worker = await this.loadLangData(sourceLang, {
 				gzip: false, // compress the image buffer
 				langPath: constants.langPath,

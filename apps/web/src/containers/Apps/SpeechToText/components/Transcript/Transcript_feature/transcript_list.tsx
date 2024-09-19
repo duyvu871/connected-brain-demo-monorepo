@@ -66,7 +66,7 @@ const TranscriptListItem: React.FC<TranscriptListItemProps> = (props) => {
 		<Flex align="start" className="flex-grow h-fit w-full gap-1" direction="column" justify="center">
 			<Flex align="center" className="w-full" justify="space-between">
 				<p className="text-green-400/85 text-bold text-sm">{props.speaker ?? 'Speaker'}</p>
-				<p className="text-gray-500 text-bold text-xs">{formatMillisecondsToMinutesSeconds(props.start)}</p>
+				<p className="text-zinc-500 text-bold text-xs">{formatMillisecondsToMinutesSeconds(props.start)}</p>
 			</Flex>
 			{/*<Tooltip*/}
 			{/*	className={'dark'}*/}
@@ -83,7 +83,7 @@ const TranscriptListItem: React.FC<TranscriptListItemProps> = (props) => {
 			<Flex align="start" justify="start">
 				<button onClick={playSegment}>{isPlaying ? <HiMiniPause className="text-red-500" /> :
 					<HiMiniPlay />}</button>
-				<p className="text-xs text-gray-300 pl-2">{props.words ?? 'Words'}</p>
+				<p className="text-xs text-zinc-300 pl-2">{props.words ?? 'Words'}</p>
 			</Flex>
 			{/*</Tooltip>*/}
 		</Flex>

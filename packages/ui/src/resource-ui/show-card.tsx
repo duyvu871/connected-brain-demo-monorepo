@@ -73,7 +73,7 @@ function FeatureItemRender({ itemList = [] }: { itemList: typeof featuresList1 }
 		<>
 			{itemList.map((feature, index) => (
 				<div
-					className="bg-black/80 overflow-hidden transition-all w-72 relative flex flex-col justify-start items-start rounded-2xl aspect-square max-w-xl shadow"
+					className="bg-zinc-200 dark:bg-black/80 overflow-hidden transition-all w-72 relative flex flex-col justify-start items-start rounded-2xl aspect-square max-w-xl shadow"
 					key={`feature-list-1-${index}`}
 					onMouseEnter={() => {
 						if (currentHover !== '') {
@@ -86,7 +86,7 @@ function FeatureItemRender({ itemList = [] }: { itemList: typeof featuresList1 }
 					}}
 				>
 					<div
-						className="absolute z-30 top-4 right-4 w-[40px] h-[40px] rounded-lg bg-gray-300/20 backdrop-blur-[4px] flex justify-center items-center">
+						className="absolute z-30 top-4 right-4 w-[40px] h-[40px] rounded-lg bg-zinc-100/50 dark:bg-zinc-300/20 backdrop-blur-[4px] flex justify-center items-center">
 						{feature.icon}
 					</div>
 					<div className="w-full h-full overflow-hidden">
@@ -107,7 +107,7 @@ function FeatureItemRender({ itemList = [] }: { itemList: typeof featuresList1 }
 							}}
 						/>
 					</div>
-					<div className="h-fit border-0 border-t-[1px] border-gray-900">
+					<div className="h-fit border-0 border-t-[1px] border-zinc-400 dark:border-zinc-900">
 						<motion.div
 							animate={currentHover === feature.title ? {} : 'rest'}
 							className="relative z-20 p-7 pr-2 pt-2 rounded-b-xl flex flex-col justify-center items-start gap-3 "
@@ -118,7 +118,7 @@ function FeatureItemRender({ itemList = [] }: { itemList: typeof featuresList1 }
 							<div className="flex justify-between items-center w-full"
 							>
 										<span
-											className="text-white text-xl font-extrabold transition-[color_0.2s,font-size_0.01s]"
+											className="text-zinc-700 dark:text-white text-xl font-extrabold transition-[color_0.2s,font-size_0.01s]"
 										>
 										{feature.title}
 										</span>
@@ -129,7 +129,7 @@ function FeatureItemRender({ itemList = [] }: { itemList: typeof featuresList1 }
 										delay: 0.1,
 									},
 								}}
-								className={cn('text-xs text-gray-300 h-11 line-clamp-3 shadow')}>{feature.description}</motion.span>
+								className={cn('text-xs text-zinc-600 dark:text-zinc-300 h-11 line-clamp-3')}>{feature.description}</motion.span>
 						</motion.div>
 						<div
 							className="backdrop-blur-[6px] h-0 w-full absolute z-10 bottom-0 transition-all showCardHoverContent" />
@@ -143,14 +143,14 @@ function FeatureItemRender({ itemList = [] }: { itemList: typeof featuresList1 }
 function ShowCard(): React.ReactNode {
 	// const [currentHover, setCurrentHover] = React.useState<string>('');
 	return (
-		<div className="w-full bg-[#16181b73] p-14 flex justify-center items-center">
+		<div className="w-full bg-zinc-100 dark:bg-zinc-900/70 p-14 pb-0 flex justify-center items-center">
 			<div className="h-min max-w-5xl flex flex-col justify-center items-center gap-10 ">
 				<div className="max-w-5xl flex flex-wrap justify-center items-center gap-10">
 					<FeatureItemRender itemList={featuresList1} />
 					<FeatureItemRender itemList={featuresList2} />
 					<FeatureItemRender itemList={featuresList3} />
 				</div>
-				<div className="flex justify-center items-center gap-10" />
+				{/*<div className="flex justify-center items-center gap-10" />*/}
 			</div>
 		</div>
 	);

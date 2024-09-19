@@ -13,7 +13,7 @@ function DonutShape({ classNames, ...props }: DonutShapeProps): JSX.Element {
 	return (
 		<div className={cn('', classNames?.wrapper || '')}>
 			<pre
-				className={cn('donut-shaped w-[400px] h-[400px] text-md text-gray-600 flex justify-center items-center', classNames?.pre || '')} {...props}  />
+				className={cn('donut-shaped w-[400px] h-[400px] text-md text-zinc-600 flex justify-center items-center', classNames?.pre || '')} {...props}  />
 		</div>
 	);
 }

@@ -12,7 +12,7 @@ const ProgressLabel: FC<ProgressLabelProps> = ({ value }) => {
 	return (
 		<Flex align="center" className="" direction="column" justify="center">
 			<Box className="text-green-400 text-xl font-semibold">{value}%</Box>
-			<Box className="text-gray-300/70 text-xs">Completed</Box>
+			<Box className="text-zinc-300/70 text-xs">Completed</Box>
 		</Flex>
 	);
 };
@@ -24,7 +24,7 @@ function Progress() {
 				aria-label="Loading..."
 				classNames={{
 					base: 'relative block',
-					track: 'bg-gray-700',
+					track: 'bg-zinc-700',
 					value: 'text-white',
 					label: 'text-white absolute top-[50%] left-[50%] transform translate-x-[-50%] translate-y-[-50%]	',
 					indicator: 'stroke-green-500 h-2',

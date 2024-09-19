@@ -12,7 +12,7 @@ function FeatureSidebar() {
 	return (
 			<aside
 				className={cn(
-					"fixed top-0 left-0 z-[120] bg-zinc-950 h-screen -translate-x-full lg:translate-x-0 transition-[width] ease-in-out duration-300 border-r border-zinc-800 dark:border-zinc-900",
+					"fixed top-0 left-0 z-[120] bg-zinc-50 dark:bg-zinc-950 h-screen -translate-x-full lg:translate-x-0 transition-[width] ease-in-out duration-300 border-r border-zinc-200 dark:border-zinc-900",
 					!isOpen ? "w-[90px]" : "w-72"
 				)}
 			>
@@ -25,10 +25,10 @@ function FeatureSidebar() {
 						)}
 					>
 						<Link className="flex items-center gap-2" href="/">
-							<Logo className="w-8 h-8 mr-1 fill-zinc-200" />
+							<Logo className="w-8 h-8 mr-1 fill-zinc-700 dark:fill-zinc-200" />
 							<h1
 								className={cn(
-									"font-bold text-lg whitespace-nowrap transition-[transform,opacity,display] ease-in-out duration-300",
+									"font-bold text-lg text-zinc-700 dark:text-zinc-100 whitespace-nowrap transition-[transform,opacity,display] ease-in-out duration-300",
 									!isOpen
 										? "-translate-x-96 opacity-0 hidden"
 										: "translate-x-0 opacity-100"

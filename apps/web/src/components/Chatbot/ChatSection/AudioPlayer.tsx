@@ -28,7 +28,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ src }) => {
 	};
 
 	return (
-		<div className="bg-gray-900 rounded-lg p-4 shadow-md">
+		<div className="bg-zinc-900 rounded-lg p-4 shadow-md">
 			<audio
 				onEnded={() => setIsPlaying(false)}
 				onLoadedData={(e) => {
@@ -43,13 +43,13 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ src }) => {
 			/>
 
 			<div className="flex items-center justify-between gap-2">
-				<div className="text-gray-400 text-sm">
+				<div className="text-zinc-400 text-sm">
 					{formatTime(currentTime)}
 				</div>
 
 				<div className="flex items-center">
 					<button
-						className="bg-gray-700 text-white rounded-full w-8 h-8 flex items-center justify-center mr-2 focus:outline-none"
+						className="bg-zinc-700 text-white rounded-full w-8 h-8 flex items-center justify-center mr-2 focus:outline-none"
 						onClick={handlePlayPause}
 						type="button"
 					>
@@ -62,7 +62,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ src }) => {
 				</div>
 			</div>
 
-			{/*<div className="w-full h-2 bg-gray-700 rounded-full mt-2 overflow-hidden">*/}
+			{/*<div className="w-full h-2 bg-zinc-700 rounded-full mt-2 overflow-hidden">*/}
 			{/*	/!*<div*!/*/}
 			{/*	/!*	className="h-full bg-indigo-500 transition-all"*!/*/}
 			{/*	/!*	style={{ width: `${(currentTime) * 100}%` }}*!/*/}

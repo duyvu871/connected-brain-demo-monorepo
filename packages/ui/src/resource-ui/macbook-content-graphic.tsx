@@ -18,24 +18,24 @@ function MacbookContentGraphic(): JSX.Element {
 						<div
 							className="relative max-w-[200px] md:max-w-md sm:max-w-xs w-full md:bottom-28 sm:bottom-20 bottom-14">
 							<div
-								className="flex items-center md:p-2 bg-gray-200/50 rounded-full text-gray-900 backdrop-blur-[4px] text-[10px] md:text-xl font-semibold"
+								className="flex items-center md:p-2 bg-zinc-200/50 rounded-full text-zinc-900 backdrop-blur-[4px] text-[10px] md:text-xl font-semibold"
 							>
-								<IoReload className="p-1 mr-3 text-gray-900 w-6 h-6 md:w-8 md:h-8" />
+								<IoReload className="p-1 mr-3 text-zinc-900 w-6 h-6 md:w-8 md:h-8" />
 								<span className="flex justify-between items-center w-full">
-						AI is generating...
-						<TiMediaStopOutline className=" text-gray-900 w-6 h-6 md:w-8 md:h-8" />
-					</span>
+									AI is generating...
+									<TiMediaStopOutline className=" text-zinc-900 w-6 h-6 md:w-8 md:h-8" />
+								</span>
 							</div>
 						</div>
 					</div>
 				</div>
 				<ul
-					className=" flex left-2 top-[360px] sm:top-60 xl:flex absolute md:left-24 px-1 py-1 bg-gray-500/20 backdrop-blur-[8px] border border-gray-800 rounded-2xl md:block xl:left-[-10px]">
+					className=" flex left-2 top-[360px] sm:top-60 xl:flex absolute md:left-24 px-1 py-1 bg-zinc-400/60 dark:bg-zinc-500/20 backdrop-blur-[8px] border border-zinc-400 dark:border-zinc-800 rounded-2xl md:block xl:left-[-10px]">
 					{heroIcons.map((icon, index) => (
 						<motion.li className="p-2 md:p-5" key={`hero-icon-${  index}`} variants={{
 							hover: {
 								scale: 1.3,
-								color: '#60a5fa',
+								color: '#d8d8d8',
 								animationDuration: '1s',
 								transition: {
 									ease: [0.15, 0.75, 0.5, 1],
@@ -43,13 +43,13 @@ function MacbookContentGraphic(): JSX.Element {
 								},
 							},
 						}} whileHover="hover">
-							{icon({ className: 'md', size: 30 })}
+							{icon({ className: 'md text-zinc-500 dark:text-zinc-100', size: 30 })}
 						</motion.li>
 					))}
 				</ul>
 
 				<div
-					className=" top-60 w-64 absolute right-0 xl:right-[-60px] md:top-20 md:w-80 flex items-center p-4 pr-6 bg-gray-500/20 backdrop-blur-[8px] border border-gray-800 rounded-2xl gap-5"
+					className=" top-60 w-64 absolute right-0 xl:right-[-60px] md:top-20 md:w-80 flex items-center p-4 pr-6 bg-zinc-400/60 dark:bg-zinc-500/20 backdrop-blur-[8px] border border-zinc-400 dark:border-zinc-800 rounded-2xl gap-5"
 				>
 					<Image
 						alt="image"
@@ -60,13 +60,13 @@ function MacbookContentGraphic(): JSX.Element {
 					/>
 
 					<div className="flex-1">
-						<h6 className="mb-1 font-semibold text-base ">Conservation Recorded</h6>
+						<h6 className="mb-1 font-semibold dark:text-zinc-200 text-zinc-400">Conservation Recorded</h6>
 
 						<div className="flex items-center justify-between">
 							<ul className="flex -m-0.5">
 								{notificationImages.map((item, index) => (
 									<li
-										className="flex w-6 h-6 border border-gray-800 rounded-full overflow-hidden"
+										className="flex w-6 h-6 border border-zinc-800 rounded-full overflow-hidden"
 										key={`notification-image-${index}`}
 									>
 										<Image
@@ -79,7 +79,7 @@ function MacbookContentGraphic(): JSX.Element {
 									</li>
 								))}
 							</ul>
-							<div className="body-2 text-sm text-gray-600">1m ago</div>
+							<div className="body-2 text-sm text-zinc-600">1m ago</div>
 						</div>
 					</div>
 				</div>

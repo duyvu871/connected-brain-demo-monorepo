@@ -76,7 +76,7 @@ const ChatMessage = forwardRef<
 								{contentMedia?.map((media, index) => (
 									<div className="relative w-24 h-28" key={'content-media_' + generateUID()}>
 										<div
-											className="w-full h-full relative rounded-xl flex justify-center items-center bg-gray-800 overflow-hidden">
+											className="w-full h-full relative rounded-xl flex justify-center items-center bg-zinc-800 overflow-hidden">
 											<Image
 												alt="media"
 												className="w-full h-full object-cover"
@@ -235,7 +235,7 @@ export default function MessageListRender() {
 					},
 				}}>
 				<div
-					className="p-2 rounded-full bg-gray-700/70 backdrop-blur border border-zinc-600"
+					className="p-2 rounded-full bg-zinc-700/70 backdrop-blur border border-zinc-600"
 					onClick={scrollToMessage}>
 					<IoIosArrowDown />
 				</div>

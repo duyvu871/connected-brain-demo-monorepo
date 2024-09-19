@@ -80,7 +80,9 @@ function VoiceRecord({ setTextContent }: VoiceRecordModalProps) {
 
 			mediaRecorderRef.current = new MediaRecorder(stream);
 			const audioChunks: Blob[] = [];
+			// mediaRecorderRef.current.stream.
 			mediaRecorderRef.current.ondataavailable = (event) => {
+				// console.log(event.data);
 				audioChunks.push(event.data);
 			};
 
@@ -139,7 +141,7 @@ function VoiceRecord({ setTextContent }: VoiceRecordModalProps) {
 					audioBase64 ? <>
 						<AudioPlayer src={audioBase64} />
 						<button
-							className="p-2 bg-gray-900 text-white rounded-md hover:bg-gray-900/70 transition-all"
+							className="p-2 bg-zinc-900 text-white rounded-md hover:bg-zinc-900/70 transition-all"
 							onClick={() => SpeechToText(audioBlob as Blob)}
 						>Transcribe
 						</button>
@@ -151,11 +153,11 @@ function VoiceRecord({ setTextContent }: VoiceRecordModalProps) {
 				className="relative w-fit h-20 flex justify-center items-center"
 			>
 				<div
-					className="absolute z-[800] w-12 h-12 rounded-full transition-all bg-gray-600"
+					className="absolute z-[800] w-12 h-12 rounded-full transition-all bg-zinc-600"
 					ref={animationMicRef}
 				 />
 				<div
-					className="record-mic relative z-[801] w-10 h-10 rounded-full bg-gray-800 flex justify-center items-center cursor-pointer"
+					className="record-mic relative z-[801] w-10 h-10 rounded-full bg-zinc-800 flex justify-center items-center cursor-pointer"
 					data-start-record={isRecording}
 					onClick={handleRecordingToggle}
 				>

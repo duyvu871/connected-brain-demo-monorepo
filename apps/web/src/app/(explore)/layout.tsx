@@ -8,6 +8,7 @@ import WebVitals from '@/app/_components/web-vitals.tsx';
 import { getServerAuthSession } from '@/lib/nextauthOptions.ts';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { ThemeProvider } from "@/layouts/global-theme";
 
 const fontSans = FontSans({
 	subsets: ['latin', 'vietnamese'],
@@ -29,9 +30,16 @@ export default async function RootLayout({
 	}
 	return (
 		<html lang="en" suppressHydrationWarning>
-			<body className={cn(fontSans.className, "")}>
+			<body className={cn(fontSans.className, "font-sans antialiased dark:bg-black bg-white")}>
 				<WebVitals />
+				<ThemeProvider
+					attribute="class"
+					defaultTheme="system"
+					disableTransitionOnChange
+					enableSystem
+				>
 				{children}
+				</ThemeProvider>
 			</body>
 		</html>
 	);

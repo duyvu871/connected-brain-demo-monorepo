@@ -31,10 +31,10 @@ export interface LanguageSelectProps {
 export const LanguageSelect: FC<LanguageSelectProps> = (props) => {
 	return (
 		<Select
-			className="max-w-md w-full dark"
+			className="max-w-md w-full"
 			classNames={{
 				base: 'flex items-center',
-				popoverContent: 'bg-gray-950/80 backdrop-blur',
+				popoverContent: 'bg-zinc-50 dark:bg-zinc-950/80 backdrop-blur',
 				innerWrapper: 'py-1.5',
 				mainWrapper: 'w-[150px]',
 				// label: 'whitespace-nowrap text-white',
@@ -51,7 +51,7 @@ export const LanguageSelect: FC<LanguageSelectProps> = (props) => {
 				return (
 					<div className="flex flex-wrap gap-1">
 						{items.map((item) => (
-							<Chip className="h-6" key={`chip-lang-${item.key}`}>
+							<Chip className="h-6 dark:text-zinc-100 text-zinc-700 " key={`chip-lang-${item.key}`}>
 								{item.textValue}
 							</Chip>
 						))}
@@ -62,7 +62,7 @@ export const LanguageSelect: FC<LanguageSelectProps> = (props) => {
 			size="sm"
 		>
 			{props.languages.map((lang) => (
-				<SelectItem className="text-white" key={lang.key}>
+				<SelectItem className="text-zinc-700 dark:text-white" key={lang.key}>
 					{lang.textValue}
 				</SelectItem>
 			))}

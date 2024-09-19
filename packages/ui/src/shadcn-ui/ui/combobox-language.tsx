@@ -62,7 +62,7 @@ const ComboboxLanguage: FC<Props> = ({ options, value, onChange }) => {
               <CommandGroup>
                 {options.map((option) => (
                   <CommandItem
-                    className="cursor-pointer hover:bg-gray-100 transition-all"
+                    className="cursor-pointer hover:bg-zinc-100 transition-all"
                     key={option.value}
                     onSelect={(currentValue) => {
                       onChange(currentValue === value ? "" : currentValue);

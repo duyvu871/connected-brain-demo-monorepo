@@ -26,7 +26,7 @@ export default function TranscriptNote() {
 
 	return (
 		<Flex align="center" className="flex-grow" direction="column" justify="start">
-			<RichTextEditor className="max-h-full flex-grow bg-gray-800 rounded-lg" editor={editor}>
+			<RichTextEditor className="max-h-full flex-grow bg-zinc-800 rounded-lg" editor={editor}>
 				<RichTextEditor.Toolbar sticky stickyOffset={60}>
 					<RichTextEditor.ControlsGroup>
 						<RichTextEditor.Bold />
@@ -74,7 +74,7 @@ export default function TranscriptNote() {
 
 				<ScrollArea className="flex-grow h-[500px]">
 					<RichTextEditor.Content
-						className="bg-gray-700 h-fit min-h-[500px]"
+						className="bg-zinc-700 h-fit min-h-[500px]"
 						style={{
 							backgroundColor: 'rgb(75 85 99 / var(--tw-bg-opacity))',
 						}}

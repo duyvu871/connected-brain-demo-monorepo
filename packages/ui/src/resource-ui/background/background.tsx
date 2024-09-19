@@ -4,8 +4,8 @@ import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { Button } from '@ui/shadcn-ui/ui/button';
 
-const borderDashStyle = 'border-0 border-dashed border-gray-800';
-const roundedOneFourth = 'relative after:border-0 after:border-dashed after:border-gray-800 after:rounded-[100%_0%_0%_100%_/_100%_0%_100%_0%] after:w-10 after:h-10 after:content-normal after:absolute after:bottom-0 after:right-0';
+const borderDashStyle = 'border-0 border-dashed border-zinc-200/0 dark:border-zinc-800/0';
+const roundedOneFourth = 'relative after:border-0 after:border-dashed after:border-zinc-200/0 dark:after:border-zinc-800/0 after:rounded-[100%_0%_0%_100%_/_100%_0%_100%_0%] after:w-10 after:h-10 after:content-normal after:absolute after:bottom-0 after:right-0';
 
 function Background(): JSX.Element {
 
@@ -41,7 +41,7 @@ function Background(): JSX.Element {
 					<div className={cn(borderDashStyle, ' border-b-[1px]')}>
 						<div className="p-6 w-full h-full flex flex-col justify-start items-center gap-6">
 							<span
-								className="text-blue-400 text-5xl flex justify-center items-center font-bold">
+								className="dark:text-zinc-50 text-zinc-800 text-5xl flex justify-center items-center font-bold">
 								{/*<WavyText*/}
 								{/*	text={'Connected Brain'}*/}
 								{/*	className={'text-blue-400 text-5xl flex justify-center items-center font-bold z-20'}*/}
@@ -53,7 +53,7 @@ function Background(): JSX.Element {
 								Connected Brain
 							</span>
 							<span
-								className=" text-[rgb(255_255_255_/_0%)] text-3xl flex justify-center items-center font-bold bg-[linear-gradient(180deg,#fff,#adadad)] bg-clip-text">
+								className="text-zinc-700/80 dark:text-[rgb(255_255_255_/_0%)] text-3xl flex justify-center items-center font-bold bg-[linear-gradient(180deg,#fff,#adadad)] bg-clip-text">
 								{/*<WavyText*/}
 								{/*	text={'The Connected Platform for Native Data handle'}*/}
 								{/*	className={'text-[rgb(255_255_255_/_0%)] bg-[linear-gradient(180deg,#fff,#adadad)] text-3xl bg-clip-text font-bold'}*/}
@@ -62,7 +62,7 @@ function Background(): JSX.Element {
 								{/*	}}*/}
 								{/*	duration={0.025}*/}
 								{/*/>*/}
-								The Connected Platform for Native Data handle
+								The Connected Platform for Native Data processing
 						</span>
 						</div>
 					</div>
@@ -73,7 +73,7 @@ function Background(): JSX.Element {
 					<div className={cn(borderDashStyle, ' border-b-[1px] border-r-[1px]')} />
 					<div className={cn(borderDashStyle, ' border-b-[1px]')}>
 						<div className="p-6 w-full h-full flex flex-col justify-start items-center gap-3">
-							<span className=" text-gray-400 text-md flex justify-center items-center font-semibold">
+							<span className="font-normal text-zinc-400 text-md flex justify-center items-center">
 								{/*<TextTyping planText={'Unlocking Tomorrow’s Potential with Intelligent Data Insights'.split(' ')} />*/}
 								Unlocking Tomorrow’s Potential with Intelligent Data Insights
 							</span>
@@ -91,19 +91,21 @@ function Background(): JSX.Element {
 							<div
 								className={cn(
 									'relative',
-									'after:border-r-[1px] after:content-normal after:border-dashed after:border-gray-800 after:h-14 after:absolute after:top-[100%] ',
-									'before:border-r-[1px] before:content-normal before:border-dashed before:border-gray-800 before:h-14 before:absolute before:top-[100%] before:right-0',
+									'after:border-r-[1px] after:content-normal after:border-dashed after:border-zinc-200 dark:after:border-zinc-800 after:h-14 after:absolute after:top-[100%] ',
+									'before:border-r-[1px] before:content-normal before:border-dashed before:border-zinc-200/0 dark:before:border-zinc-800/0 before:h-14 before:absolute before:top-[100%] before:right-0',
 									// roundedOneFourth,
 								)}>
 								<div
 									className={cn(borderDashStyle,
 										'border-r-[1px] border-l-[1px] p-8 ',
 									)}>
-								<span className="capitalize text-gray-400 text-2xl flex justify-center items-center font-semibold">
+								<span className="capitalize text-zinc-400 text-2xl flex justify-center items-center font-semibold">
 									<Link href={userSession.status === 'authenticated' ? '/explore' : '/auth/method?type=register'} passHref>
 											<Button
-												className="capitalize flex justify-center items-center p-6 px-4 font-extrabold rounded-2xl rounded-tr-[0] rounded-bl-[0] text-xl bg-gray-200 text-zinc-800 transition-colors hover:bg-opacity-90"
-												variant="outline">
+												className="capitalize text-xs font-normal flex justify-center items-center p-6 px-4 rounded-xl text-xl border border-zinc-400 dark:border-zinc-700 bg-zinc-900 text-zinc-50 dark:bg-zinc-50 dark:text-zinc-800 transition-colors hover:bg-opacity-80 dark:hover:bg-opacity-90"
+												size="lg"
+												variant="outline"
+											>
 												Start Now
 														{/*<IoIosArrowRoundForward className={'text-4xl'} />*/}
 											</Button>

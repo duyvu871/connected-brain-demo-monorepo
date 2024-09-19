@@ -11,7 +11,7 @@ function Card({ classNames }: CardProps) {
 	return (
 		<div
 			className={cn(
-				'border border-gray-800 shadow rounded-xl p-4 max-w-lg w-full mx-auto',
+				'border border-zinc-800 shadow rounded-xl p-4 max-w-lg w-full mx-auto',
 				classNames?.wrapper || '',
 			)}>
 			<div className="animate-pulse flex space-x-4">

@@ -42,7 +42,7 @@ const UploadForward = forwardRef<HTMLButtonElement, ButtonProps & {
 
 	return (
 		<Button
-			className="w-10 h-10 px-0 min-w-fit bg-transparent hover:bg-zinc-800 text-zinc-900 hover:text-zinc-100 transition-all"
+			className="w-10 h-10 px-0 min-w-fit bg-transparent hover:bg-zinc-800 text-zinc-400 dark:text-zinc-900 hover:text-zinc-100 transition-all"
 			onClick={handleUpload}
 			ref={ref}
 			{...otherProps}

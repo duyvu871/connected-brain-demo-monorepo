@@ -18,7 +18,6 @@ import { theme as storageTheme } from '@/states/global/theme.ts';
 
 export function SheetMenu() {
 	const [isOpen] = useAtom(sidebarOpen);
-	const [theme] = useAtom(storageTheme);
 	return (
 		<Sheet>
 			<SheetOverlay className="z-[180]"/>
@@ -27,7 +26,7 @@ export function SheetMenu() {
 					<MenuIcon size={20} />
 				</Button>
 			</SheetTrigger>
-			<SheetContent className={cn('sm:w-72 px-3 h-full flex flex-col border-zinc-700 z-[200]', theme)} side="left">
+			<SheetContent className={cn('sm:w-72 px-3 h-full flex flex-col border-zinc-700 z-[200]')} side="left">
 				<div
 					className={cn(
 						"flex justify-center transition-transform ease-in-out duration-300 mb-1",
@@ -35,10 +34,10 @@ export function SheetMenu() {
 					)}
 				>
 					<Link className="flex items-center gap-2" href="/">
-						<Logo className="w-8 h-8 mr-1 fill-zinc-200" />
+						<Logo className="w-8 h-8 mr-1 fill-zinc-700 dark:fill-zinc-200" />
 						<h1
 							className={cn(
-								"font-bold text-lg whitespace-nowrap transition-[transform,opacity,display] ease-in-out duration-300",
+								"dark:text-zinc-50 text-zinc-700 font-bold text-lg whitespace-nowrap transition-[transform,opacity,display] ease-in-out duration-300",
 								!isOpen
 									? "-translate-x-96 opacity-0 hidden"
 									: "translate-x-0 opacity-100"

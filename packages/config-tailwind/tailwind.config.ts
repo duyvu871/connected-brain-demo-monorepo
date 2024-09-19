@@ -5,6 +5,7 @@ import { nextui } from '@nextui-org/react'
 const config: Omit<Config, "content"> = {
   content: [
     "./src/**/*.{tsx,ts,js,jsx}",
+    "./src/app/**/*.{tsx,ts,js,jsx}",
     "./src/containers/**/*.{tsx,ts,js,jsx}",
     "./src/components/**/*.{tsx,ts,js,jsx}",
     "./src/layouts/**/*.{tsx,ts,js,jsx}",

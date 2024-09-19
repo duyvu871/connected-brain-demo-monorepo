@@ -17,22 +17,22 @@ type ContentSidebarProps = BoxProps;
 const navItems = [
 	{
 		title: 'App',
-		icon: <TbApps className="text-gray-300" size={30} />,
+		icon: <TbApps className="text-zinc-300" size={30} />,
 		href: '',
 	},
 	{
 		title: 'Analytics',
-		icon: <HiMiniChartPie className="text-gray-300" size={30} />,
+		icon: <HiMiniChartPie className="text-zinc-300" size={30} />,
 		href: '/analytics',
 	},
 	{
 		title: 'Records',
-		icon: <FaRegFolderOpen className="text-gray-300" size={30} />,
+		icon: <FaRegFolderOpen className="text-zinc-300" size={30} />,
 		href: '/records',
 	},
 	{
 		title: 'Settings',
-		icon: <RiSettings3Fill className="text-gray-300" size={30} />,
+		icon: <RiSettings3Fill className="text-zinc-300" size={30} />,
 		href: '/settings',
 	},
 ];
@@ -54,11 +54,11 @@ const ContentSidebar = forwardRef<HTMLDivElement, ContentSidebarProps>((props, r
 							justify="center">
 					<div className="p-2">
 						<Image alt="John Doe"
-									 className="w-20 h-20 rounded-full mx-auto color-gray-400" src="https://www.gravatar.com/avatar/2acfb745ecf9d4dccb3364752d17f65f?s=260&d=mp" />
+									 className="w-20 h-20 rounded-full mx-auto color-zinc-400" src="https://www.gravatar.com/avatar/2acfb745ecf9d4dccb3364752d17f65f?s=260&d=mp" />
 					</div>
 					<div className="p-2">
 						<h3 className="text-center text-md text-white font-medium leading-8">Joh Doe</h3>
-						<div className="text-center text-gray-400 text-xs font-semibold">
+						<div className="text-center text-zinc-400 text-xs font-semibold">
 							<p>Web Developer</p>
 						</div>
 					</div>
@@ -71,8 +71,8 @@ const ContentSidebar = forwardRef<HTMLDivElement, ContentSidebarProps>((props, r
 						wrapper: 'w-full',
 						base: 'flex-grow',
 						tabList: 'flex-grow bg-transparent gap-7',
-						cursor: 'dark:bg-gray-700 rounded-2xl',
-						tab: 'flex-grow ease-in-out p-6 rounded-2xl group hover:bg-gray-700 hover:text-white transition-all duration-[500] data-[hover-unselected=true]:opacity-100 data-[hover-unselected=true]:text-white',
+						cursor: 'dark:bg-zinc-700 rounded-2xl',
+						tab: 'flex-grow ease-in-out p-6 rounded-2xl group hover:bg-zinc-700 hover:text-white transition-all duration-[500] data-[hover-unselected=true]:opacity-100 data-[hover-unselected=true]:text-white',
 						tabContent: 'flex-grow flex justify-center items-center',
 					}}
 					isVertical
@@ -99,7 +99,7 @@ const ContentSidebar = forwardRef<HTMLDivElement, ContentSidebarProps>((props, r
 			</Flex>
 			<Tooltip className="dark" classNames={{ content: 'text-md' }} content="Logout">
 				<Center
-					className="h-16 w-16 rounded-2xl transition-colors hover:bg-gray-800 cursor-pointer"
+					className="h-16 w-16 rounded-2xl transition-colors hover:bg-zinc-800 cursor-pointer"
 					onClick={() => signOut({})}
 				>
 					<IoExit size={30} />

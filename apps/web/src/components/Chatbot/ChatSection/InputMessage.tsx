@@ -66,7 +66,7 @@ export default function InputMessage(
 					</UploadModal>
 				</Tooltip>
 				<Tooltip title="Generate prompt">
-					<div className="p-3 rounded-full bg-gray-600 cursor-pointer" onClick={async () => {
+					<div className="p-3 rounded-full bg-zinc-600 cursor-pointer" onClick={async () => {
 						if (promptText === '') {
 							return;
 						}

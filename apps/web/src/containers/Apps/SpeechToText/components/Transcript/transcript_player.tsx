@@ -169,7 +169,7 @@ function TranscriptPlayer() {
 			<Tooltip className="dark" classNames={{ content: 'text-md' }} content="Edit">
 				<Center
 					className={cn(
-						'w-8 h-8 rounded-full hover:bg-gray-400/70 transition-all cursor-pointer',
+						'w-8 h-8 rounded-full hover:bg-zinc-400/70 transition-all cursor-pointer',
 						{
 							'': enableEdit,
 						},
@@ -183,7 +183,7 @@ function TranscriptPlayer() {
 			<Tooltip className="dark" classNames={{ content: 'text-md' }} content="Backward">
 				<Center
 					className={cn(
-						'border-solid border-[2px] border-gray-600/70 w-8 h-8 rounded-full bg-gray-400/40 hover:bg-gray-400/70 transition-all cursor-pointer')}
+						'border-solid border-[2px] border-zinc-600/70 w-8 h-8 rounded-full bg-zinc-400/40 hover:bg-zinc-400/70 transition-all cursor-pointer')}
 					onClick={backward}
 				>
 					<HiMiniArrowUturnLeft className="text-green-400" size={20} />
@@ -193,9 +193,9 @@ function TranscriptPlayer() {
 			<Tooltip className="dark" classNames={{ content: 'text-md' }} content="Pause/Play">
 				<Center
 					className={cn(
-						'border-solid border-[2px] border-gray-600/70 w-9 h-9 rounded-full bg-gray-400/40 hover:bg-gray-400/70 transition-all cursor-pointer',
+						'border-solid border-[2px] border-zinc-600/70 w-9 h-9 rounded-full bg-zinc-400/40 hover:bg-zinc-400/70 transition-all cursor-pointer',
 						{
-							'bg-gray-400/70': isPlaying,
+							'bg-zinc-400/70': isPlaying,
 						},
 					)}
 					onClick={togglePause}
@@ -208,7 +208,7 @@ function TranscriptPlayer() {
 			<Tooltip className="dark" classNames={{ content: 'text-md' }} content="Forward">
 				<Center
 					className={cn(
-						'border-solid border-[2px] border-gray-600/70 w-8 h-8 rounded-full bg-gray-400/40 hover:bg-gray-400/70 transition-all cursor-pointer')}
+						'border-solid border-[2px] border-zinc-600/70 w-8 h-8 rounded-full bg-zinc-400/40 hover:bg-zinc-400/70 transition-all cursor-pointer')}
 					onClick={forward}
 				>
 					<HiMiniArrowUturnRight className="text-green-400" size={20} />

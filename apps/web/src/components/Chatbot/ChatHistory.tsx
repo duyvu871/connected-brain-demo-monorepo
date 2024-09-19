@@ -104,14 +104,14 @@ const ChatHistoryItem = ({
 				)}>
 				<div className="flex justify-start items-center w-full">
 					<div className="text-white" onClick={() => directToSection(sectionId)}>
-						{startContent || <FiMessageSquare className="w-4 h-4 font-bold text-gray-400" />}
+						{startContent || <FiMessageSquare className="w-4 h-4 font-bold text-zinc-400" />}
 					</div>
 					<div
 						className="w-full text-start relative pl-2"
 						onClick={() => directToSection(sectionId)}>
 						<input
 							className={cn(
-								'w-full outline-none bg-inherit text-gray-400 relative text-start',
+								'w-full outline-none bg-inherit text-zinc-400 relative text-start',
 								isEditing ? '' : 'cursor-pointer',
 							)}
 							onBlur={() => {
@@ -144,7 +144,7 @@ const ChatHistoryItem = ({
 					{endContent || (
 						<div className="relative">
 							<Tooltip title="Chat options">
-								<div className="text-gray-600 hover:text-gray-200 p-1 transition-all">
+								<div className="text-zinc-600 hover:text-zinc-200 p-1 transition-all">
 									<SlOptionsVertical className="w-4 h-4" />
 								</div>
 							</Tooltip>
@@ -157,10 +157,10 @@ const ChatHistoryItem = ({
 					'flex transition-all duration-300 cursor-pointer',
 					enableEditTile ? 'w-20' : 'w-0',
 				)}>
-				<div className="w-20 h-10 bg-zinc-800 rounded-xl text-gray-400 flex">
+				<div className="w-20 h-10 bg-zinc-800 rounded-xl text-zinc-400 flex">
 					<Tooltip title="Edit">
 						<div
-							className="w-full h-full flex justify-center items-center hover:text-gray-200 transition-all border-r border-zinc-800">
+							className="w-full h-full flex justify-center items-center hover:text-zinc-200 transition-all border-r border-zinc-800">
 							<HiPencil
 								className="w-6 h-6"
 								onClick={() => {
@@ -172,7 +172,7 @@ const ChatHistoryItem = ({
 					</Tooltip>
 					<Tooltip title="Delete session">
 						<div
-							className="w-full h-full flex justify-center items-center hover:text-gray-200 transition-all">
+							className="w-full h-full flex justify-center items-center hover:text-zinc-200 transition-all">
 							<RiDeleteBin7Line className="w-6 h-6" />
 						</div>
 					</Tooltip>
@@ -274,7 +274,7 @@ function ChatHistory({ classnames }: ChatHistoryProps) {
 					classnames?.container || '',
 				)}>
 				{/*<div className={'w-full h-10 text-end md:hidden flex justify-end mb-1'}>*/}
-				{/*	<div className={'rounded-full w-8 h-8 hover:bg-gray-800 flex justify-center items-center'}>*/}
+				{/*	<div className={'rounded-full w-8 h-8 hover:bg-zinc-800 flex justify-center items-center'}>*/}
 				{/*		<LiaTimesSolid className={'text-white'} />*/}
 				{/*	</div>*/}
 				{/*</div>*/}
@@ -290,7 +290,7 @@ function ChatHistory({ classnames }: ChatHistoryProps) {
 								<motion.div
 									className={cn(
 										'relative w-10 h-10 bg-zinc-800 flex justify-center items-center rounded-xl transition-all duration-300 cursor-pointer',
-										'hover:bg-gray-700 hidden md:flex',
+										'hover:bg-zinc-700 hidden md:flex',
 										isCollapsed ? '' : 'w-0 ',
 									)}
 									initial="rest"
@@ -311,7 +311,7 @@ function ChatHistory({ classnames }: ChatHistoryProps) {
 									<SearchIcon
 										className={
 											chatHistoryCollapsed
-												? 'w-10 h-10 flex justify-center items-center transition-all hover:bg-gray-700 rounded-xl'
+												? 'w-10 h-10 flex justify-center items-center transition-all hover:bg-zinc-700 rounded-xl'
 												: ''
 										}
 										onClick={() => {
@@ -372,7 +372,7 @@ function ChatHistory({ classnames }: ChatHistoryProps) {
 						<div className="w-full h-fit p-2 flex justify-center items-center">
 							{/* <button
 								className={cn(
-									'text-white bg-gray-800 rounded-xl p-2 transition-all duration-300 cursor-pointer',
+									'text-white bg-zinc-800 rounded-xl p-2 transition-all duration-300 cursor-pointer',
 									chatHistoryCollapsed ? 'w-0 h-0 hidden' : '',
 								)}
 								onClick={() => setShowMore(prev => !prev)}>

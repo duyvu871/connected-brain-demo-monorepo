@@ -15,7 +15,7 @@ export default function StarterScreen(): React.ReactNode {
 	return (
 		<HeaderWrapper>
 			<main className="flex-1">
-				<Box className="relative mb-4 flex flex-col items-center justify-center  sm:pb-[26vh] py-[8vh] pt-[18vh] sm:pt-[26vh]">
+				<Box className="relative mb-4 flex flex-col items-center justify-center sm:pb-[26vh] py-[8vh] pt-[18vh] sm:pt-[26vh]">
 					<Box className="absolute inset-0 flex items-center justify-center overflow-hidden">
 						<Box
 							className="relative mb-72 h-fit w-full max-w-4xl sm:mb-0">
@@ -35,20 +35,20 @@ export default function StarterScreen(): React.ReactNode {
 						<Box className="flex flex-col gap-4 justify-center items-center">
 							<Box className="text-center">
 								<p
-									className="max-w-[100vw] text-3xl sm:text-4xl font-semibold text-white mx-5 sm:whitespace-nowrap">
+									className="max-w-[100vw] text-3xl sm:text-4xl font-semibold text-zinc-700 dark:text-white mx-5 sm:whitespace-nowrap">
 									<span>Scan</span>.
 									<span>Recognize</span>.<span>Extract</span>
 								</p>
 							</Box>
 							<Box className="text-center max-w-xl">
-								<p className="text-medium font-thin text-zinc-300">
+								<p className="text-medium font-thin text-zinc-600 dark:text-zinc-300">
 									OCR instantly transforms your images into editable text, saving you time and effort, no matter your
 									industry.
 								</p>
 							</Box>
 							<Box className="flex justify-center items-center gap-4">
-								<p className="text-lg font-semibold">Try Demo below or</p>
-								<Button as={Link} className="bg-zinc-900 rounded-lg" href="/app/ocr/p" variant="bordered">
+								<p className="text-sm dark:text-zinc-500 text-zinc-600">Try Demo below or</p>
+								<Button as={Link} className="bg-zinc-50 dark:bg-zinc-900 rounded-lg hover:bg-zinc-100 transition-colors" href="/app/ocr/p" variant="bordered">
 									Start Now <IoArrowForward className="-rotate-[35]" size={20} />
 								</Button>
 							</Box>

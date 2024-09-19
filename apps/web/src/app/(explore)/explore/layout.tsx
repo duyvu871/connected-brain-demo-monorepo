@@ -1,7 +1,7 @@
 import MainSidebarLayout from '@/layouts/main-sidebar';
 import React from 'react';
-import DefaultPageProvider from '@/providers/page-provider/default.tsx';
 import AppProvider from '@/providers/app-provider.tsx';
+import { ModeToggle } from '@/components/Theme/theme-toggle.tsx';
 
 type ExploreLayoutProps = {
 	children: React.ReactNode;
@@ -10,11 +10,13 @@ type ExploreLayoutProps = {
 export default function ExploreLayout({children}: ExploreLayoutProps) {
 	return (
 		<AppProvider>
-			<DefaultPageProvider>
-				<MainSidebarLayout>
+			<MainSidebarLayout customHeader={
+				<>
+					<ModeToggle />
+				</>
+			}>
 					{children}
-				</MainSidebarLayout>
-			</DefaultPageProvider>
+			</MainSidebarLayout>
 		</AppProvider>
 	)
 }

@@ -18,10 +18,9 @@ type MainSidebarLayoutProps = {
 
 export default function MainSidebarLayout({children, customHeader}: MainSidebarLayoutProps) {
 	const [isOpen] = useAtom(sidebarOpen);
-	const [theme] = useAtom(storageTheme);
 	const pathName = usePathname();
 	return (
-		<div className={theme}>
+		<>
 			<FeatureSidebar />
 			<ContentLayout customHeader={customHeader} title={getAppName(pathName)}>
 				<main
@@ -33,6 +32,6 @@ export default function MainSidebarLayout({children, customHeader}: MainSidebarL
 					{children}
 				</main>
 			</ContentLayout>
-		</div>
+		</>
 	)
 }

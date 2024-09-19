@@ -7,6 +7,7 @@ import DialogFeedback from '@/containers/Apps/OCRScan/components/dialog/dialog-f
 import DropdownMenuUser from '@/containers/Apps/OCRScan/components/dropdown/dropdown-menu.tsx';
 import React, { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { ModeToggle } from '@/components/Theme/theme-toggle.tsx';
 
 export default function PlaygroundHeader() {
 	const pathname = usePathname();
@@ -35,6 +36,7 @@ export default function PlaygroundHeader() {
 				)
 			}
 			<DialogFeedback />
+			<ModeToggle />
 		</>
 	);
 }

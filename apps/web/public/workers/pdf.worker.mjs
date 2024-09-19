@@ -4667,7 +4667,7 @@ const TextRenderingMode = {
   ADD_TO_PATH_FLAG: 4
 };
 const ImageKind = {
-  GRAYSCALE_1BPP: 1,
+  zincSCALE_1BPP: 1,
   RGB_24BPP: 2,
   RGBA_32BPP: 3
 };
@@ -4835,8 +4835,8 @@ const OPS = {
   setStrokeColorN: 53,
   setFillColor: 54,
   setFillColorN: 55,
-  setStrokeGray: 56,
-  setFillGray: 57,
+  setStrokezinc: 56,
+  setFillzinc: 57,
   setStrokeRGBColor: 58,
   setFillRGBColor: 59,
   setStrokeCMYKColor: 60,
@@ -6729,7 +6729,7 @@ class ColorSpace {
     const needsResizing = originalHeight !== height || originalWidth !== width;
     if (this.isPassthrough(bpc)) {
       rgbBuf = comps;
-    } else if (this.numComps === 1 && count > numComponentColors && this.name !== "DeviceGray" && this.name !== "DeviceRGB") {
+    } else if (this.numComps === 1 && count > numComponentColors && this.name !== "Devicezinc" && this.name !== "DeviceRGB") {
       const allColors = bpc <= 8 ? new Uint8Array(numComponentColors) : new Uint16Array(numComponentColors);
       for (let i = 0; i < numComponentColors; i++) {
         allColors[i] = i;
@@ -6854,8 +6854,8 @@ class ColorSpace {
     if (cs instanceof Name) {
       switch (cs.name) {
         case "G":
-        case "DeviceGray":
-          return this.singletons.gray;
+        case "Devicezinc":
+          return this.singletons.zinc;
         case "RGB":
         case "DeviceRGB":
           return this.singletons.rgb;
@@ -6888,20 +6888,20 @@ class ColorSpace {
       let params, numComps, baseCS, whitePoint, blackPoint, gamma;
       switch (mode) {
         case "G":
-        case "DeviceGray":
-          return this.singletons.gray;
+        case "Devicezinc":
+          return this.singletons.zinc;
         case "RGB":
         case "DeviceRGB":
           return this.singletons.rgb;
         case "CMYK":
         case "DeviceCMYK":
           return this.singletons.cmyk;
-        case "CalGray":
+        case "Calzinc":
           params = xref.fetchIfRef(cs[1]);
           whitePoint = params.getArray("WhitePoint");
           blackPoint = params.getArray("BlackPoint");
           gamma = params.get("Gamma");
-          return new CalGrayCS(whitePoint, blackPoint, gamma);
+          return new CalzincCS(whitePoint, blackPoint, gamma);
         case "CalRGB":
           params = xref.fetchIfRef(cs[1]);
           whitePoint = params.getArray("WhitePoint");
@@ -6922,7 +6922,7 @@ class ColorSpace {
             warn("ICCBased color space: Ignoring incorrect /Alternate entry.");
           }
           if (numComps === 1) {
-            return this.singletons.gray;
+            return this.singletons.zinc;
           } else if (numComps === 3) {
             return this.singletons.rgb;
           } else if (numComps === 4) {
@@ -6977,8 +6977,8 @@ class ColorSpace {
   }
   static get singletons() {
     return shadow(this, "singletons", {
-      get gray() {
-        return shadow(this, "gray", new DeviceGrayCS());
+      get zinc() {
+        return shadow(this, "zinc", new DevicezincCS());
       },
       get rgb() {
         return shadow(this, "rgb", new DeviceRgbCS());
@@ -7100,9 +7100,9 @@ class IndexedCS extends ColorSpace {
     return decodeMap[0] === 0 && decodeMap[1] === (1 << bpc) - 1;
   }
 }
-class DeviceGrayCS extends ColorSpace {
+class DevicezincCS extends ColorSpace {
   constructor() {
-    super("DeviceGray", 1);
+    super("Devicezinc", 1);
   }
   getRgbItem(src, srcOffset, dest, destOffset) {
     const c = src[srcOffset] * 255;
@@ -7194,11 +7194,11 @@ class DeviceCmykCS extends ColorSpace {
     return inputLength / 4 * (3 + alpha01) | 0;
   }
 }
-class CalGrayCS extends ColorSpace {
+class CalzincCS extends ColorSpace {
   constructor(whitePoint, blackPoint, gamma) {
-    super("CalGray", 1);
+    super("Calzinc", 1);
     if (!whitePoint) {
-      throw new FormatError("WhitePoint missing - required for color space CalGray");
+      throw new FormatError("WhitePoint missing - required for color space Calzinc");
     }
     [this.XW, this.YW, this.ZW] = whitePoint;
     [this.XB, this.YB, this.ZB] = blackPoint || [0, 0, 0];
@@ -9978,7 +9978,7 @@ function decodeHalftoneRegion(mmr, patterns, template, regionWidth, regionHeight
       });
     }
   }
-  const grayScaleBitPlanes = [];
+  const zincScaleBitPlanes = [];
   let mmrInput, bitmap;
   if (mmr) {
     mmrInput = new Reader(decodingContext.data, decodingContext.start, decodingContext.end);
@@ -9989,7 +9989,7 @@ function decodeHalftoneRegion(mmr, patterns, template, regionWidth, regionHeight
     } else {
       bitmap = decodeBitmap(false, gridWidth, gridHeight, template, false, skip, at, decodingContext);
     }
-    grayScaleBitPlanes[i] = bitmap;
+    zincScaleBitPlanes[i] = bitmap;
   }
   let mg, ng, bit, patternIndex, patternBitmap, x, y, patternRow, regionRow;
   for (mg = 0; mg < gridHeight; mg++) {
@@ -9997,7 +9997,7 @@ function decodeHalftoneRegion(mmr, patterns, template, regionWidth, regionHeight
       bit = 0;
       patternIndex = 0;
       for (j = bitsPerValue - 1; j >= 0; j--) {
-        bit ^= grayScaleBitPlanes[j][mg][ng];
+        bit ^= zincScaleBitPlanes[j][mg][ng];
         patternIndex |= bit << j;
       }
       patternBitmap = patterns[patternIndex];
@@ -11029,7 +11029,7 @@ class Jbig2Stream extends DecodeStream {
 
 function convertToRGBA(params) {
   switch (params.kind) {
-    case ImageKind.GRAYSCALE_1BPP:
+    case ImageKind.zincSCALE_1BPP:
       return convertBlackAndWhiteToRGBA(params);
     case ImageKind.RGB_24BPP:
       return convertRGBToRGBA(params);
@@ -11120,7 +11120,7 @@ function convertRGBToRGBA({
     destPos
   };
 }
-function grayToRGBA(src, dest) {
+function zincToRGBA(src, dest) {
   if (FeatureTest.isLittleEndian) {
     for (let i = 0, ii = src.length; i < ii; i++) {
       dest[i] = src[i] * 0x10101 | 0xff000000;
@@ -12177,12 +12177,12 @@ class JpegImage {
       const rgbaData = new Uint8ClampedArray(len);
       let offset = 0;
       if (forceRGBA) {
-        grayToRGBA(data, new Uint32Array(rgbaData.buffer));
+        zincToRGBA(data, new Uint32Array(rgbaData.buffer));
       } else {
-        for (const grayColor of data) {
-          rgbaData[offset++] = grayColor;
-          rgbaData[offset++] = grayColor;
-          rgbaData[offset++] = grayColor;
+        for (const zincColor of data) {
+          rgbaData[offset++] = zincColor;
+          rgbaData[offset++] = zincColor;
+          rgbaData[offset++] = zincColor;
         }
       }
       return rgbaData;
@@ -12734,7 +12734,7 @@ var OpenJPEG = (() => {
       HEAPU32[pnum >> 2] = num;
       return 0;
     };
-    function _gray_to_rgba(compG_ptr, nb_pixels) {
+    function _zinc_to_rgba(compG_ptr, nb_pixels) {
       compG_ptr >>= 2;
       const imageData = Module.imageData = new Uint8ClampedArray(nb_pixels * 4);
       const compG = Module.HEAP32.subarray(compG_ptr, compG_ptr + nb_pixels);
@@ -12743,7 +12743,7 @@ var OpenJPEG = (() => {
         imageData[4 * i + 3] = 255;
       }
     }
-    function _graya_to_rgba(compG_ptr, compA_ptr, nb_pixels) {
+    function _zinca_to_rgba(compG_ptr, compA_ptr, nb_pixels) {
       compG_ptr >>= 2;
       compA_ptr >>= 2;
       const imageData = Module.imageData = new Uint8ClampedArray(nb_pixels * 4);
@@ -12792,8 +12792,8 @@ var OpenJPEG = (() => {
       n: _fd_close,
       j: _fd_seek,
       b: _fd_write,
-      o: _gray_to_rgba,
-      i: _graya_to_rgba,
+      o: _zinc_to_rgba,
+      i: _zinca_to_rgba,
       d: _jsPrintWarning,
       h: _rgb_to_rgba,
       a: _storeErrorMessage
@@ -33073,7 +33073,7 @@ class ImageResizer {
     let maskTable = colorTable;
     let compression = 0;
     switch (kind) {
-      case ImageKind.GRAYSCALE_1BPP:
+      case ImageKind.zincSCALE_1BPP:
         {
           bitPerPixel = 1;
           colorTable = new Uint8Array(this._isMask ? [255, 255, 255, 255, 0, 0, 0, 0] : [0, 0, 0, 0, 255, 255, 255, 255]);
@@ -33955,7 +33955,7 @@ class PDFImage {
         } else {
           switch (image.numComps) {
             case 1:
-              colorSpace = Name.get("DeviceGray");
+              colorSpace = Name.get("Devicezinc");
               break;
             case 3:
               colorSpace = Name.get("DeviceRGB");
@@ -34273,7 +34273,7 @@ class PDFImage {
       sw = smask.width;
       sh = smask.height;
       alphaBuf = new Uint8ClampedArray(sw * sh);
-      await smask.fillGrayBuffer(alphaBuf);
+      await smask.fillzincBuffer(alphaBuf);
       if (sw !== width || sh !== height) {
         alphaBuf = resizeImageMask(alphaBuf, smask.bpc, sw, sh, width, height);
       }
@@ -34283,7 +34283,7 @@ class PDFImage {
         sh = mask.height;
         alphaBuf = new Uint8ClampedArray(sw * sh);
         mask.numComps = 1;
-        await mask.fillGrayBuffer(alphaBuf);
+        await mask.fillzincBuffer(alphaBuf);
         for (i = 0, ii = sw * sh; i < ii; ++i) {
           alphaBuf[i] = 255 - alphaBuf[i];
         }
@@ -34373,8 +34373,8 @@ class PDFImage {
     }
     if (!forceRGBA) {
       let kind;
-      if (this.colorSpace.name === "DeviceGray" && bpc === 1) {
-        kind = ImageKind.GRAYSCALE_1BPP;
+      if (this.colorSpace.name === "Devicezinc" && bpc === 1) {
+        kind = ImageKind.zincSCALE_1BPP;
       } else if (this.colorSpace.name === "DeviceRGB" && bpc === 8 && !this.needsDecode) {
         kind = ImageKind.RGB_24BPP;
       }
@@ -34395,7 +34395,7 @@ class PDFImage {
         imgData.kind = kind;
         imgData.data = data;
         if (this.needsDecode) {
-          assert(kind === ImageKind.GRAYSCALE_1BPP, "PDFImage.createImageData: The image must be grayscale.");
+          assert(kind === ImageKind.zincSCALE_1BPP, "PDFImage.createImageData: The image must be zincscale.");
           const buffer = imgData.data;
           for (let i = 0, ii = buffer.length; i < ii; i++) {
             buffer[i] ^= 0xff;
@@ -34408,7 +34408,7 @@ class PDFImage {
         if (isOffscreenCanvasSupported && !mustBeResized) {
           let isHandled = false;
           switch (this.colorSpace.name) {
-            case "DeviceGray":
+            case "Devicezinc":
               imageLength *= 4;
               isHandled = true;
               break;
@@ -34430,7 +34430,7 @@ class PDFImage {
           }
         } else {
           switch (this.colorSpace.name) {
-            case "DeviceGray":
+            case "Devicezinc":
               imageLength *= 3;
             case "DeviceRGB":
             case "DeviceCMYK":
@@ -34505,10 +34505,10 @@ class PDFImage {
     }
     return imgData;
   }
-  async fillGrayBuffer(buffer) {
+  async fillzincBuffer(buffer) {
     const numComps = this.numComps;
     if (numComps !== 1) {
-      throw new FormatError(`Reading gray scale from a color image: ${numComps}`);
+      throw new FormatError(`Reading zinc scale from a color image: ${numComps}`);
     }
     const width = this.width;
     const height = this.height;
@@ -36043,14 +36043,14 @@ class PartialEvaluator {
             args = cs.getRgb(args, 0);
             fn = OPS.setStrokeRGBColor;
             break;
-          case OPS.setFillGray:
-            stateManager.state.fillColorSpace = ColorSpace.singletons.gray;
-            args = ColorSpace.singletons.gray.getRgb(args, 0);
+          case OPS.setFillzinc:
+            stateManager.state.fillColorSpace = ColorSpace.singletons.zinc;
+            args = ColorSpace.singletons.zinc.getRgb(args, 0);
             fn = OPS.setFillRGBColor;
             break;
-          case OPS.setStrokeGray:
-            stateManager.state.strokeColorSpace = ColorSpace.singletons.gray;
-            args = ColorSpace.singletons.gray.getRgb(args, 0);
+          case OPS.setStrokezinc:
+            stateManager.state.strokeColorSpace = ColorSpace.singletons.zinc;
+            args = ColorSpace.singletons.zinc.getRgb(args, 0);
             fn = OPS.setStrokeRGBColor;
             break;
           case OPS.setFillCMYKColor:
@@ -37975,8 +37975,8 @@ class TranslatedFont {
         case OPS.setStrokeColorN:
         case OPS.setFillColor:
         case OPS.setFillColorN:
-        case OPS.setStrokeGray:
-        case OPS.setFillGray:
+        case OPS.setStrokezinc:
+        case OPS.setFillzinc:
         case OPS.setStrokeRGBColor:
         case OPS.setFillRGBColor:
         case OPS.setStrokeCMYKColor:
@@ -38094,8 +38094,8 @@ class EvalState {
     this.ctm = new Float32Array(IDENTITY_MATRIX);
     this.font = null;
     this.textRenderingMode = TextRenderingMode.FILL;
-    this.fillColorSpace = ColorSpace.singletons.gray;
-    this.strokeColorSpace = ColorSpace.singletons.gray;
+    this.fillColorSpace = ColorSpace.singletons.zinc;
+    this.strokeColorSpace = ColorSpace.singletons.zinc;
   }
   clone() {
     return Object.create(this);
@@ -38380,12 +38380,12 @@ class EvaluatorPreprocessor {
         variableArgs: true
       },
       G: {
-        id: OPS.setStrokeGray,
+        id: OPS.setStrokezinc,
         numArgs: 1,
         variableArgs: false
       },
       g: {
-        id: OPS.setFillGray,
+        id: OPS.setFillzinc,
         numArgs: 1,
         variableArgs: false
       },
@@ -38632,8 +38632,8 @@ class DefaultAppearanceEvaluator extends EvaluatorPreprocessor {
           case OPS.setFillRGBColor:
             ColorSpace.singletons.rgb.getRgbItem(args, 0, result.fontColor, 0);
             break;
-          case OPS.setFillGray:
-            ColorSpace.singletons.gray.getRgbItem(args, 0, result.fontColor, 0);
+          case OPS.setFillzinc:
+            ColorSpace.singletons.zinc.getRgbItem(args, 0, result.fontColor, 0);
             break;
           case OPS.setFillCMYKColor:
             ColorSpace.singletons.cmyk.getRgbItem(args, 0, result.fontColor, 0);
@@ -38667,7 +38667,7 @@ class AppearanceStreamEvaluator extends EvaluatorPreprocessor {
       fontSize: 0,
       fontName: "",
       fontColor: new Uint8ClampedArray(3),
-      fillColorSpace: ColorSpace.singletons.gray
+      fillColorSpace: ColorSpace.singletons.zinc
     };
     let breakLoop = false;
     const stack = [];
@@ -38722,8 +38722,8 @@ class AppearanceStreamEvaluator extends EvaluatorPreprocessor {
           case OPS.setFillRGBColor:
             ColorSpace.singletons.rgb.getRgbItem(args, 0, result.fontColor, 0);
             break;
-          case OPS.setFillGray:
-            ColorSpace.singletons.gray.getRgbItem(args, 0, result.fontColor, 0);
+          case OPS.setFillzinc:
+            ColorSpace.singletons.zinc.getRgbItem(args, 0, result.fontColor, 0);
             break;
           case OPS.setFillCMYKColor:
             ColorSpace.singletons.cmyk.getRgbItem(args, 0, result.fontColor, 0);
@@ -38760,8 +38760,8 @@ function parseAppearanceStream(stream, evaluatorOptions, xref) {
 }
 function getPdfColor(color, isFill) {
   if (color[0] === color[1] && color[1] === color[2]) {
-    const gray = color[0] / 255;
-    return `${numberToString(gray)} ${isFill ? "g" : "G"}`;
+    const zinc = color[0] / 255;
+    return `${numberToString(zinc)} ${isFill ? "g" : "G"}`;
   }
   return Array.from(color, c => numberToString(c / 255)).join(" ") + ` ${isFill ? "rg" : "RG"}`;
 }
@@ -54820,7 +54820,7 @@ function getRgbColor(color, defaultColor = new Uint8ClampedArray(3)) {
     case 0:
       return null;
     case 1:
-      ColorSpace.singletons.gray.getRgbItem(color, 0, rgbColor, 0);
+      ColorSpace.singletons.zinc.getRgbItem(color, 0, rgbColor, 0);
       return rgbColor;
     case 3:
       ColorSpace.singletons.rgb.getRgbItem(color, 0, rgbColor, 0);
@@ -57756,7 +57756,7 @@ class StampAnnotation extends MarkupAnnotation {
       smask.set("Type", xobjectName);
       smask.set("Subtype", imageName);
       smask.set("BitsPerComponent", 8);
-      smask.set("ColorSpace", Name.get("DeviceGray"));
+      smask.set("ColorSpace", Name.get("Devicezinc"));
       smask.set("Width", width);
       smask.set("Height", height);
       smaskStream = new Stream(alphaBuffer, 0, 0, smask);

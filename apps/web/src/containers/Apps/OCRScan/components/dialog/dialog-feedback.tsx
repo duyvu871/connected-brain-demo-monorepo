@@ -6,9 +6,9 @@ export default function DialogFeedback(): JSX.Element {
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
-				<Button variant="bordered">Feedback</Button>
+				<Button className="border border-zinc-300 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950">Feedback</Button>
 			</DialogTrigger>
-			<DialogContent className="sm:max-w-[425px] bg-zinc-950 border-zinc-700 rounded-lg w-[calc(100%-40px)]">
+			<DialogContent className="sm:max-w-[425px] bg-zinc-950 border-zinc-800 rounded-lg w-[calc(100%-40px)]">
 				<DialogHeader>
 					<DialogTitle>Send we your feedback</DialogTitle>
 				</DialogHeader>

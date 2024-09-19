@@ -37,7 +37,7 @@ function TranscriptPlayerTimeline() {
 					className="max-w-md"
 					classNames={{
 						thumb: 'bg-zinc-50',
-						track: 'bg-gray-900 border-l border-r',
+						track: 'bg-zinc-900 border-l border-r',
 						filler: "bg-zinc-50"
 					}}
 					color="foreground"

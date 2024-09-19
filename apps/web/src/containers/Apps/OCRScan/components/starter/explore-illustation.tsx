@@ -10,7 +10,7 @@ export default function ExploreIllustration(): JSX.Element {
 	return (
 		<Box className="flex flex-col justify-center items-center w-full my-20">
 			<Box className="w-full flex justify-center items-center gap-2 mb-20">
-				<h2 className="text-2xl text-zinc-100 font-normal">Turn images into editable text in seconds</h2>
+				<h2 className="text-2xl text-zinc-700 dark:text-zinc-100 font-normal">Turn images into editable text in seconds</h2>
 			</Box>
 			<Box className="flex flex-col sm:flex-row max-w-4xl">
 				<Box className="p-5 bg-zinc-300">

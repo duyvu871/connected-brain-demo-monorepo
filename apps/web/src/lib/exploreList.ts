@@ -22,8 +22,8 @@ export type ExploreItem = {
 
 export const exploreList: ExploreItem[] = [
 	{
-		title: "Use Cases",
-		description: "Chose from a variety of use cases to get started",
+		title: "Solutions",
+		description: "Chose from a variety of products to get started",
 		icon: PiNetworkLight,
 		items: [
 			{
@@ -53,7 +53,7 @@ export const exploreList: ExploreItem[] = [
 		]
 	},
 	{
-		title: "All Products",
+		title: "Get started",
 		description: "Explore all AI products",
 		items: [
 			{

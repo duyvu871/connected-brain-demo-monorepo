@@ -4,7 +4,7 @@ import { NextUIProvider } from '@nextui-org/react';
 
 export default function NextuiProvider({ children }: { children: React.ReactNode }) {
 	return (
-		<NextUIProvider className="layout dark">
+		<NextUIProvider className="layout">
 			{children}
 		</NextUIProvider>
 	);

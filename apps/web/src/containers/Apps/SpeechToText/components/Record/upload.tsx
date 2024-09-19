@@ -115,7 +115,7 @@ const UploadAudio: React.FC<UploadAudioProps> = ({
 					)}
 				</div>
 				<div className="flex items-center justify-center w-full">
-					<label className="flex flex-col items-center justify-center w-full h-full border-2 border-zinc-300 border-dashed rounded-lg cursor-pointer bg-zinc-50 dark:hover:bg-zinc-800 dark:bg-zinc-700 hover:bg-zinc-100 dark:border-zinc-700 dark:hover:border-gray-500 dark:hover:bg-zinc-600 transition-all"
+					<label className="flex flex-col items-center justify-center w-full h-full border-2 border-zinc-300 border-dashed rounded-lg cursor-pointer bg-zinc-50 dark:hover:bg-zinc-800 dark:bg-zinc-700 hover:bg-zinc-100 dark:border-zinc-700 dark:hover:border-zinc-500 dark:hover:bg-zinc-600 transition-all"
 								 htmlFor="dropzone-file">
 						<div className="flex flex-col items-center justify-center pt-5 pb-6">
 							<svg aria-hidden="true" className="w-8 h-8 mb-2 text-zinc-500 dark:text-zinc-400"

@@ -170,7 +170,7 @@ function VoiceRecord({ setTextContent, size = { wrapper: 'sm', icon: 'sm' } }: V
 					})}
 				>
 					<div
-						className={cn('absolute z-[800] rounded-full transition-all bg-gray-600', {
+						className={cn('absolute z-[800] rounded-full transition-all bg-zinc-600', {
 							// 'w-24 h-24': size?.icon === 'xl',
 							// 'w-20 h-20': size?.icon === 'lg',
 							// 'w-16 h-16': size?.icon === 'md',
@@ -183,7 +183,7 @@ function VoiceRecord({ setTextContent, size = { wrapper: 'sm', icon: 'sm' } }: V
 						ref={animationMicRef}
 					 />
 					<div
-						className={cn('record-mic relative z-[801] rounded-full bg-gray-800 shadow-[inset_0_0_20px_1px] flex justify-center items-center cursor-pointer',
+						className={cn('record-mic relative z-[801] rounded-full bg-zinc-800 shadow-[inset_0_0_20px_1px] flex justify-center items-center cursor-pointer',
 							{
 								'w-20 h-20': size?.icon === 'xl',
 								'w-16 h-16': size?.icon === 'lg',

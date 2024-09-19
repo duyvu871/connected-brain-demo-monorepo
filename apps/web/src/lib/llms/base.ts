@@ -1,16 +1,5 @@
-import type {
-	Content,
-	GenerationConfig,
-	GenerativeModel,
-	Part,
-	SafetySetting} from '@google/generative-ai';
-import {
-	GoogleGenerativeAI,
-	HarmBlockThreshold,
-	HarmCategory
-} from '@google/generative-ai';
-import { initAI } from './init';
-import { ChatbotService } from '@/lib/llms/base.ts';
+import type { Content, GenerationConfig, SafetySetting } from '@google/generative-ai';
+import { HarmBlockThreshold, HarmCategory } from '@google/generative-ai';
 
 export type MimeTypes =
 	'image/png'
@@ -50,17 +39,11 @@ export type MimeTypes =
 	| 'image/jpeg'
 	| 'image/jpeg-sequence';
 
+export abstract class ChatbotService {
+	protected generationConfig: GenerationConfig;
+	protected safetySettings: SafetySetting[];
 
-export class GeminiChatService extends ChatbotService {
-	private genAI: GoogleGenerativeAI;
-	private model: GenerativeModel;
-
-	constructor(apiKey: string) {
-		super();
-		this.genAI = new GoogleGenerativeAI(apiKey);
-		this.model = this.genAI.getGenerativeModel({
-			model: 'gemini-1.5-flash-latest',
-		});
+	protected constructor() {
 		this.generationConfig = {
 			temperature: 1,
 			topP: 0.95,
@@ -88,58 +71,13 @@ export class GeminiChatService extends ChatbotService {
 		];
 	}
 
-	public async startChat(isUsePrompt: boolean) {
-		const defaultPrompt = [{
-			role: 'model',
-			part: [{
-				text: ""
-			}]
-		}] as unknown as Content;
-		let initMessage: Content | undefined;
-		if (isUsePrompt) initMessage = initAI().initPrompt as unknown as Content;
-		const chatSessionGenerated = await this.model.generateContent(
-			initMessage ? initMessage.parts : defaultPrompt.parts
-		);
-		const response = chatSessionGenerated.response;
-		return response.text();
-	}
-
-	public async sendMessage(
-		message: {
-			textContent: string;
-			mediaContent: string[]; // url for media content
-		},
+	// Abstract methods to be implemented by specific chatbot services
+	abstract startChat(isUsePrompt: boolean): Promise<string>;
+	abstract sendMessage(
+		message: { textContent: string; mediaContent: string[] },
 		history: Content[],
-		passInitPrompt?: boolean,
-	): Promise<string> {
-		const initMessage = initAI().initPrompt as unknown as Content[];
-		const messageContent: string | (string | Part)[] = [
-			{
-				text: message.textContent,
-			},
-		];
-
-		if (message.mediaContent.length > 0) {
-			const contentFetch = message.mediaContent.map((item) => this.fetchToBase64WithMimeType(item));
-			const content = await Promise.all(contentFetch);
-			const filteredContent = content.filter((item) => item?.contentType && item?.base64Data) as NonNullable<{
-				base64Data: string;
-				contentType: MimeTypes
-			}[]>;
-			const mediaContent = filteredContent.map((item) =>
-				this.fileToGenerativePath(item.base64Data, item.contentType));
-			messageContent.push(...mediaContent);
-		}
-		// console.log(messageContent);
-		const chatSession = this.model.startChat({
-			generationConfig: this.generationConfig,
-			safetySettings: this.safetySettings,
-			history: passInitPrompt ? [...initMessage, ...history] : history,
-		});
-
-		const result = await chatSession.sendMessage(messageContent);
-		return result.response.text();
-	}
+		passInitPrompt?: boolean
+	): Promise<string>;
 
 	/**
 	 * Generate a message from a prompt
@@ -147,7 +85,10 @@ export class GeminiChatService extends ChatbotService {
 	 * @param mimeType mime type of the asset
 	 * @returns
 	 */
-	public fileToGenerativePath(content: string, mimeType: MimeTypes): {
+	protected fileToGenerativePath(
+		content: string,
+		mimeType: MimeTypes
+	): {
 		inlineData: {
 			data: string;
 			mimeType: MimeTypes;
@@ -161,7 +102,7 @@ export class GeminiChatService extends ChatbotService {
 		};
 	}
 
-	public async fetchToBase64WithMimeType(url: string) {
+	protected async fetchToBase64WithMimeType(url: string) {
 		try {
 			// validate url
 			const urlObj = new URL(url);

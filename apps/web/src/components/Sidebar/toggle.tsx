@@ -11,7 +11,7 @@ export function SidebarToggle({ isOpen, setIsOpen }: SidebarToggleProps) {
 	return (
 		<div className="invisible lg:visible absolute top-[18px] -right-[16px] z-20">
 			<Button
-				className="rounded-md w-8 h-8 dark:bg-zinc-50 bg-zinc-900 text-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-200 hover:bg-zinc-800 border-zinc-200 dark:border-zinc-200"
+				className="rounded-md w-8 h-8 bg-zinc-50 text-zinc-900 hover:bg-zinc-200 border-zinc-200 dark:border-zinc-700"
 				onClick={() => setIsOpen && setIsOpen(!isOpen)}
 				size="icon"
 				variant="outline"
