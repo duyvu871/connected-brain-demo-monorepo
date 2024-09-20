@@ -19,6 +19,8 @@ RUN npm install -g npm@10.8.1  && npm cache clean --force
 RUN npm install turbo@2.0.12 --global
 # Install PM2 globally
 RUN npm install -g pm2@5.4.2
+# Install concurrently globally
+RUN npm install -g concurrently@8.2.2
 
 # Install dependencies for both client and server
 #WORKDIR /connected-brain-demo-monorepo/apps/web/
