@@ -4,6 +4,8 @@ FROM node:20-alpine
 # Install Python3 and pip3
 RUN apk update && apk add --no-cache python3 py3-pip
 RUN apk add --no-cache build-base cairo-dev pango-dev jpeg-dev giflib-dev librsvg-dev libtool autoconf automake
+# Install ImageMagick
+RUN apk add --no-cache imagemagick
 
 # Set the working directory in the container
 WORKDIR /connected-brain-demo-monorepo
@@ -13,24 +15,16 @@ COPY . .
 
 # Install the latest version of npm
 RUN npm install -g npm@10.8.1  && npm cache clean --force
+# Install the latest version of turbo
+RUN npm install turbo@2.0.12 --global
+# Install PM2 globally
+RUN npm install -g pm2@5.4.2
 
 # Install dependencies for both client and server
 WORKDIR /connected-brain-demo-monorepo/apps/web/
-RUN npm install && npm run build && npm cache clean --force
+RUN npm install
 WORKDIR /connected-brain-demo-monorepo/apps/server/
-RUN npm install && npm run build && npm cache clean --force
-
-# Clean up the apt cache
-RUN sudo apt-get clean
-
-# Update apt package lists
-RUN apt-get update
-
-# Install ImageMagick
-RUN apt-get install -y imagemagick
-
-# Install PM2 globally
-RUN npm install -g pm2
+RUN npm install
 
 # Expose ports for client and server
 EXPOSE 3000
@@ -38,6 +32,8 @@ EXPOSE 3001
 
 # Set the working directory in the container
 WORKDIR /connected-brain-demo-monorepo
+# Build the project with turbo
+RUN npm run build
 
 # Start the application with PM2
 CMD ["pm2-runtime", "start", "ecosystem.container.config.js"]
