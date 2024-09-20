@@ -7,6 +7,9 @@ WORKDIR /connected-brain-demo-monorepo
 # Copy the entire project code into the container
 COPY . .
 
+# Install the latest version of npm
+RUN npm install -g npm@10.8.1
+
 # Install dependencies for both client and server
 WORKDIR /connected-brain-demo-monorepo/apps/web/
 RUN npm install
