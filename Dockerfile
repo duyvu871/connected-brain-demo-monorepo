@@ -1,5 +1,5 @@
 # Use Node.js 20 as the base image
-FROM node:20
+FROM node:20-alpine
 
 # Set the working directory in the container
 WORKDIR /connected-brain-demo-monorepo
@@ -8,13 +8,13 @@ WORKDIR /connected-brain-demo-monorepo
 COPY . .
 
 # Install the latest version of npm
-RUN npm install -g npm@10.8.1
+RUN npm install -g npm@10.8.1  && npm cache clean --force
 
 # Install dependencies for both client and server
 WORKDIR /connected-brain-demo-monorepo/apps/web/
-RUN npm install
+RUN npm install && npm run build && npm cache clean --force
 WORKDIR /connected-brain-demo-monorepo/apps/server/
-RUN npm install
+RUN npm install && npm run build && npm cache clean --force
 
 # Clean up the apt cache
 RUN sudo apt-get clean
