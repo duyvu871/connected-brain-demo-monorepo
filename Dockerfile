@@ -2,15 +2,15 @@
 FROM node:18
 
 # Set the working directory in the container
-WORKDIR /app
+WORKDIR /connected-brain-demo-monorepo
 
 # Copy the entire project code into the container
 COPY . .
 
 # Install dependencies for both client and server
-WORKDIR /app/connected-brain-demo-monorepo/apps/web/
+WORKDIR /connected-brain-demo-monorepo/apps/web/
 RUN npm install
-WORKDIR /app/connected-brain-demo-monorepo/apps/server/
+WORKDIR /connected-brain-demo-monorepo/apps/server/
 RUN npm install
 
 # Update apt package lists
@@ -27,7 +27,7 @@ EXPOSE 3000
 EXPOSE 3001
 
 # Set the working directory in the container
-WORKDIR /app/connected-brain-demo-monorepo
+WORKDIR /connected-brain-demo-monorepo
 
 # Start the application with PM2
 CMD ["pm2-runtime", "start", "ecosystem.container.config.js"]
