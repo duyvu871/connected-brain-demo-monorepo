@@ -6,6 +6,5 @@ services:
       - "3000:3000"
       - "3001:3001"
   chatbot_serves:
-    build: .
     ports:
       - "9090:9091"
