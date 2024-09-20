@@ -51,7 +51,7 @@ COPY --from=builder /connected-brain-demo-monorepo/out/full/ .
 
 
 
-RUN turbo build --filter=web...
+RUN npx turbo build --filter=web...
 
 FROM base AS runner
 
