@@ -3,8 +3,7 @@ FROM node:20-alpine
 
 # Install Python3 and pip3
 RUN apk update && apk add --no-cache python3 py3-pip
-RUN apt-get update && apt-get install -y build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev libtool autoconf automake \
-&& rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache build-base cairo-dev pango-dev jpeg-dev giflib-dev librsvg-dev libtool autoconf automake
 
 # Set the working directory in the container
 WORKDIR /connected-brain-demo-monorepo
