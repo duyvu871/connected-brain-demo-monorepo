@@ -54,6 +54,7 @@ COPY --from=builder /connected-brain-demo-monorepo/out/full/ .
 RUN npx turbo build --filter=web...
 
 FROM base AS runner
+WORKDIR /connected-brain-demo-monorepo
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs

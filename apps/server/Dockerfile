@@ -16,7 +16,7 @@ WORKDIR /connected-brain-demo-monorepo
 # Install the latest version of npm
 RUN npm install -g npm@10.8.1  && npm cache clean --force
 # Install the latest version of turbo
-RUN npm install turbo@2.0.12 --global
+RUN npm install -g turbo@2.0.12
 # Install PM2 globally
 RUN npm install -g pm2@5.4.2
 # Install concurrently globally
@@ -54,6 +54,7 @@ COPY --from=builder /connected-brain-demo-monorepo/out/full/ .
 RUN npx turbo build --filter=server...
 
 FROM base AS runner
+WORKDIR /connected-brain-demo-monorepo
 
 RUN addgroup --system --gid 1001 expressjs
 RUN adduser --system --uid 1001 expressjs
