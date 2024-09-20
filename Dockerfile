@@ -26,5 +26,8 @@ RUN npm install -g pm2
 EXPOSE 3000
 EXPOSE 3001
 
+# Set the working directory in the container
+WORKDIR /app/connected-brain-demo-monorepo
+
 # Start the application with PM2
-CMD ["pm2-runtime", "start", "ecosystem.config.js"]
+CMD ["pm2-runtime", "start", "ecosystem.container.config.js"]
