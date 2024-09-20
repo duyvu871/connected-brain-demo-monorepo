@@ -24,7 +24,7 @@ RUN npm install -g concurrently@8.2.2
 
 # Copy the entire project code into the container
 COPY . .
-RUN turbo prune server --docker
+RUN npx turbo prune server --docker
 
 # Add lockfile and package.json's of isolated subworkspaces
 FROM base AS installer
