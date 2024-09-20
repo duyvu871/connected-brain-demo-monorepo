@@ -8,10 +8,28 @@ services:
       - REDIS_HOST=host.docker.internal
       - REDIS_PORT=6379
       - REDIS_PASSWORD=Q7ZmVcBlZSJSWVJ0Yedu7K46dHf6MAnO
-  app:
-    build: .
+  web:
+    container_name: connected_brain_web
+    build:
+        context: .
+        dockerfile: ./apps/web/Dockerfile
     ports:
       - "3000:3000"
+    extra_hosts:
+      - "host.docker.internal:192.168.1.38"
+    networks:
+      - app_network
+  server:
+    container_name: connected_brain_server
+    build:
+        context: .
+        dockerfile: ./apps/server/Dockerfile
+    ports:
       - "3001:3001"
     extra_hosts:
       - "host.docker.internal:192.168.1.38"
+    networks:
+      - app_network
+networks:
+  app_network:
+    external: true # Use an existing network named app_network

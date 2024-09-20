@@ -55,12 +55,10 @@ RUN turbo build --filter=server...
 
 FROM base AS runner
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
-USER nextjs
+RUN addgroup --system --gid 1001 expressjs
+RUN adduser --system --uid 1001 expressjs
+USER expressjs
 
-COPY --from=installer --chown=nextjs:nodejs /connected-brain-demo-monorepo/apps/web/.next/standalone ./
-COPY --from=installer --chown=nextjs:nodejs /connected-brain-demo-monorepo/apps/web/.next/static ./apps/web/.next/static
-COPY --from=installer --chown=nextjs:nodejs /connected-brain-demo-monorepo/apps/web/public ./apps/web/public
+COPY --from=installer /connected-brain-demo-monorepo .
 
 CMD ["pm2-runtime", "start", "ecosystem.config.js"]
