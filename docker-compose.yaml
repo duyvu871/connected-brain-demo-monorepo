@@ -4,6 +4,10 @@ services:
     image: redis:6.2-alpine
     ports:
       - "6379:6379"
+    environment:
+      - REDIS_HOST=host.docker.internal
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=Q7ZmVcBlZSJSWVJ0Yedu7K46dHf6MAnO
   app:
     build: .
     ports:
