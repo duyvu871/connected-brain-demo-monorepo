@@ -22,9 +22,9 @@ RUN npm install -g pm2@5.4.2
 
 # Install dependencies for both client and server
 WORKDIR /connected-brain-demo-monorepo/apps/web/
-RUN npm install
+RUN npm install && npm cache clean --force
 WORKDIR /connected-brain-demo-monorepo/apps/server/
-RUN npm install
+RUN npm install && npm cache clean --force
 
 # Expose ports for client and server
 EXPOSE 3000
