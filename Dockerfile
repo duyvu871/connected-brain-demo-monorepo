@@ -2,9 +2,9 @@
 FROM node:20-alpine
 
 # Install Python3 and pip3
-RUN apk update && \
-    apk add --no-cache python3 py3-pip
-RUN apk update && apk add pkgconfig
+RUN apk update && apk add --no-cache python3 py3-pip
+RUN apk add pkgconfig
+RUN apk add --no-cache pixman-dev
 
 # Set the working directory in the container
 WORKDIR /connected-brain-demo-monorepo
