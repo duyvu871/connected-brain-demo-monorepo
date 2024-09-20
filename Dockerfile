@@ -13,6 +13,9 @@ RUN npm install
 WORKDIR /connected-brain-demo-monorepo/apps/server/
 RUN npm install
 
+# Clean up the apt cache
+RUN sudo apt-get clean
+
 # Update apt package lists
 RUN apt-get update
 
