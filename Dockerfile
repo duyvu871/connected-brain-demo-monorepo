@@ -21,17 +21,17 @@ RUN npm install turbo@2.0.12 --global
 RUN npm install -g pm2@5.4.2
 
 # Install dependencies for both client and server
-WORKDIR /connected-brain-demo-monorepo/apps/web/
-RUN npm install && npm cache clean --force
-WORKDIR /connected-brain-demo-monorepo/apps/server/
-RUN npm install && npm cache clean --force
+#WORKDIR /connected-brain-demo-monorepo/apps/web/
+#RUN npm install && npm cache clean --force
+#WORKDIR /connected-brain-demo-monorepo/apps/server/
+#RUN npm install && npm cache clean --force
 
 # Expose ports for client and server
 EXPOSE 3000
 EXPOSE 3001
 
-# Set the working directory in the container
-WORKDIR /connected-brain-demo-monorepo
+# Install dependencies for the project
+RUN npm install
 # Build the project with turbo
 RUN npm run build
 
