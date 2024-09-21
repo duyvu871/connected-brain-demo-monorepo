@@ -50,6 +50,10 @@ const redisInstance = new Redis({
 	} : {}),
 });
 
+if (!redisInstance) {
+	throw new Error('Redis instance is not created');
+}
+
 const workerQueue = new Worker('background_task', workerHandler, {
 	connection: redisInstance,
 	autorun: true,
