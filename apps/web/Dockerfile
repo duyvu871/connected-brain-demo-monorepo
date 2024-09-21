@@ -65,4 +65,6 @@ COPY --from=installer --chown=nextjs:nodejs /connected-brain-demo-monorepo/apps/
 COPY --from=installer --chown=nextjs:nodejs /connected-brain-demo-monorepo/apps/web/.next/static ./apps/web/.next/static
 COPY --from=installer --chown=nextjs:nodejs /connected-brain-demo-monorepo/apps/web/public ./apps/web/public
 
+WORKDIR /connected-brain-demo-monorepo/apps/web
+
 CMD ["pm2-runtime", "start", "ecosystem.config.js"]

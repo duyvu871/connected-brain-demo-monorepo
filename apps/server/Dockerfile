@@ -64,4 +64,6 @@ USER expressjs
 
 COPY --from=installer /connected-brain-demo-monorepo .
 
+WORKDIR /connected-brain-demo-monorepo/apps/server
+
 CMD ["pm2-runtime", "start", "ecosystem.config.js"]
