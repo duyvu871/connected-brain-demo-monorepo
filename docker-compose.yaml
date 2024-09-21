@@ -29,8 +29,9 @@ services:
         dockerfile: ./apps/server/Dockerfile
     env_file: ./apps/server/.env
     environment:
-      NODE_ENV: production
-      PORT: 3001
+      - NODE_ENV=production
+      - PORT=3001
+      - REDIS_HOST=redis
     ports:
       - "3001:3001"
 #    extra_hosts:
