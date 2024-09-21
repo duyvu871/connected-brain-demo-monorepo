@@ -21,7 +21,8 @@ RUN npm install -g turbo@2.0.12
 RUN npm install -g pm2@5.4.2
 # Install concurrently globally
 RUN npm install -g concurrently@8.2.2
-
+# Install tsc-alias globally
+RUN npm install -g tsc-alias@1.18.10
 # Copy the entire project code into the container
 COPY . .
 RUN npx turbo prune web --docker
