@@ -74,4 +74,5 @@ WORKDIR /connected-brain-demo-monorepo/apps/server
 
 RUN ls -al -R
 
-CMD ["pm2-runtime", "start", "ecosystem.config.js"]
+#CMD ["pm2-runtime", "start", "ecosystem.config.js"]
+CMD ["npm", "run", "start:concurrently"]
