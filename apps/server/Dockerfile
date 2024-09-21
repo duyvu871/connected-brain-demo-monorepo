@@ -66,4 +66,6 @@ COPY --from=installer /connected-brain-demo-monorepo .
 
 WORKDIR /connected-brain-demo-monorepo/apps/server
 
+RUN ls -al -R
+
 CMD ["pm2-runtime", "start", "ecosystem.config.js"]
