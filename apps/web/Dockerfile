@@ -69,7 +69,6 @@ USER nextjs
 
 COPY --from=installer --chown=nextjs:nodejs /connected-brain-demo-monorepo/apps/web ./apps/web
 
-
 #COPY --from=installer --chown=nextjs:nodejs /connected-brain-demo-monorepo/apps/web/.next/standalone ./
 #COPY --from=installer --chown=nextjs:nodejs /connected-brain-demo-monorepo/apps/web/.next/static ./apps/web/.next/static
 #COPY --from=installer --chown=nextjs:nodejs /connected-brain-demo-monorepo/apps/web/public ./apps/web/public
