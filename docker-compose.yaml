@@ -10,6 +10,11 @@ services:
       - REDIS_PASSWORD=Q7ZmVcBlZSJSWVJ0Yedu7K46dHf6MAnO
     networks:
       - connected_brain_network
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
   web:
     container_name: connected_brain_web
     build:
@@ -38,6 +43,9 @@ services:
 #      - "host.docker.internal:192.168.1.38"
     networks:
       - connected_brain_network
+    depends_on:
+      redis:
+        condition: service_healthy
 networks:
   connected_brain_network:
     driver: bridge
