@@ -67,13 +67,13 @@ RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 USER nextjs
 
-COPY --from=installer --chown=nextjs:nodejs /connected-brain-demo-monorepo/apps/web/.next/standalone ./
-COPY --from=installer --chown=nextjs:nodejs /connected-brain-demo-monorepo/apps/web/.next/static ./apps/web/.next/static
-COPY --from=installer --chown=nextjs:nodejs /connected-brain-demo-monorepo/apps/web/public ./apps/web/public
+#COPY --from=installer --chown=nextjs:nodejs /connected-brain-demo-monorepo/apps/web/.next/standalone ./
+#COPY --from=installer --chown=nextjs:nodejs /connected-brain-demo-monorepo/apps/web/.next/static ./apps/web/.next/static
+#COPY --from=installer --chown=nextjs:nodejs /connected-brain-demo-monorepo/apps/web/public ./apps/web/public
 
 WORKDIR /connected-brain-demo-monorepo/apps/web
 
 RUN ls -al -R
 
 #CMD ["pm2-runtime", "start", "ecosystem.config.js"]
-CMD ["npm", "run", "start:product"]
+CMD ["npm", "run", "start"]
