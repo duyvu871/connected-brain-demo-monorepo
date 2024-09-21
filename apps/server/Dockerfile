@@ -64,19 +64,19 @@ RUN npm install -g pm2@5.4.2
 # Install concurrently globally
 RUN npm install -g concurrently@8.2.2
 
+COPY --from=installer /connected-brain-demo-monorepo .
+
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 expressjs
 
+RUN mkdir -p /connected-brain-demo-monorepo/apps/server/storage
 RUN chown -R expressjs:nodejs /connected-brain-demo-monorepo/apps/server/storage
 RUN chmod -R 755 /connected-brain-demo-monorepo/apps/server/storage
 
 USER expressjs
 
-COPY --from=installer /connected-brain-demo-monorepo .
 
 WORKDIR /connected-brain-demo-monorepo/apps/server
-
-RUN ls -al -R
 
 #CMD ["pm2-runtime", "start", "ecosystem.config.js"]
 CMD ["npm", "run", "start:concurrently"]
