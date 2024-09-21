@@ -64,10 +64,10 @@ RUN npm install -g pm2@5.4.2
 # Install concurrently globally
 RUN npm install -g concurrently@8.2.2
 
-RUN addgroup --system --gid 1001 expressjs
+RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 expressjs
 
-RUN chown -R expressjs:expressjs /connected-brain-demo-monorepo/apps/server/storage
+RUN chown -R expressjs:nodejs /connected-brain-demo-monorepo/apps/server/storage
 RUN chmod -R 755 /connected-brain-demo-monorepo/apps/server/storage
 
 USER expressjs
