@@ -6,8 +6,11 @@
     "build": "tsup && tsc-alias"
   },
   "devDependencies": {
+    "rimraf": "^6.0.1",
+    "tsc-alias": "^1.8.10",
     "@repo/typescript-config": "*",
-    "typescript": "latest"
+    "typescript": "latest",
+    "tsup": "^8.2.4"
   },
   "dependencies": {
     "@google/generative-ai": "^0.16.0"
