@@ -14,7 +14,7 @@ RUN apk add --no-cache imagemagick
 WORKDIR /connected-brain-demo-monorepo
 
 # Install the latest version of npm
-RUN npm install -g npm@10.8.1  && npm cache clean --force
+RUN npm install -g npm@10.8.1
 # Install the latest version of turbo
 RUN npm install -g turbo@2.0.12
 # Install PM2 globally
@@ -57,6 +57,12 @@ RUN npx turbo build --filter=server...
 
 FROM base AS runner
 WORKDIR /connected-brain-demo-monorepo
+
+RUN npm install -g npm@10.8.1
+# Install PM2 globally
+RUN npm install -g pm2@5.4.2
+# Install concurrently globally
+RUN npm install -g concurrently@8.2.2
 
 RUN addgroup --system --gid 1001 expressjs
 RUN adduser --system --uid 1001 expressjs
