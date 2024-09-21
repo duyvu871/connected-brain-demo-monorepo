@@ -32,4 +32,5 @@ services:
       - app_network
 networks:
   app_network:
-    external: true # Use an existing network named app_network
+    driver: bridge
+#    external: true # Use an existing network named app_network
