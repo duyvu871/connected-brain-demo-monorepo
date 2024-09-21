@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "set NEXT_PUBLIC_DISABLE_ESLINT=true&&next build",
     "start": "next start",
+    "start:product": "set NODE_ENV=production&&set PORT=3000&&node apps/web/server.js",
     "lint": "next lint",
     "type-check": "tsc --noEmit"
   },
