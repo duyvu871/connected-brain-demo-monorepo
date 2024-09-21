@@ -15,6 +15,7 @@ services:
     build:
         context: .
         dockerfile: ./apps/web/Dockerfile
+    env_file: ./apps/web/.env
     ports:
       - "3000:3000"
 #    extra_hosts:
@@ -26,6 +27,7 @@ services:
     build:
         context: .
         dockerfile: ./apps/server/Dockerfile
+    env_file: ./apps/server/.env
     ports:
       - "3001:3001"
 #    extra_hosts:
