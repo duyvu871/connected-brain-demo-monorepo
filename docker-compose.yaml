@@ -7,7 +7,7 @@ services:
     environment:
       - REDIS_HOST=host.docker.internal
       - REDIS_PORT=6379
-      - REDIS_PASSWORD=Q7ZmVcBlZSJSWVJ0Yedu7K46dHf6MAnO
+#      - REDIS_PASSWORD=Q7ZmVcBlZSJSWVJ0Yedu7K46dHf6MAnO
     networks:
       - connected_brain_network
     healthcheck:
