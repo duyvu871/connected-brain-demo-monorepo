@@ -28,10 +28,10 @@ export default function InputMessage(
 	};
 
 	return (
-		<div className={cn('flex flex-col justify-between items-center p-2 gap-2', isTooLong ? 'flex-col' : '')}>
+		<div className={cn('flex flex-col md:flex-row justify-between items-center md:items-end p-2 gap-2', isTooLong ? 'flex-col' : '')}>
 			<AutoResizeQuill
 				className={cn(
-					'w-full bg-transparent outline-none max-h-52 resize-none text-white rounded-lg p-2 bg-zinc-900 border border-zinc-800',
+					'w-full bg-zinc-50 outline-none max-h-52 resize-none text-white rounded-lg p-2 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800',
 					isTooLong ? 'h-fit p-2' : 'h-14',
 				)}
 				event={{
@@ -49,11 +49,11 @@ export default function InputMessage(
 				value={promptText}
 			/>
 			<div
-				className={cn('w-full flex flex-row justify-end items-center gap-2')}>
+				className={cn('w-full md:w-fit flex flex-row justify-end items-center gap-2')}>
 				<Tooltip title="Voice Record">
 					<VoiceRecordModal>
 						<div className="p-2 aspect-square flex justify-center items-center rounded-full cursor-pointer">
-							<IoMicSharp className="text-white" size={24} />
+							<IoMicSharp className="dark:text-zinc-50 text-zinc-600" size={24} />
 						</div>
 					</VoiceRecordModal>
 				</Tooltip>
@@ -66,21 +66,21 @@ export default function InputMessage(
 				{/*	</UploadModal>*/}
 				{/*</Tooltip>*/}
 				<Tooltip title="Generate prompt">
-					<div className="p-3 py-1.5 rounded-md bg-zinc-800 cursor-pointer flex justify-center items-center gap-3" onClick={async () => {
-
-
-						if (promptText === '') {
-							return;
-						}
-						setContentMedia([]);
-						// setIsSendMessage(true);
-						setPromptText('');
-						updateInputValue('');
-						await (action?.sendMessage(promptText, contentMedia));
-						// setIsSendMessage(false);
-					}}>
-						<span className="text-white">Send</span>
-						<BsFillSendFill className="text-white" />
+					<div className="p-3 py-1.5 rounded-md bg-zinc-300 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover-zinc-700 transition-colors cursor-pointer flex justify-center items-center gap-3"
+							 onClick={async () => {
+									if (promptText === '') {
+										return;
+									}
+									setContentMedia([]);
+									// setIsSendMessage(true);
+									setPromptText('');
+									updateInputValue('');
+									await (action?.sendMessage(promptText, contentMedia));
+									// setIsSendMessage(false);
+								}}
+					>
+						<span className="dark:text-zinc-50 text-zinc-700">Send</span>
+						<BsFillSendFill className="dark:text-zinc-50 text-zinc-700" />
 					</div>
 				</Tooltip>
 			</div>

@@ -8,22 +8,22 @@ import useUID from '@/hooks/useUID.ts';
 const LaunchOption = [
 	{
 		title: 'Chủ đề đáng chú ý',
-		icon: <LuClipboardList className="text-white w-6 h-6" />,
+		icon: <LuClipboardList className="text-zinc-700 dark:text-zinc-100 w-6 h-6" />,
 		prompt: 'Chủ đề đáng chú ý',
 	},
 	{
 		title: 'Chủ đề đáng chú ý',
-		icon: <LuClipboardList className="text-white w-6 h-6" />,
+		icon: <LuClipboardList className="text-zinc-700 dark:text-zinc-100 w-6 h-6" />,
 		prompt: 'Chủ đề đáng chú ý',
 	},
 	{
 		title: 'Chủ đề đáng chú ý',
-		icon: <LuClipboardList className="text-white w-6 h-6" />,
+		icon: <LuClipboardList className="text-zinc-700 dark:text-zinc-100 w-6 h-6" />,
 		prompt: 'Chủ đề đáng chú ý',
 	},
 	{
 		title: 'Chủ đề đáng chú ý',
-		icon: <LuClipboardList className="text-white w-6 h-6" />,
+		icon: <LuClipboardList className="text-zinc-700 dark:text-zinc-100 w-6 h-6" />,
 		prompt: 'Chủ đề đáng chú ý',
 	},
 ];
@@ -39,9 +39,9 @@ function LaunchScreen() {
 		<div className="w-full h-full flex justify-center items-center">
 			<div className="flex flex-col justify-center items-center gap-5">
 				<div className="w-full flex justify-center items-center my-10">
-					<Logo className="w-28 h-28 text-blue-400 fill-zinc-100" />
+					<Logo className="w-28 h-28 text-blue-400 fill-zinc-700 dark:fill-zinc-100" />
 				</div>
-				<div className="flex justify-center items-center text-3xl my-5">
+				<div className="flex justify-center items-center text-3xl my-5 text-zinc-700 dark:text-zinc-100">
 					<span>Xin chào👋! Tôi có thể giúp gì cho bạn?</span>
 				</div>
 				<div className="w-full flex justify-center items-center mx-auto">
@@ -49,12 +49,12 @@ function LaunchScreen() {
 						{LaunchOption.map((option, index) => (
 							<div
 								className={cn(
-									'flex flex-col justify-between items-center gap-2 max-w-xs h-24 border border-zinc-800 rounded-xl p-2 bg-zinc-900',
-									'hover:bg-zinc-800 transition-all duration-300 cursor-pointer',
+									'flex flex-col justify-between items-center gap-2 max-w-xs h-24 border border-zinc-200 dark:border-zinc-800 rounded-xl p-2 bg-zinc-100 dark:bg-zinc-900',
+									'hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-all duration-300 cursor-pointer',
 								)}
 								key={"launch-option-" + genID()}
 								onClick={handleSendMessage(option.prompt)}>
-								<div className="text-white p-2 text-medium">
+								<div className="text-zinc-600 dark:text-zinc-100 p-2 text-medium">
 									<span>{option.title}</span>
 								</div>
 								<div className="h-fit w-full">{option.icon}</div>

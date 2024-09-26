@@ -23,7 +23,7 @@ function Tooltip({ children, title }: TooltipProps) {
 					{children}
 					{/*</div>*/}
 				</TooltipTrigger>
-				<TooltipContent className="z-[500] text-white">
+				<TooltipContent className="z-[200] text-white bg-zinc-700">
 					{title}
 				</TooltipContent>
 			</ShadcnTooltip>

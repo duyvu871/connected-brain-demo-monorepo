@@ -53,10 +53,11 @@ function Copy({ childrenProps, children, text, tooltipText }: CopyToClipBoardPro
 			>
 				{/*<input ref={inputRef} value={text}/>*/}
 				<Button
-					className="px-1 py-1 text-medium font-medium bg-transparent text-zinc-100 h-10 w-10 min-w-[10px]"
 					disabled={isCopied}
 					onClick={onCopyText}
-					{...childrenProps}>
+					{...childrenProps}
+					className={cn("px-1 py-1 text-medium font-medium bg-transparent text-zinc-100 h-10 w-10 !min-w-[10px]", childrenProps?.className || "")}
+				>
 					{children ?? <MdContentCopy size={16}/>}
 				</Button>
 				{/*</Tooltip>*/}

@@ -85,7 +85,7 @@ export function Menu({ isOpen }: MenuProps) {
                                 </span>
 																<p
 																	className={cn(
-																		"max-w-[200px] truncate dark:text-zinc-50 text-zinc-700",
+																		"max-w-[200px] truncate dark:text-zinc-50 text-zinc-700  group-hover:text-zinc-50",
 																		isOpen === false
 																			? "-translate-x-96 opacity-0"
 																			: "translate-x-0 opacity-100",

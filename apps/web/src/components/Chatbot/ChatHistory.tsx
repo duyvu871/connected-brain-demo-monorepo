@@ -96,22 +96,22 @@ const ChatHistoryItem = ({
 	}, [isEditing]);
 
 	return (
-		<div className="w-full flex justify-between overflow-hidden gap-1 ">
+		<div className="w-full flex justify-between overflow-hidden gap-1 pl-3">
 			<div
 				className={cn(
-					'flex w-full max-w-sm p-2 px-4 rounded-xl gap-2 justify-between items-center hover:bg-zinc-800 transition-all duration-300 cursor-pointer',
-					isActive ? 'bg-zinc-800 ' : '',
+					'flex w-full max-w-sm p-2 rounded-lg gap-2 justify-between items-center hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-all duration-300 cursor-pointer',
+					isActive ? 'bg-zinc-200 dark:bg-zinc-800 ' : '',
 				)}>
 				<div className="flex justify-start items-center w-full">
 					<div className="text-white" onClick={() => directToSection(sectionId)}>
-						{startContent || <FiMessageSquare className="w-4 h-4 font-bold text-zinc-400" />}
+						{startContent || <FiMessageSquare className="w-4 h-4 font-bold text-zinc-700 dark:text-zinc-400" />}
 					</div>
 					<div
 						className="w-full text-start relative pl-2"
 						onClick={() => directToSection(sectionId)}>
 						<input
 							className={cn(
-								'w-full outline-none bg-inherit text-zinc-400 relative text-start',
+								'w-full text-sm outline-none bg-inherit text-zinc-700 dark:text-zinc-400 relative text-start',
 								isEditing ? '' : 'cursor-pointer',
 							)}
 							onBlur={() => {
@@ -144,7 +144,7 @@ const ChatHistoryItem = ({
 					{endContent || (
 						<div className="relative">
 							<Tooltip title="Chat options">
-								<div className="text-zinc-600 hover:text-zinc-200 p-1 transition-all">
+								<div className="text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200 p-1 transition-all">
 									<SlOptionsVertical className="w-4 h-4" />
 								</div>
 							</Tooltip>
@@ -157,10 +157,10 @@ const ChatHistoryItem = ({
 					'flex transition-all duration-300 cursor-pointer',
 					enableEditTile ? 'w-20' : 'w-0',
 				)}>
-				<div className="w-20 h-10 bg-zinc-800 rounded-xl text-zinc-400 flex">
+				<div className="w-20 h-10 bg-zinc-200 dark:bg-zinc-800 rounded-lg text-zinc-700 dark:text-zinc-400 flex">
 					<Tooltip title="Edit">
 						<div
-							className="w-full h-full flex justify-center items-center hover:text-zinc-200 transition-all border-r border-zinc-800">
+							className="w-full h-full flex justify-center items-center text-zinc-700 dark:text-zinc-400 hover:text-zinc-400 transition-all border-r border-zinc-300 dark:border-zinc-800">
 							<HiPencil
 								className="w-6 h-6"
 								onClick={() => {
@@ -172,7 +172,7 @@ const ChatHistoryItem = ({
 					</Tooltip>
 					<Tooltip title="Delete session">
 						<div
-							className="w-full h-full flex justify-center items-center hover:text-zinc-200 transition-all">
+							className="w-full h-full flex justify-center items-center text-zinc-700 dark:text-zinc-400 hover:text-zinc-400 transition-all">
 							<RiDeleteBin7Line className="w-6 h-6" />
 						</div>
 					</Tooltip>
@@ -262,14 +262,14 @@ function ChatHistory({ classnames }: ChatHistoryProps) {
 	return (
 		<div
 			className={cn(
-				' flex flex-col justify-between transition-all bottom-0 z-[60] w-full md:max-w-xs md:h-full md:relative md:p-2.5 hidden:md:pr-0 border-r border-zinc-800',
+				' flex flex-col justify-between transition-all bottom-0 w-full md:max-w-xs md:h-full md:relative md:p-2.5 hidden:md:pr-0 border-r border-zinc-300 dark:border-zinc-800',
 				chatHistoryCollapsed ? 'w-fit gap-0' : '',
 				classnames?.wrapper || '',
 			)}>
 			{/*<div className={'w-screen h-screen absolute top-0 left-0 bg-black/40 z-[121] md:hidden'} />*/}
 			<div
 				className={cn(
-					'bg-zinc-950 flex flex-col justify-between hidden:border border-zinc-800 gap-1 shadow w-full md:h-full md:rounded-2xl rounded-3xl rounded-b-none p-2 max-w-lg mx-auto select-none transition-all',
+					'bg-zinc-50 dark:bg-zinc-950 flex flex-col justify-between hidden:border border-zinc-300 dark:border-zinc-800 gap-1 w-full md:h-full md:rounded-2xl rounded-3xl rounded-b-none p-2 max-w-lg mx-auto select-none transition-all',
 					chatHistoryCollapsed ? 'w-fit' : '',
 					classnames?.container || '',
 				)}>
@@ -285,11 +285,13 @@ function ChatHistory({ classnames }: ChatHistoryProps) {
 								'w-full flex justify-between select-none mb-4 transition-all gap-2',
 								chatHistoryCollapsed ? 'w-fit gap-2' : '',
 								isCollapsed ? '' : 'gap-0',
+								'hidden'
+
 							)}>
 							<Tooltip title={chatHistoryCollapsed ? 'Show History' : 'Hide history'}>
 								<motion.div
 									className={cn(
-										'relative w-10 h-10 bg-zinc-800 flex justify-center items-center rounded-xl transition-all duration-300 cursor-pointer',
+										'relative w-10 h-10 bg-zinc-800 flex justify-center items-center rounded-lg transition-all duration-300 cursor-pointer',
 										'hover:bg-zinc-700 hidden md:flex',
 										isCollapsed ? '' : 'w-0 ',
 									)}
@@ -301,9 +303,10 @@ function ChatHistory({ classnames }: ChatHistoryProps) {
 							</Tooltip>
 							<div
 								className={cn(
-									'rounded-xl bg-zinc-800 h-10 w-full md:w-64 flex justify-center items-center px-3 transition-all duration-300',
+									'rounded-lg bg-zinc-800 h-10 w-full md:w-64 flex justify-center items-center px-3 transition-all duration-300',
 									chatHistoryCollapsed ? 'md:w-10 p-0' : '',
 									isCollapsed ? '' : 'w-full',
+									'hidden'
 								)}
 								// onMouseEnter={() => setIsCollapsed(false)}
 							>
@@ -311,7 +314,7 @@ function ChatHistory({ classnames }: ChatHistoryProps) {
 									<SearchIcon
 										className={
 											chatHistoryCollapsed
-												? 'w-10 h-10 flex justify-center items-center transition-all hover:bg-zinc-700 rounded-xl'
+												? 'w-10 h-10 flex justify-center items-center transition-all hover:bg-zinc-700 rounded-lg'
 												: ''
 										}
 										onClick={() => {
@@ -340,7 +343,7 @@ function ChatHistory({ classnames }: ChatHistoryProps) {
 						<Tooltip title="Create session">
 							<div
 								className={cn(
-									'relative w-full h-10 bg-zinc-800 flex justify-center items-center rounded-xl transition-all duration-[300] cursor-pointer',
+									'relative w-full h-10 bg-zinc-800 flex justify-center items-center rounded-lg transition-all duration-[300] cursor-pointer',
 									'hover:bg-zinc-700',
 									chatHistoryCollapsed ? 'w-[88px] p-0' : '',
 								)}
@@ -360,7 +363,7 @@ function ChatHistory({ classnames }: ChatHistoryProps) {
 								'w-full px-2 pt-2 transition-all',
 								chatHistoryCollapsed ? 'w-0 invisible' : '',
 							)}>
-							<span className="font-semibold">Recent</span>
+							<span className="dark:text-zinc-200 text-zinc-700 font-semibold">Recent</span>
 						</div>
 						<div className="w-full flex justify-center items-center">
 							<ChatSectionList
@@ -369,7 +372,7 @@ function ChatHistory({ classnames }: ChatHistoryProps) {
 							/>
 						</div>
 
-						<div className="w-full h-fit p-2 flex justify-center items-center">
+						<div className="w-full h-fit flex justify-start item-center pl-12 mt-2">
 							{/* <button
 								className={cn(
 									'text-white bg-zinc-800 rounded-xl p-2 transition-all duration-300 cursor-pointer',
@@ -378,19 +381,19 @@ function ChatHistory({ classnames }: ChatHistoryProps) {
 								onClick={() => setShowMore(prev => !prev)}>
 								{showMore ? <TfiAngleUp /> : <TfiAngleDown />}
 							</button> */}
-							<Button
+							<div
 								className={cn(
-									'text-white bg-zinc-800 rounded-xl transition-all duration-300 cursor-pointer hover:bg-zinc-700',
+									'text-medium font-semibold rounded-xl transition-all duration-300 cursor-pointer',
 									chatHistoryCollapsed ? 'w-0 h-0 hidden' : '',
 								)}
 								onClick={() => setShowMore(prev => !prev)}>
-								{showMore ? <TfiAngleUp /> : <TfiAngleDown />}
-							</Button>
+								{!showMore ? <span className="text-zinc-600 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300">View all</span> : <span className="text-zinc-600 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300">Collapse</span>}
+							</div>
 						</div>
 					</div>
 				</div>
 				<div
-					className="w-full rounded-xl p-1  hover:bg-zinc-700 flex justify-center items-center bg-zinc-800">
+					className="w-full rounded-xl p-1 bg-transparent border text-zinc-700 dark:text-zinc-50 dark:border-0 border-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700 dark:bg-zinc-800 flex justify-center items-center transition-colors">
 					<DownloadModal chatHistoryCollapsed={chatHistoryCollapsed} />
 				</div>
 			</div>

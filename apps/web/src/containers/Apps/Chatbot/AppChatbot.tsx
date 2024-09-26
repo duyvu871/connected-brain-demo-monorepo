@@ -14,7 +14,7 @@ const LazyChatSection = lazy(
 function AppChatbot() {
 	return (
 		<>
-			<div className="w-full h-full relative">
+			<div className="w-full h-full relative bg-zinc-50 dark:bg-zinc-950">
 				<div className="w-full h-[calc(100vh_-_57px)] flex">
 					<Suspense
 						fallback={

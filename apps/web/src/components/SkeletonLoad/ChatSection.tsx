@@ -17,10 +17,10 @@ export const LeftChat = ({
 }) => {
 	return (
 		<div className={cn('flex justify-start gap-2 w-full', classnames?.wrapper || '')}>
-			<div className="h-8 w-8 rounded-full bg-zinc-800" />
+			<div className="h-8 w-8 rounded-full bg-zinc-200 dark:bg-zinc-800" />
 			<div className={cn('flex flex-col gap-1 w-full', classnames?.chatList || '')}>
-				<div className="h-20 max-w-xl w-full bg-zinc-800 rounded-xl" />
-				<div className="h-10 w-48 bg-zinc-800 rounded-xl" />
+				<div className="h-20 max-w-xl w-full bg-zinc-200 dark:bg-zinc-800 rounded-xl" />
+				<div className="h-10 w-48 bg-zinc-200 dark:bg-zinc-800 rounded-xl" />
 			</div>
 		</div>
 	);
@@ -43,7 +43,7 @@ function ChatSection({ classNames }: ChatSectionProps) {
 				/>
 			</div>
 			<div className="w-full h-16 flex justify-center items-center">
-				<div className="w-full h-12 max-w-xl rounded-full bg-zinc-800" />
+				<div className="w-full h-12 max-w-xl rounded-full bg-zinc-200 dark:bg-zinc-800" />
 			</div>
 		</div>
 	);

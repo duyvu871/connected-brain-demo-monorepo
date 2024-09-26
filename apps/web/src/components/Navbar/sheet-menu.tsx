@@ -20,10 +20,10 @@ export function SheetMenu() {
 	const [isOpen] = useAtom(sidebarOpen);
 	return (
 		<Sheet>
-			<SheetOverlay className="z-[180]"/>
+			<SheetOverlay className="z-[180] bg-zinc-100/40 dark:bg-zinc-950/40"/>
 			<SheetTrigger asChild className="lg:hidden">
-				<Button className="h-8 border-zinc-700" size="icon" variant="outline">
-					<MenuIcon size={20} />
+				<Button className="h-8 border-zinc-300 dark:border-zinc-700" size="icon" variant="outline">
+					<MenuIcon className="dark:text-zinc-100 text-zinc-700" size={20}/>
 				</Button>
 			</SheetTrigger>
 			<SheetContent className={cn('sm:w-72 px-3 h-full flex flex-col border-zinc-700 z-[200]')} side="left">

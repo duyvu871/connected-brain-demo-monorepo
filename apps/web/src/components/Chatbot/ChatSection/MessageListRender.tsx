@@ -49,13 +49,13 @@ const ChatMessage = forwardRef<
 			'gap-2': !isAssistant,
 		})} ref={ref} {...props}>
 			{isAssistant ? <div className="h-8 w-8 rounded-full pt-5">
-					<Logo className='h-8 w-8 fill-zinc-100' />
+					<Logo className='h-8 w-8 fill-zinc-700 dark:fill-zinc-100' />
 				</div> : null}
 			<div className={messageListClass}>
 				<div className={cn(
 					'h-fit max-w-full rounded-xl p-5',
 					{
-						'bg-zinc-800 text-zinc-300 w-[calc(100vw_-_70px)] w-fit sm:max-w-[calc(100%_*_3_/_4)] md:max-w-[60%]': !isAssistant,
+						'bg-zinc-200 dark:bg-zinc-800 text-zinc-300 w-[calc(100vw_-_70px)] w-fit sm:max-w-[calc(100%_*_3_/_4)] md:max-w-[60%]': !isAssistant,
 						'w-[calc(100vw_-_43px)]': isAssistant,
 					}
 				)}>
@@ -66,10 +66,10 @@ const ChatMessage = forwardRef<
 							isAssistant ? 'h-0 transition-all delay-500 duration-[1000]' : 'hidden',
 						)}
 						style={{
-							animationDuration: content && content.split('\n').length * 0.2 + 's',
+							animationDuration: content && ((content.split('\n').length * 0.2 > 10) ? 10 : content.split('\n').length * 0.2) + 's',
 						}}>
-						<div className="h-20 bg-gradient-to-t from-[--background-hero]" />
-						<div className="h-full bg-[--background-hero]" />
+						<div className="h-20 bg-gradient-to-t from-zinc-50 dark:from-zinc-950" />
+						<div className="h-full bg-zinc-50 dark:bg-zinc-950" />
 					</div>
 					<Markdown>{content ?? ""}</Markdown>
 						{(!isAssistant && contentMedia?.length) ? <div className="flex p-2 m-2 gap-4 justify-start">
@@ -93,19 +93,19 @@ const ChatMessage = forwardRef<
 					{isAssistant ? <>
 							<Tooltip title="Like this response">
 								<div
-									className="p-2 rounded-full bg-zinc-800 cursor-pointer transition-all hover:bg-zinc-700 hover:text-white">
+									className="p-2 rounded-full bg-zinc-200 dark:bg-zinc-800 cursor-pointer transition-all text-zinc-700 hover:bg-zinc-300 hover:text-zinc-600 dark:hover:bg-zinc-700 dark:hover:text-white">
 									<AiOutlineLike />
 								</div>
 							</Tooltip>
 							<Tooltip title="Unlike this response">
 								<div
-									className="p-2 rounded-full bg-zinc-800 cursor-pointer transition-all hover:bg-zinc-700 hover:text-white">
+									className="p-2 rounded-full bg-zinc-200 dark:bg-zinc-800 cursor-pointer transition-all text-zinc-700 hover:bg-zinc-300 hover:text-zinc-600 dark:hover:bg-zinc-700 dark:hover:text-white">
 									<AiOutlineDislike />
 								</div>
 							</Tooltip>
 							<Tooltip title="Unlike this response">
 								<div
-									className="p-2 rounded-full bg-zinc-800 cursor-pointer transition-all hover:bg-zinc-700 hover:text-white ">
+									className="p-2 rounded-full bg-zinc-200 dark:bg-zinc-800 cursor-pointer transition-all text-zinc-700 hover:bg-zinc-300 hover:text-zinc-600 dark:hover:bg-zinc-700 dark:hover:text-white">
 									<FiEdit />
 								</div>
 							</Tooltip>
@@ -113,7 +113,7 @@ const ChatMessage = forwardRef<
 								<Copy
 									childrenProps={{
 										className:
-											'p-2 rounded-full bg-zinc-800 cursor-pointer transition-all hover:bg-zinc-700 hover:text-white min-w-fit h-fit',
+											'p-2 aspect-square rounded-full bg-zinc-200 dark:bg-zinc-800 cursor-pointer transition-all text-zinc-700 hover:bg-zinc-300 hover:text-zinc-600 dark:hover:bg-zinc-700 dark:hover:text-white',
 									}}
 									text={markdownToTxt(content ?? "")}
 								/>
@@ -178,7 +178,7 @@ export default function MessageListRender() {
 	return (
 		<>
 			<div
-				className=" flex flex-col items-center gap-5 overflow-hidden overflow-y-auto w-full h-full pt-10 pb-20 relative"
+				className=" flex flex-col items-center gap-5 overflow-hidden overflow-y-auto w-full h-full pt-10 pb-20 px-2 relative"
 				ref={scrollRef}>
 				{isNewSection ? (
 					<LaunchScreen />

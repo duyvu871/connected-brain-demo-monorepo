@@ -25,7 +25,7 @@ export default function MainSidebarLayout({children, customHeader}: MainSidebarL
 			<ContentLayout customHeader={customHeader} title={getAppName(pathName)}>
 				<main
 					className={cn(
-						"min-h-[calc(100svh_-_57px)] dark:bg-zinc-950 transition-[margin-left] ease-in-out duration-300",
+						"min-h-[calc(100svh_-_57px)] bg-white dark:bg-zinc-950 transition-[margin-left] ease-in-out duration-300",
 						!isOpen ? "lg:ml-[90px]" : "lg:ml-72",
 					)}
 				>

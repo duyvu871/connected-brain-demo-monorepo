@@ -34,7 +34,7 @@ export default function ExploreStack() {
 										?
 										<Link className="flex justify-center items-center group" href={href} key={"explore-item-" + genUID()}>
 											<div className={cn("flex md:h-[100px] flex-col md:flex-row items-center w-[calc(100vw_-_100px)] md:min-w-[400px] w-fit border border-zinc-300 dark:border-zinc-700 rounded-lg overflow-hidden",)} >
-												<div className="shrink-0 h-24 md:aspect-square md:h-full w-[calc(100vw_-_100px)] md:w-auto flex justify-center bg-zinc-100 dark:bg-zinc-950 p-5 border-b md:border-b-[0] md:border-r border-zinc-300">
+												<div className="shrink-0 h-24 md:aspect-square md:h-full w-[calc(100vw_-_100px)] md:w-auto flex justify-center bg-zinc-100 dark:bg-zinc-950 p-5 border-b md:border-b-[0] md:border-r dark:border-zinc-700 border-zinc-300">
 													<Image alt="image"  height={500} src={ItemIcon.href} width={500} />
 												</div>
 												<div className={cn("flex-grow max-w-[300px] flex flex-col items-start justify-center p-4 gap-1.5")}>
