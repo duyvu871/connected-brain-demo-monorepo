@@ -262,14 +262,14 @@ function ChatHistory({ classnames }: ChatHistoryProps) {
 	return (
 		<div
 			className={cn(
-				' flex flex-col justify-between transition-all bottom-0 z-[60] w-full md:max-w-xs md:h-full md:relative md:p-5 md:pr-0',
+				' flex flex-col justify-between transition-all bottom-0 z-[60] w-full md:max-w-xs md:h-full md:relative md:p-2.5 hidden:md:pr-0 border-r border-zinc-800',
 				chatHistoryCollapsed ? 'w-fit gap-0' : '',
 				classnames?.wrapper || '',
 			)}>
 			{/*<div className={'w-screen h-screen absolute top-0 left-0 bg-black/40 z-[121] md:hidden'} />*/}
 			<div
 				className={cn(
-					'bg-[--background-hero] flex flex-col justify-between border border-zinc-800 gap-1 shadow w-full md:h-full md:rounded-2xl rounded-3xl rounded-b-none p-2 max-w-lg mx-auto select-none transition-all',
+					'bg-zinc-950 flex flex-col justify-between hidden:border border-zinc-800 gap-1 shadow w-full md:h-full md:rounded-2xl rounded-3xl rounded-b-none p-2 max-w-lg mx-auto select-none transition-all',
 					chatHistoryCollapsed ? 'w-fit' : '',
 					classnames?.container || '',
 				)}>

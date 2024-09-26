@@ -84,7 +84,7 @@ function BodyContent(): JSX.Element {
       <BodyContentWrapper>
         <div className="bg-cover md:bg-contain">
           <div className="absolute w-full flex flex-center justify-center overflow-hidden">
-            <div className="w-[1200px] sm:max-w-4xl sm:w-full">
+            <div className="relative w-[1200px] sm:max-w-4xl sm:w-full">
               <BlobBackground className="w-[inherit] sm:w-full" />
             </div>
           </div>

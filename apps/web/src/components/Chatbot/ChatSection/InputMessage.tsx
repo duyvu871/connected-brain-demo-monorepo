@@ -28,11 +28,11 @@ export default function InputMessage(
 	};
 
 	return (
-		<div className={cn('flex justify-between items-center p-2', isTooLong ? 'flex-col' : '')}>
+		<div className={cn('flex flex-col justify-between items-center p-2 gap-2', isTooLong ? 'flex-col' : '')}>
 			<AutoResizeQuill
 				className={cn(
-					'w-full bg-transparent outline-none max-h-52 resize-none text-white',
-					isTooLong ? 'h-fit p-4' : 'h-14',
+					'w-full bg-transparent outline-none max-h-52 resize-none text-white rounded-lg p-2 bg-zinc-900 border border-zinc-800',
+					isTooLong ? 'h-fit p-2' : 'h-14',
 				)}
 				event={{
 					onEnter: () => {
@@ -49,7 +49,7 @@ export default function InputMessage(
 				value={promptText}
 			/>
 			<div
-				className={cn('flex flex-row justify-end items-center gap-2', isTooLong ? 'w-full ' : 'w-fit')}>
+				className={cn('w-full flex flex-row justify-end items-center gap-2')}>
 				<Tooltip title="Voice Record">
 					<VoiceRecordModal>
 						<div className="p-2 aspect-square flex justify-center items-center rounded-full cursor-pointer">
@@ -57,16 +57,18 @@ export default function InputMessage(
 						</div>
 					</VoiceRecordModal>
 				</Tooltip>
-				<Tooltip title="Upload">
-					<UploadModal>
-						<div
-							className="p-2 aspect-square flex justify-center items-center rounded-full cursor-pointer">
-							<MdOutlineFileUpload className="text-white" size={26} />
-						</div>
-					</UploadModal>
-				</Tooltip>
+				{/*<Tooltip title="Upload">*/}
+				{/*	<UploadModal>*/}
+				{/*		<div*/}
+				{/*			className="p-2 aspect-square flex justify-center items-center rounded-full cursor-pointer">*/}
+				{/*			<MdOutlineFileUpload className="text-white" size={26} />*/}
+				{/*		</div>*/}
+				{/*	</UploadModal>*/}
+				{/*</Tooltip>*/}
 				<Tooltip title="Generate prompt">
-					<div className="p-3 rounded-full bg-zinc-600 cursor-pointer" onClick={async () => {
+					<div className="p-3 py-1.5 rounded-md bg-zinc-800 cursor-pointer flex justify-center items-center gap-3" onClick={async () => {
+
+
 						if (promptText === '') {
 							return;
 						}
@@ -77,6 +79,7 @@ export default function InputMessage(
 						await (action?.sendMessage(promptText, contentMedia));
 						// setIsSendMessage(false);
 					}}>
+						<span className="text-white">Send</span>
 						<BsFillSendFill className="text-white" />
 					</div>
 				</Tooltip>

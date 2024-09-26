@@ -91,7 +91,7 @@ const AutoResizeQuill = ({
 		<div className={className + ' input_editor'} ref={containerRef} style={{ height: 'auto', overflow: 'hidden' }}>
 			<ReactQuill
 				bounds=".input_editor"
-				className="border-0 max-h-52"
+				className="border-0 max-h-52 min-h-14 resize-none"
 				formats={[]}
 				modules={{
 					toolbar: false,

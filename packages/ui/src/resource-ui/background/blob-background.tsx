@@ -5,8 +5,15 @@ const BlobBackground = forwardRef<SVGSVGElement, React.SVGProps<SVGSVGElement>>(
 
 	return (
 		<svg ref={ref} viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" {...props}>
-			<circle className="fill-zinc-400/70 dark:fill-zinc-900/20" cx="100" cy="100" r="80" />
-			<g>
+			<circle className="fill-zinc-400/70 dark:fill-zinc-900/20" cx="100" cy="100" filter="url(#bbblurry-filter)" r="80" />
+			<defs>
+				<filter colorInterpolationFilters="sRGB" filterUnits="objectBoundingBox" height="400%" id="bbblurry-filter" primitiveUnits="userSpaceOnUse" width="400%"
+								x="-100%" y="-100%">
+					<feGaussianBlur edgeMode="none" height="100%" in="SourceGraphic" result="blur" stdDeviation="1" width="100%" x="0%"
+													y="0%" />
+				</filter>
+			</defs>
+			<g filter="url(#bbblurry-filter)">
 				<svg
 					className="blobs"
 					xmlns="http://www.w3.org/2000/svg"
@@ -25,6 +32,7 @@ const BlobBackground = forwardRef<SVGSVGElement, React.SVGProps<SVGSVGElement>>(
 					/>
 				</svg>
 			</g>
+			{/*<rect fill="transparent" height="200" width="200" x="0" y="0" />*/}
 		</svg>
 	);
 });

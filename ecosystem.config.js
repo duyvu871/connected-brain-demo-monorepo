@@ -1,9 +1,11 @@
+const path = require('path');
+
 module.exports = {
 	apps: [
 		{
 			name: 'connected-brain-front-end',
 			script: 'npm run start',  // Assuming corrected package.json script
-			cwd: '/home/adc300/connected-brain/connected-brain-demo-monorepo/apps/web/', // Change to your web app directory
+			cwd: path.join(__dirname, 'apps/web'), // Change to your web app directory
 			// watch: [
 			// 	'src',  // Example, adjust as needed
 			// 	'public',
@@ -26,7 +28,7 @@ module.exports = {
 			// watch: [
 			// 	'src', // Watch your source code for changes
 			// ],
-			cwd: '/home/adc300/connected-brain/connected-brain-demo-monorepo/apps/server', // Change to your server app directory
+			cwd: path.join(__dirname, 'apps/server'), // Change to your server app directory
 			out_file: "./back-end-out.log",
 			error_file: "./back-end-error.log",
 			log_date_format: "DD-MM HH:mm:ss Z",

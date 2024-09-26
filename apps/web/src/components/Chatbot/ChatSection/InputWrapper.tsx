@@ -8,7 +8,7 @@ export default function InputWrapper() {
 
 	return (
 		<div
-			className="w-full h-14 h-fit rounded-[30px] border border-zinc-800 bg-zinc-800 relative z-[110] mb-2">
+			className="w-full h-14 h-fit rounded-lg hidden:border border-zinc-800 hidden:bg-zinc-800 relative z-[110]">
 			<ContentMedia />
 			<InputMessage
 				action={{
