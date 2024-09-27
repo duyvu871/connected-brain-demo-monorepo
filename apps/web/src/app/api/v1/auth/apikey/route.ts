@@ -8,15 +8,15 @@ const keyBindings = {
 };
 
 export async function GET(request: NextRequest) {
+	const session = await getServerAuthSession();
+	if (!session) {
+		return dataTemplate({ message: 'Unauthorized' }, 401);
+	}
+	const keyOrder = request.nextUrl.searchParams.get('order');
+	if (!keyOrder) {
+		return dataTemplate({ message: 'Invalid order' }, 400);
+	}
 	try {
-		const session = await getServerAuthSession();
-		if (!session) {
-			return dataTemplate({ message: 'Unauthorized' }, 401);
-		}
-		const keyOrder = request.nextUrl.searchParams.get('order');
-		if (!keyOrder) {
-			return dataTemplate({ message: 'Invalid order' }, 400);
-		}
 		const keys = keyOrder.split(',');
 		const responseKeys = keys.map((key) => {
 			return {
