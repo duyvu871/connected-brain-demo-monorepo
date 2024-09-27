@@ -62,7 +62,7 @@ export default class SpeechToTextService {
 		content: Buffer,
 		audit: MakeRequired<Partial<Awaited<ReturnType<typeof SpeechToTextService.create_audit>>>, 'audio'>
 	) {
-		const createFileContent = FileStorageService.write_file(AppConfig.app_root + audit.audio.path, content);
+		const createFileContent = FileStorageService.write_file(global.__rootdir + audit.audio.path, content);
 		return audit.audio.path;
 	}
 
@@ -110,7 +110,7 @@ export default class SpeechToTextService {
 	}
 	// update audit
 	public static async update_audit(id: string|ObjectId, audit: Partial<IS2tDTO>) {
-		const auditPath = `${AppConfig.path.storage}/Assets/s2t/${id.toString()}/audit.json`;
+		const auditPath = `${global.__rootdir}/storage/Assets/s2t/${id.toString()}/audit.json`;
 		const rewriteAudit = FileStorageService.read_file(auditPath);
 		const auditJson = JSON.parse(rewriteAudit);
 		const newAudit = {...auditJson, ...audit};
@@ -125,7 +125,7 @@ export default class SpeechToTextService {
 	// get transcript by id
 	public static async get_transcript(id: string|ObjectId) {
 		const audit = await SpeechToTextService.get_audit(id);
-		const auditContent = FileStorageService.read_file(AppConfig.app_root + audit.auditPath);
+		const auditContent = FileStorageService.read_file(global.__rootdir + audit.auditPath);
 
 		return auditContent;
 	}
@@ -136,7 +136,7 @@ export default class SpeechToTextService {
 	// update transcript
 	public static async update_transcript(id: string|ObjectId, transcript: string) {
 		const audit = await SpeechToTextService.get_audit(id);
-		const auditContent = FileStorageService.read_file(AppConfig.app_root + audit.auditPath);
+		const auditContent = FileStorageService.read_file(global.__rootdir + audit.auditPath);
 		const auditJson = JSON.parse(auditContent);
 		auditJson.transcript.push(transcript);
 	}
