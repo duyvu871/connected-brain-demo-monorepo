@@ -42,7 +42,7 @@ export default async function SpeechToText(data: ConvertToWavJob['job_data']) {
 		// console.log('Transcript:', transcripts_parse.sentences);
 
 		await SpeechToTextService.update_audit(data.id, {
-			cloudPath: upload_to_google_cloud?.downloadURL ?? '',
+			cloudPath: audio_storage_url,
 			// cloudPath: upload_to_firebase?.downloadURL ?? '',
 			audio: {
 				path: file_path,
@@ -51,7 +51,7 @@ export default async function SpeechToText(data: ConvertToWavJob['job_data']) {
 			transcript: transcripts_parse.sentences,
 			status: 'done'
 		});
-		console.log('global', global.__io);
+		// console.log('global', global.__io);
 		// global.__io.emit(`s2t:transcript:${data.id}`, transcripts_parse.sentences);
 		return 'DONE';
 	}
