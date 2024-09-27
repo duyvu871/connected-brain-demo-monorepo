@@ -23,7 +23,7 @@ export default class SpeechToTextController {
 				const audit = await SpeechToTextService.create_audit(db_repo._id ?? 'error_audit_created');
 				const audio_file = await SpeechToTextService.create_audio_stream(req, audit);
 				const absolute_path = path.join(process.cwd(), audit.audio.path);
-				const convert_to_wav = await BackgroundTaskService.add_task<WorkerJob>(
+				process.env.NODE_ENV === "development" && await BackgroundTaskService.add_task<WorkerJob>(
 					'background_task',
 					'convert_to_wav',
 					{

@@ -12,9 +12,7 @@ interface ISignUpRequest {
 export async function POST(request: NextRequest) {
 	try {
 		const json: ISignUpRequest = await request.json();
-
 		const response = await signUp({ ...json });
-
 		return dataTemplate(response, 200);
 	} catch (e: any) {
 		return dataTemplate({ error: e.message }, 500);

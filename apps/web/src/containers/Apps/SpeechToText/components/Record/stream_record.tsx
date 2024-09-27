@@ -51,6 +51,10 @@ function VoiceRecord({ setTextContent, size = { wrapper: 'sm', icon: 'sm' } }: V
 		if (audioBlob) {
 			try {
 				const uploadResponse = await uploadAudio(audioBlob);
+				if (!uploadResponse) {
+					error('Upload failed. Please try again.');
+					return;
+				}
 				success('Audio uploaded successfully!');
 				setSectionId(uploadResponse.id);
 				if (uploadResponse.id) {
