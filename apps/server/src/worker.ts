@@ -45,10 +45,10 @@ const redisInstance = new Redis({
 	port: parseInt(process.env.REDIS_PORT as string),
 	maxRetriesPerRequest: null,
 	connectTimeout: 3600000, // 1 hour
-	...(isProduction ? {
-		password: process.env.REDIS_PASSWORD,
-		username: process.env.REDIS_USERNAME
-	} : {}),
+	// ...(isProduction ? {
+	// 	password: process.env.REDIS_PASSWORD,
+	// 	username: process.env.REDIS_USERNAME
+	// } : {}),
 });
 
 if (!redisInstance) {

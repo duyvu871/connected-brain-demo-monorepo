@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "start:test:product": "set NODE_ENV=production&&set PORT=3001&&tsup --watch --onSuccess \"npm run start:concurrently\"",
     "start": "npm run start:concurrently",
     "dev": "set NODE_ENV=development&&set PORT=3001&&tsup --watch --onSuccess \"npm run start:concurrently\"",
     "start:concurrently": "concurrently \"node dist/worker.js\" \" node dist/app.js\"",
