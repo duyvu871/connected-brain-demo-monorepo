@@ -7,9 +7,8 @@ import { HttpStatusCode } from '@/helpers/http_status_code';
 import { MakeRequired } from '@/types/helper';
 import { Request } from 'express';
 import { Server } from 'socket.io';
-import { api_route, socket_event } from '@repo/utils/constants';
+import { api_route } from '@repo/utils/constants';
 import path from 'path';
-// import { storage } from '@/configs/firebase';
 
 export default class SpeechToTextService {
 	public static connection(io: Server) {
@@ -110,12 +109,14 @@ export default class SpeechToTextService {
 	}
 	// update audit
 	public static async update_audit(id: string|ObjectId, audit: Partial<IS2tDTO>) {
-		const auditPath = `${global.__rootdir}/storage/Assets/s2t/${id.toString()}/audit.json`;
+		const auditPath = `${process.cwd()}/storage/Assets/s2t/${id.toString()}/audit.json`;
 		const rewriteAudit = FileStorageService.read_file(auditPath);
 		const auditJson = JSON.parse(rewriteAudit);
 		const newAudit = {...auditJson, ...audit};
 		const writeNewAudit = await FileStorageService.write_file(auditPath, Buffer.from(JSON.stringify(newAudit)));
-		const updateAuditRepo = await S2t.findByIdAndUpdate(new Types.ObjectId(id.toString()), newAudit, {new: true}).exec();
+		const updateAuditRepo = await S2t.findByIdAndUpdate(
+			new Types.ObjectId(id.toString()), newAudit, {new: true}
+		).exec();
 		if (!updateAuditRepo) {
 			throw new ApiError(HttpStatusCode.InternalServerError, "fail update audit");
 		}
@@ -125,7 +126,7 @@ export default class SpeechToTextService {
 	// get transcript by id
 	public static async get_transcript(id: string|ObjectId) {
 		const audit = await SpeechToTextService.get_audit(id);
-		const auditContent = FileStorageService.read_file(global.__rootdir + audit.auditPath);
+		const auditContent = FileStorageService.read_file(process.cwd() + audit.auditPath);
 
 		return auditContent;
 	}
@@ -136,7 +137,7 @@ export default class SpeechToTextService {
 	// update transcript
 	public static async update_transcript(id: string|ObjectId, transcript: string) {
 		const audit = await SpeechToTextService.get_audit(id);
-		const auditContent = FileStorageService.read_file(global.__rootdir + audit.auditPath);
+		const auditContent = FileStorageService.read_file(process.cwd() + audit.auditPath);
 		const auditJson = JSON.parse(auditContent);
 		auditJson.transcript.push(transcript);
 	}
