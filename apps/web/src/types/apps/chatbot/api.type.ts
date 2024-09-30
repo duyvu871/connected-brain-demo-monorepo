@@ -36,6 +36,17 @@ export type SectionMessageGeneratedType = {
 	createdAt: Date;
 	updatedAt: Date;
 }
+
+export enum ReferenceLinkType {
+	bmp = 'image/bmp',
+	csv = 'text/csv',
+	odt = 'application/vnd.oasis.opendocument.text',
+	doc = 'application/msword',
+	docx = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+	gif = 'image/gif',
+	pdf = 'application/pdf',
+}
+
 export type MessageHistoryType = {
 	_id?: ObjectId;
 	message: string;
@@ -43,11 +54,24 @@ export type MessageHistoryType = {
 	role: 'user' | 'assistant';
 	createdAt: Date;
 	updatedAt: Date;
+	reference_link: {
+		name: string;
+		link: string;
+		type:
+			'image/bmp'|
+			'text/csv'|
+			'application/vnd.oasis.opendocument.text'|
+			'application/msword'|
+			'application/vnd.openxmlformats-officedocument.wordprocessingml.document'|
+			'image/gif'|
+			'application/pdf';
+	}[];
 	// coming soon update for the next version
 	// modified history
 }
 
 export type SendMessageRequest = {
+	model: string;
 	user_id?: string;
 	message?: string;
 	messageMedia?: string[];
@@ -59,4 +83,13 @@ export type SendMessageResponse = {
 	role: 'USER' | 'ASSISTANT';
 	createdAt: Date;
 	updatedAt: Date;
+}
+
+export type GetAvailableModelsResponse = {
+	models: {
+		default: boolean;
+		name: string;
+		description: string;
+		code: string;
+	}[];
 }

@@ -1,23 +1,30 @@
+import type {ChatbotService as ChatbotServiceBase} from '@/lib/llms/base';
 import { GeminiChatService as Chatbot } from '@/lib/llms/gemini';
+import {ConnectedbrainBot} from '@/lib/llms/connectedbrain-bot';
 import type { Collection, Db} from 'mongodb';
 import { ObjectId } from 'mongodb';
 import type { UserInterface as UserType } from 'types/user.type'; // Assuming UserType has '_id' as ObjectId
-import type { MessageHistoryType, SectionMessageGeneratedType } from 'types/apps/chatbot/api.type.ts'; // Assuming these types have '_id' as ObjectId
+import type { MessageHistoryType, SectionMessageGeneratedType } from 'types/apps/chatbot/api.type';
+import { ReferenceLinkType } from 'types/apps/chatbot/api.type'; // Assuming these types have '_id' as ObjectId
 import clientPromise from '@/lib/mongodb';
 import type { Content } from '@google/generative-ai';
 import { initAI } from '@/lib/llms/init';
 import * as process from 'node:process';
+import type { modelsEnum } from '@/lib/llms/models-definition';
+import { fileType } from '@repo/utils';
 
 export class ChatbotService {
-	private chatbot!: Chatbot;
+	private chatbot!: ChatbotServiceBase;
 	private db!: Db;
 	private userCollection!: Collection<UserType>;
 	private sectionMessageCollection!: Collection<SectionMessageGeneratedType>;
 	private messageHistoryCollection!: Collection<MessageHistoryType>;
 	private readonly USER_ID: ObjectId;
+	private readonly model!: keyof typeof modelsEnum;
 
-	constructor(userId: ObjectId) {
+	constructor(userId: ObjectId, model?: keyof typeof modelsEnum) {
 		this.USER_ID = userId;
+		this.model = model || '001';
 	}
 
 	private async loadDB() {
@@ -34,7 +41,17 @@ export class ChatbotService {
 	}
 
 	private initChatbot() {
-		this.chatbot = new Chatbot(process.env.GEMINI_API_KEY);
+		switch (this.model) {
+			case '001':
+				this.chatbot = new Chatbot(process.env.GEMINI_API_KEY);
+				break;
+			case '002':
+				this.chatbot = new ConnectedbrainBot();
+				break;
+			default:
+				this.chatbot = new Chatbot(process.env.GEMINI_API_KEY);
+				break;
+		}
 	}
 
 	// init the AI generate message service for new user
@@ -93,6 +110,7 @@ export class ChatbotService {
 		const chatRequest: ExcludeProperties<MessageHistoryType, '_id'> = {
 			message: message.textContent,
 			mediaMessage: message.mediaContent,
+			reference_link: [],
 			role: 'user',
 			createdAt: new Date(),
 			updatedAt: new Date(),
@@ -111,12 +129,21 @@ export class ChatbotService {
 
 		const chatResponse: MessageHistoryType = {
 			_id: new ObjectId(),
-			message: response,
+			message: response.answer,
 			mediaMessage: [''],
+			reference_link: !response?.reference_link ? [] : response.reference_link.map((link) => ({
+				name: fileType.fileInformationFromPath(link).name,
+				link: `https://api.connectedbrain.com.vn/${link.replace('/media/brainx/Data/Chatbot', 'storage/brainx/chatbot/reference')}`,
+				type: ReferenceLinkType[(link.split('.').pop() || "doc") as keyof typeof ReferenceLinkType] as MessageHistoryType['reference_link'][number]['type'],
+			})),
 			role: 'assistant',
 			createdAt: new Date(),
 			updatedAt: new Date(),
 		};
+
+		if (response.error) {
+			return chatResponse;
+		}
 
 		const requestCreateMessage = await this.messageHistoryCollection.insertOne(chatRequest);
 		if (!requestCreateMessage.acknowledged) throw new Error('Failed to create user message');

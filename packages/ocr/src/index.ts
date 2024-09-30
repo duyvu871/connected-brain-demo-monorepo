@@ -145,7 +145,7 @@ export class OCR {
 		}
 	}
 
-	public static async processzincScaleImage(
+	public static async processGrayScaleImage(
 		imageBuffer: Buffer,
 	): Promise<Buffer> {
 		try {

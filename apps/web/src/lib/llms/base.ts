@@ -39,6 +39,12 @@ export type MimeTypes =
 	| 'image/jpeg'
 	| 'image/jpeg-sequence';
 
+export type ChatbotResponse = {
+	answer: string;
+	reference_link?: string[];
+	error?: string;
+};
+
 export abstract class ChatbotService {
 	protected generationConfig: GenerationConfig;
 	protected safetySettings: SafetySetting[];
@@ -72,12 +78,12 @@ export abstract class ChatbotService {
 	}
 
 	// Abstract methods to be implemented by specific chatbot services
-	abstract startChat(isUsePrompt: boolean): Promise<string>;
+	abstract startChat(isUsePrompt: boolean): Promise<ChatbotResponse>;
 	abstract sendMessage(
 		message: { textContent: string; mediaContent: string[] },
 		history: Content[],
 		passInitPrompt?: boolean
-	): Promise<string>;
+	): Promise<ChatbotResponse>;
 
 	/**
 	 * Generate a message from a prompt

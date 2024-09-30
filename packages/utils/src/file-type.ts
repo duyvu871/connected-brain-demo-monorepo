@@ -19,6 +19,17 @@ export function detectMimeType(base64 = ''): string | undefined {
 	return mimeType;
 }
 
+export function detectFileExtension(path: string): string | undefined {
+	return path.split('.').pop();
+}
+
+export function fileInformationFromPath(path: string): { ext: string; mime: string, name: string } {
+	const ext = detectFileExtension(path);
+	const mime = detectMimeType(path);
+	const name = path.split('/').pop();
+	return { ext: ext || '', mime: mime || '' , name: name ? name.split('.').shift() || '' : '' };
+}
+
 // export async function fileTypeFromBuffer(buffer: Buffer): Promise<{ ext: string; mime: string } | undefined> {
 // 	const fileType = await import('file-type');
 // 	console.log('fileType', fileType);

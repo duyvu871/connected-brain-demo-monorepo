@@ -1,0 +1,33 @@
+{
+  "name": "@repo/network-sftp",
+  "type": "module",
+  "scripts": {
+    "build": "tsup && tsc-alias",
+    "dev": "tsup --watch",
+    "test": "jest",
+    "typecheck": "tsc --noEmit",
+    "clean": "rimraf .turbo && rimraf node_modules",
+    "clear:force": "rimraf *.js --force"
+  },
+  "files": [
+    "dist/**"
+  ],
+  "exports": {
+    ".": "./dist/index.cjs"
+  },
+  "dependencies": {
+    "@repo/utils": "*",
+    "file-type": "^19.4.0",
+    "rxjs": "^7.8.1",
+    "ssh2": "^1.16.0"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "*",
+    "@types/ssh2": "^1.15.1",
+    "jest": "^29.7.0",
+    "rimraf": "^6.0.1",
+    "tsc-alias": "^1.8.10",
+    "tsup": "^8.2.4",
+    "typescript": "latest"
+  }
+}

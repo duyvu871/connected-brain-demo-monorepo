@@ -25,7 +25,8 @@ import { APIs } from '@/global/contants/route';
 import type { ObjectId } from 'mongodb';
 import useUID from '@/hooks/useUID';
 import { useToast } from '@/hooks/useToast.ts';
-
+import { useAtomCallback } from 'jotai/utils';
+import { selectedModel } from '@/states/Chatbot/playground';
 
 interface Message {
 	id: string;
@@ -90,6 +91,7 @@ function ChatbotProvider({ children }: { children: React.ReactNode }) {
 	const [chat_id, setChatId] = useState<string>('');
 	const [user, setUser] = useState<UserInterface|null>(userSession);
 	const [generateUID] = useUID();
+
 	// const { _id, role, username, uid } = user;
 	const [contentMedia, setContentMedia] = useState<string[]>([]);
 
@@ -116,7 +118,8 @@ function ChatbotProvider({ children }: { children: React.ReactNode }) {
 		store.dispatch(UpdateChatByIdAction(text, chat_id));
 	};
 
-	const sendMessage = async (text: string, mediaContent: string[] = []) => {
+	const sendMessage = useAtomCallback(async (get, set,  text: string, mediaContent: string[] = []) => {
+		const model = get(selectedModel);
 		if (!chat_id) {
 			await createSectionMessage(text);
 			return;
@@ -135,6 +138,7 @@ function ChatbotProvider({ children }: { children: React.ReactNode }) {
 				messageMedia: mediaContent,
 				section_id: chat_id,
 				user_id: user?.id,
+				model,
 			} as SendMessageRequest),
 		});
 		setContentMedia([]);
@@ -148,7 +152,7 @@ function ChatbotProvider({ children }: { children: React.ReactNode }) {
 		// insertMessage(data.message, 'assistant', chat_id);
 		setNewMessageId(newMessageId);
 		updateMessage(data.message, newMessageId);
-	};
+	});
 
 	const getSections = useCallback(async (user_id: string) => {
 		if (!user_id) {
@@ -165,7 +169,8 @@ function ChatbotProvider({ children }: { children: React.ReactNode }) {
 		return data;
 	}, []);
 
-	const createSectionMessage = async (message: string, mediaContent: string[] = []) => {
+	const createSectionMessage = useAtomCallback(async (get, set, message: string, mediaContent: string[] = []) => {
+		const model = get(selectedModel);
 		insertMessage(message, mediaContent, 'user', 'preview-created-user');
 		insertMessage(NewChatMessageEnum.NEW_MESSAGE, [], 'assistant', 'preview-created-assistant');
 		setIsSending(true);
@@ -179,6 +184,7 @@ function ChatbotProvider({ children }: { children: React.ReactNode }) {
 				message,
 				contentMedia: mediaContent,
 				user_id: user?.id,
+				model
 			}),
 		});
 		const data = await response.json() as CreateNewSectionResponse & { error?: string };
@@ -206,7 +212,7 @@ function ChatbotProvider({ children }: { children: React.ReactNode }) {
 			message_generated: [''] as unknown as ObjectId[],
 		},
 			...prevSections]);
-	};
+	});
 
 	const getChatHistory = useCallback(async (chat_id: string) => {
 		if (!user?.id) {

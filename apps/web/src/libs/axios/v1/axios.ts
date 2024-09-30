@@ -4,11 +4,16 @@ import type { TranslateResponse } from '@repo/translate';
 import type { Page as TesseractPage} from "tesseract.js"
 import type { UploadPDFResponse } from 'types/apps/ocr/api.type.ts';
 import axiosWithAuth from '@/libs/axios/v1/axiosWithAuth.ts';
-import axiosNextAuth from '@/libs/axios/v1/axiosWithAuth.ts';
+import type { GetAvailableModelsResponse } from 'types/apps/chatbot/api.type.ts';
 
 // Interface to define the shape of the `api.v1` object 
 // This improves code clarity and type checking 
 interface ApiV1 {
+	chatbot: {
+		sendMessage: (message: string, section_id: string, messageMedia?: string[], callback?: (error: AxiosError | null, data?: any) => void)
+			=> Promise<string | undefined>;
+		getAvailableModels: (callback?: (error: AxiosError | null, data?: any) => void) => Promise<GetAvailableModelsResponse | undefined>;
+	}
 	translate: (
 		body: {text: string, from?: string, to?: string},
 		callback?: (error: AxiosError | null, translation?: string) => void
@@ -32,7 +37,7 @@ interface ApiV1 {
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001';
 
 // Create the Axios instance with the base URL
-const api= axios.create({
+const api = axios.create({
 	baseURL: `${API_ENDPOINT}/api/v1`,
 }) as  AxiosInstance & { v1: ApiV1 } ;
 
@@ -63,6 +68,32 @@ const apiTemplate = async <T>(
 
 // Define methods for API version 1
 api.v1 = {
+	chatbot: {
+		sendMessage: async (message, section_id, messageMedia = [], callback = undefined) => {
+			const body = {
+				message,
+				section_id,
+				messageMedia,
+			};
+			const config = {
+				method: 'post',
+				configs: {}
+			} as const;
+			const response = await apiTemplate<string>(api, '/feature/chatbot/send-message', body, config, callback);
+			return response?.data;
+		},
+		getAvailableModels: async (callback = undefined) => {
+			const api = axios.create({
+				baseURL: `/api/v1`,
+			});
+			const config = {
+				method: 'get',
+				configs: {}
+			} as const;
+			const response = await apiTemplate<GetAvailableModelsResponse>(api, '/feature/chatbot/get-available-models', {}, config, callback);
+			return response?.data;
+		}
+	},
 	translate: async (body, callback = undefined) => {
 		try {
 			// Make a POST request to the /translate endpoint
@@ -137,7 +168,7 @@ api.v1 = {
 				configs: {}
 			} as const;
 			const response = await apiTemplate<TesseractPage>(
-				axiosNextAuth,
+				axiosWithAuth,
 				`${API_ENDPOINT}/api/v1/feature/ocr/get-extract/${fileId}/${page}?clientId=${clientId}`,
 				{},
 				config,

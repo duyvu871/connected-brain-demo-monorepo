@@ -14,7 +14,8 @@ import { motion, useAnimate } from 'framer-motion';
 import { TfiAngleDown, TfiAngleLeft, TfiAngleRight, TfiAngleUp } from 'react-icons/tfi';
 import type { SectionMessageGeneratedType } from 'types/apps/chatbot/api.type.ts';
 import DownloadModal from '@/components/Chatbot/Modals/DownloadModal';
-import { Button } from '@ui/shadcn-ui/ui/button';
+// import { Button } from '@ui/shadcn-ui/ui/button';
+import ModelSelect from '@/components/Chatbot/model-select.tsx';
 
 interface ChatHistoryProps {
 	classnames?: {
@@ -99,8 +100,8 @@ const ChatHistoryItem = ({
 		<div className="w-full flex justify-between overflow-hidden gap-1 pl-3">
 			<div
 				className={cn(
-					'flex w-full max-w-sm p-2 rounded-lg gap-2 justify-between items-center hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-all duration-300 cursor-pointer',
-					isActive ? 'bg-zinc-200 dark:bg-zinc-800 ' : '',
+					'flex w-full max-w-sm p-2 rounded-md gap-2 justify-between items-center hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-all duration-300 cursor-pointer',
+					isActive ? 'bg-zinc-200 dark:bg-zinc-900 ' : '',
 				)}>
 				<div className="flex justify-start items-center w-full">
 					<div className="text-white" onClick={() => directToSection(sectionId)}>
@@ -220,7 +221,7 @@ function ChatHistory({ classnames }: ChatHistoryProps) {
 	const { sections } = useChatbot();
 	const [CHRef, animate] = useAnimate(); // CHRef: Chat History Ref
 
-	const [sectionRendered, setSectionRendered] = React.useState<SectionMessageGeneratedType[]>(
+	const [sectionRendered, setSectionRendered] = useState<SectionMessageGeneratedType[]>(
 		sections.slice(0, 5),
 	);
 
@@ -262,14 +263,14 @@ function ChatHistory({ classnames }: ChatHistoryProps) {
 	return (
 		<div
 			className={cn(
-				' flex flex-col justify-between transition-all bottom-0 w-full md:max-w-xs md:h-full md:relative md:p-2.5 hidden:md:pr-0 border-r border-zinc-300 dark:border-zinc-800',
+				' flex flex-col justify-between transition-all bottom-0 w-full md:max-w-[250px] lg:max-w-xs md:h-full md:relative md:p-2 md:py-4 md:pt-2 hidden:md:pr-0 border-r border-zinc-300 dark:border-zinc-800',
 				chatHistoryCollapsed ? 'w-fit gap-0' : '',
 				classnames?.wrapper || '',
 			)}>
 			{/*<div className={'w-screen h-screen absolute top-0 left-0 bg-black/40 z-[121] md:hidden'} />*/}
 			<div
 				className={cn(
-					'bg-zinc-50 dark:bg-zinc-950 flex flex-col justify-between hidden:border border-zinc-300 dark:border-zinc-800 gap-1 w-full md:h-full md:rounded-2xl rounded-3xl rounded-b-none p-2 max-w-lg mx-auto select-none transition-all',
+					'bg-zinc-50 dark:bg-zinc-950 flex flex-col justify-between hidden:border border-zinc-300 dark:border-zinc-800 gap-1 w-full md:h-full md:rounded-2xl rounded-3xl rounded-b-none p-5 sm:p-0 max-w-lg mx-auto select-none transition-all',
 					chatHistoryCollapsed ? 'w-fit' : '',
 					classnames?.container || '',
 				)}>
@@ -285,8 +286,7 @@ function ChatHistory({ classnames }: ChatHistoryProps) {
 								'w-full flex justify-between select-none mb-4 transition-all gap-2',
 								chatHistoryCollapsed ? 'w-fit gap-2' : '',
 								isCollapsed ? '' : 'gap-0',
-								'hidden'
-
+								'hidden',
 							)}>
 							<Tooltip title={chatHistoryCollapsed ? 'Show History' : 'Hide history'}>
 								<motion.div
@@ -306,7 +306,7 @@ function ChatHistory({ classnames }: ChatHistoryProps) {
 									'rounded-lg bg-zinc-800 h-10 w-full md:w-64 flex justify-center items-center px-3 transition-all duration-300',
 									chatHistoryCollapsed ? 'md:w-10 p-0' : '',
 									isCollapsed ? '' : 'w-full',
-									'hidden'
+									'hidden',
 								)}
 								// onMouseEnter={() => setIsCollapsed(false)}
 							>
@@ -340,39 +340,51 @@ function ChatHistory({ classnames }: ChatHistoryProps) {
 								/>
 							</div>
 						</div>
-						<Tooltip title="Create session">
-							<div
-								className={cn(
-									'relative w-full h-10 bg-zinc-800 flex justify-center items-center rounded-lg transition-all duration-[300] cursor-pointer',
-									'hover:bg-zinc-700',
-									chatHistoryCollapsed ? 'w-[88px] p-0' : '',
-								)}
-								onClick={() => router.push('/app/chatbot')}>
-								<HiOutlineDocumentPlus className="w-6 h-6" />
-								<span
+						<div className="w-full flex justify-start">
+							<Tooltip title="Create session">
+								<div
 									className={cn(
-										'text-white leading-5 transition-all',
-										chatHistoryCollapsed ? 'w-0 invisible overflow-hidden' : 'ml-2 w-fit',
-									)}>
-									Create New Session
+										'relative w-full px-4 h-10 bg-zinc-800 flex justify-center items-center rounded-lg transition-all duration-[300] cursor-pointer',
+										'hover:bg-zinc-700',
+										chatHistoryCollapsed ? 'w-[88px] p-0' : '',
+									)}
+									onClick={() => router.push('/app/chatbot')}>
+									<HiOutlineDocumentPlus className="w-6 h-6" />
+									<span
+										className={cn(
+											'text-white leading-5 transition-all text-sm',
+											chatHistoryCollapsed ? 'w-0 invisible overflow-hidden' : 'ml-2 w-fit',
+										)}>
+									New Session
 								</span>
-							</div>
-						</Tooltip>
+								</div>
+							</Tooltip>
+						</div>
 						<div
 							className={cn(
-								'w-full px-2 pt-2 transition-all',
+								'w-full pt-2 transition-all',
 								chatHistoryCollapsed ? 'w-0 invisible' : '',
 							)}>
-							<span className="dark:text-zinc-200 text-zinc-700 font-semibold">Recent</span>
+							<span className="dark:text-zinc-200 text-zinc-700 text-sm">Models</span>
 						</div>
-						<div className="w-full flex justify-center items-center">
+						<div className="w-full pt-2 transition-all">
+							<ModelSelect />
+						</div>
+						<div
+							className={cn(
+								'w-full pt-2 transition-all',
+								chatHistoryCollapsed ? 'w-0 invisible' : '',
+							)}>
+							<span className="dark:text-zinc-200 text-zinc-700 text-sm">Recent</span>
+						</div>
+						<div className="w-full pt-2 flex justify-center items-center">
 							<ChatSectionList
 								chatHistoryCollapsed={chatHistoryCollapsed}
 								sections={sectionRendered}
 							/>
 						</div>
 
-						<div className="w-full h-fit flex justify-start item-center pl-12 mt-2">
+						<div className="w-full h-fit flex justify-start item-center pl-6 my-2">
 							{/* <button
 								className={cn(
 									'text-white bg-zinc-800 rounded-xl p-2 transition-all duration-300 cursor-pointer',
@@ -387,7 +399,10 @@ function ChatHistory({ classnames }: ChatHistoryProps) {
 									chatHistoryCollapsed ? 'w-0 h-0 hidden' : '',
 								)}
 								onClick={() => setShowMore(prev => !prev)}>
-								{!showMore ? <span className="text-zinc-600 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300">View all</span> : <span className="text-zinc-600 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300">Collapse</span>}
+								{!showMore ?
+									<span className=" text-smtext-zinc-600 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300">View all</span> :
+									<span
+										className="text-sm text-zinc-600 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300">Collapse</span>}
 							</div>
 						</div>
 					</div>

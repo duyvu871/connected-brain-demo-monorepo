@@ -54,6 +54,20 @@ export type MimeTypes =
 export class GeminiChatService extends ChatbotService {
 	private genAI: GoogleGenerativeAI;
 	private model: GenerativeModel;
+	protected defaultResponse = '## Brainiac - Chatbot hỗ trợ chuyển đổi số cho doanh nghiệp Việt\n' +
+		'\n' +
+		'Xin chào! Tôi là **Brainiac**, chatbot được phát triển bởi Connected Brain. Tôi ra đời với sứ mệnh hỗ trợ các **khách hàng và doanh nghiệp Việt Nam** trên con đường **chuyển đổi số**.\n' +
+		'\n' +
+		'Hãy xem tôi như **trợ lý kỹ thuật số thông minh** của bạn, luôn sẵn sàng giải đáp mọi thắc mắc và giúp bạn ứng dụng những công nghệ tiên tiến nhất. \n' +
+		'\n' +
+		'Với Brainiac, bạn có thể:\n' +
+		'\n' +
+		'- Nâng cao hiệu quả hoạt động.\n' +
+		'- Thúc đẩy tăng trưởng kinh doanh.\n' +
+		'- Tạo ra trải nghiệm khách hàng vượt trội.\n' +
+		'\n' +
+		'**Bạn muốn khám phá những lợi ích cụ thể mà tôi mang lại?** Hãy tiếp tục tìm hiểu!\n';
+	protected errorResponse = 'Xin lỗi, Brainiac gặp sự cố trong quá trình xử lý yêu cầu của bạn. Vui lòng thử lại sau.';
 
 	constructor(apiKey: string) {
 		super();
@@ -101,7 +115,9 @@ export class GeminiChatService extends ChatbotService {
 			initMessage ? initMessage.parts : defaultPrompt.parts
 		);
 		const response = chatSessionGenerated.response;
-		return response.text();
+		return {
+			answer: response.text(),
+		};
 	}
 
 	public async sendMessage(
@@ -111,34 +127,44 @@ export class GeminiChatService extends ChatbotService {
 		},
 		history: Content[],
 		passInitPrompt?: boolean,
-	): Promise<string> {
-		const initMessage = initAI().initPrompt as unknown as Content[];
-		const messageContent: string | (string | Part)[] = [
-			{
-				text: message.textContent,
-			},
-		];
+	) {
+		try {
+			const initMessage = initAI().initPrompt as unknown as Content[];
+			const messageContent: string | (string | Part)[] = [
+				{
+					text: message.textContent,
+				},
+			];
 
-		if (message.mediaContent.length > 0) {
-			const contentFetch = message.mediaContent.map((item) => this.fetchToBase64WithMimeType(item));
-			const content = await Promise.all(contentFetch);
-			const filteredContent = content.filter((item) => item?.contentType && item?.base64Data) as NonNullable<{
-				base64Data: string;
-				contentType: MimeTypes
-			}[]>;
-			const mediaContent = filteredContent.map((item) =>
-				this.fileToGenerativePath(item.base64Data, item.contentType));
-			messageContent.push(...mediaContent);
+			if (message.mediaContent.length > 0) {
+				const contentFetch = message.mediaContent.map((item) => this.fetchToBase64WithMimeType(item));
+				const content = await Promise.all(contentFetch);
+				const filteredContent = content.filter((item) => item?.contentType && item?.base64Data) as NonNullable<{
+					base64Data: string;
+					contentType: MimeTypes
+				}[]>;
+				const mediaContent = filteredContent.map((item) =>
+					this.fileToGenerativePath(item.base64Data, item.contentType));
+				messageContent.push(...mediaContent);
+			}
+			// console.log(messageContent);
+			const chatSession = this.model.startChat({
+				generationConfig: this.generationConfig,
+				safetySettings: this.safetySettings,
+				history: passInitPrompt ? [...initMessage, ...history] : history,
+			});
+
+			const result = await chatSession.sendMessage(messageContent);
+			return {
+				answer: result.response.text(),
+			};
+		} catch (error: any) {
+			console.log('Error sending message:', error);
+			return {
+				answer: this.errorResponse,
+				error: error.message,
+			};
 		}
-		// console.log(messageContent);
-		const chatSession = this.model.startChat({
-			generationConfig: this.generationConfig,
-			safetySettings: this.safetySettings,
-			history: passInitPrompt ? [...initMessage, ...history] : history,
-		});
-
-		const result = await chatSession.sendMessage(messageContent);
-		return result.response.text();
 	}
 
 	/**

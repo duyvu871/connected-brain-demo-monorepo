@@ -28,7 +28,7 @@ export default function InputMessage(
 	};
 
 	return (
-		<div className={cn('flex flex-col md:flex-row justify-between items-center md:items-end p-2 gap-2', isTooLong ? 'flex-col' : '')}>
+		<div className={cn('flex flex-col md:flex-row justify-between items-center md:items-end p-2 md:pb-4 gap-2', isTooLong ? 'flex-col' : '')}>
 			<AutoResizeQuill
 				className={cn(
 					'w-full bg-zinc-50 outline-none max-h-52 resize-none text-white rounded-lg p-2 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800',
