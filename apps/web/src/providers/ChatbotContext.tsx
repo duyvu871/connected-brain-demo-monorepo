@@ -114,8 +114,8 @@ function ChatbotProvider({ children }: { children: React.ReactNode }) {
 		store.dispatch(InsertMessageAction(text, contentMedia, sender, chat_id));
 	};
 
-	const updateMessage = (text: string, chat_id: string) => {
-		store.dispatch(UpdateChatByIdAction(text, chat_id));
+	const updateMessage = (text: string, ref_link: MessageHistoryType['reference_link'], chat_id: string) => {
+		store.dispatch(UpdateChatByIdAction(text, ref_link, chat_id));
 	};
 
 	const sendMessage = useAtomCallback(async (get, set,  text: string, mediaContent: string[] = []) => {
@@ -151,7 +151,7 @@ function ChatbotProvider({ children }: { children: React.ReactNode }) {
 		setIsSending(false);
 		// insertMessage(data.message, 'assistant', chat_id);
 		setNewMessageId(newMessageId);
-		updateMessage(data.message, newMessageId);
+		updateMessage(data.message, data?.reference_link || [], newMessageId);
 	});
 
 	const getSections = useCallback(async (user_id: string) => {
@@ -216,7 +216,7 @@ function ChatbotProvider({ children }: { children: React.ReactNode }) {
 
 	const getChatHistory = useCallback(async (chat_id: string) => {
 		if (!user?.id) {
-			console.error('User id not found');
+			console.log('User id not found');
 			return;
 		}
 		const response = await fetch('/api/v1/feature/chatbot/get-chat-history?user_id=' + user.id.toString() + '&section_id=' + chat_id);
@@ -231,7 +231,8 @@ function ChatbotProvider({ children }: { children: React.ReactNode }) {
 				id: String(message?._id ?? ''),
 				role: message.role,
 				message: message.message,
-				contentMedia: message.mediaMessage ?? [],
+				contentMedia: message.mediaMessage || [],
+				reference_link: message.reference_link || [],
 			})),
 		}));
 	}, [errorShowToast, user]);

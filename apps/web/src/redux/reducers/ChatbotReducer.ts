@@ -1,10 +1,12 @@
 import { ChatActionTypes } from '@/redux/actions/ChatbotAtion';
 import type { ChatAction } from '@/redux/actions/ChatbotAtion';
+import type { MessageHistoryType } from 'types/apps/chatbot/api.type.ts';
 
 export interface ChatState {
 	messages: {
 		message: string;
 		contentMedia: string[];
+		reference_link?: MessageHistoryType['reference_link'];
 		role: 'user' | 'assistant';
 		id: string;
 	}[];
@@ -39,7 +41,7 @@ const chatReducer = (state = initialState, action: ChatAction): ChatState => {
 		case ChatActionTypes.UPDATE_CHAT_BY_ID:
 			const updatedMessages = state.messages.map((message) => {
 				if (message.id === action.payload.id) {
-					return { ...message, message: action.payload.message };
+					return { ...message, message: action.payload.message, reference_link: action.payload.reference_link };
 				}
 				return message;
 			});

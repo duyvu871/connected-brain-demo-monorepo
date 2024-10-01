@@ -9,6 +9,7 @@ import { motion } from 'framer-motion';
 import { IoIosArrowDown } from 'react-icons/io';
 import { useAuth } from '@/hooks/useAuth';
 import useUID from '@/hooks/useUID';
+import type { MessageHistoryType} from '@/types/apps/chatbot/api.type';
 import { NewChatMessageEnum } from '@/types/apps/chatbot/api.type';
 import { Logo } from '@ui/Icons';
 import Markdown from '@/components/Markdown';
@@ -18,6 +19,9 @@ import { AiOutlineDislike, AiOutlineLike } from 'react-icons/ai';
 import { FiEdit } from 'react-icons/fi';
 import Copy from '@/components/CopyToClipboard';
 import markdownToTxt from 'markdown-to-txt';
+import DocViewer from '@/components/Chatbot/ChatSection/doc-viewer.tsx';
+// import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
+// import "@cyntler/react-doc-viewer/dist/index.css";
 
 type ChatMessageProps = {
 	classNames?: {
@@ -29,17 +33,25 @@ type ChatMessageProps = {
 	content?: string;
 	contentMedia?: string[];
 	isNewMessage?: boolean;
+	referenceLink?: MessageHistoryType['reference_link'];
 };
 
 const ChatMessage = forwardRef<
 	React.ElementRef<'div'> & ChatMessageProps,
 	React.ComponentPropsWithoutRef<'div'> & ChatMessageProps
->(({ classNames, children, role, content, contentMedia, isNewMessage = false, ...props }, ref) => {
+>(({ classNames, children, role, content, contentMedia, isNewMessage = false, referenceLink, ...props }, ref) => {
 	const isAssistant = role === 'assistant';
 	const messageWrapperClass = cn('flex justify-start w-full', classNames?.wrapper || '');
-	const messageListClass = cn('flex flex-col gap-1 w-full', classNames?.chatList || '');
+	const messageListClass = cn('flex flex-col gap-1 w-full relative', classNames?.chatList || '');
 	const { user } = useAuth();
 	const [generateUID] = useUID();
+
+	const docs = referenceLink ? referenceLink.map(({link, name, type}) => {
+		return { uri: link, fileType: type, fileName: name };
+	}) : [];
+
+	console.log(docs);
+
 	if (content === NewChatMessageEnum.NEW_MESSAGE && isAssistant) {
 		return <LeftChat />;
 	}
@@ -57,11 +69,11 @@ const ChatMessage = forwardRef<
 					{
 						'bg-zinc-200 dark:bg-zinc-800 text-zinc-300 w-[calc(100vw_-_70px)] w-fit sm:max-w-[calc(100%_*_3_/_4)] md:max-w-[60%]': !isAssistant,
 						'w-[calc(100vw_-_43px)]': isAssistant,
-					}
+					},
 				)}>
 					<div
 						className={cn(
-							'absolute w-full h-full bottom-0 left-0 overflow-hidden ',
+							'absolute z-[100] w-full h-full bottom-0 left-0 overflow-hidden ',
 							isNewMessage ? 'heightToZero' : '',
 							isAssistant ? 'h-0 transition-all delay-500 duration-[1000]' : 'hidden',
 						)}
@@ -71,54 +83,65 @@ const ChatMessage = forwardRef<
 						<div className="h-20 bg-gradient-to-t from-zinc-50 dark:from-zinc-950" />
 						<div className="h-full bg-zinc-50 dark:bg-zinc-950" />
 					</div>
-					<Markdown>{content ?? ""}</Markdown>
-						{(!isAssistant && contentMedia?.length) ? <div className="flex p-2 m-2 gap-4 justify-start">
-								{contentMedia?.map((media, index) => (
-									<div className="relative w-24 h-28" key={'content-media_' + generateUID()}>
-										<div
-											className="w-full h-full relative rounded-xl flex justify-center items-center bg-zinc-800 overflow-hidden">
-											<Image
-												alt="media"
-												className="w-full h-full object-cover"
-												radius="lg"
-												src={media}
-											/>
-										</div>
-									</div>
-								))}
-							</div> : null
-							}
+					<Markdown>{content ?? ''}</Markdown>
+					{(!isAssistant && contentMedia?.length) ? <div className="flex p-2 m-2 gap-4 justify-start">
+						{contentMedia?.map((media, index) => (
+							<div className="relative w-24 h-28" key={'content-media_' + generateUID()}>
+								<div
+									className="w-full h-full relative rounded-xl flex justify-center items-center bg-zinc-800 overflow-hidden">
+									<Image
+										alt="media"
+										className="w-full h-full object-cover"
+										radius="lg"
+										src={media}
+									/>
+								</div>
+							</div>
+						))}
+					</div> : null
+					}
+				</div>
+				<div className="flex flex-col gap-2 mt-4 w-full">
+					<div>
+						<div className="text-sm text-zinc-600 dark:text-zinc-300">Reference Links</div>
+					</div>
+					<div className="w-full overflow-auto overflow-y-hidden">
+						<div className="flex gap-4 w-fit">
+							{(isAssistant && docs.length) ?
+								docs.map((doc) => <DocViewer doc={doc} key={`doc-${generateUID()}`} />) : null}
+						</div>
+					</div>
 				</div>
 				<div className="w-full flex justify-start items-center gap-2">
 					{isAssistant ? <>
-							<Tooltip title="Like this response">
-								<div
-									className="p-2 rounded-full bg-zinc-200 dark:bg-zinc-800 cursor-pointer transition-all text-zinc-700 hover:bg-zinc-300 hover:text-zinc-600 dark:hover:bg-zinc-700 dark:hover:text-white">
-									<AiOutlineLike />
-								</div>
-							</Tooltip>
-							<Tooltip title="Unlike this response">
-								<div
-									className="p-2 rounded-full bg-zinc-200 dark:bg-zinc-800 cursor-pointer transition-all text-zinc-700 hover:bg-zinc-300 hover:text-zinc-600 dark:hover:bg-zinc-700 dark:hover:text-white">
-									<AiOutlineDislike />
-								</div>
-							</Tooltip>
-							<Tooltip title="Unlike this response">
-								<div
-									className="p-2 rounded-full bg-zinc-200 dark:bg-zinc-800 cursor-pointer transition-all text-zinc-700 hover:bg-zinc-300 hover:text-zinc-600 dark:hover:bg-zinc-700 dark:hover:text-white">
-									<FiEdit />
-								</div>
-							</Tooltip>
-							<Tooltip title="Copy">
-								<Copy
-									childrenProps={{
-										className:
-											'p-2 aspect-square rounded-full bg-zinc-200 dark:bg-zinc-800 cursor-pointer transition-all text-zinc-700 hover:bg-zinc-300 hover:text-zinc-600 dark:hover:bg-zinc-700 dark:hover:text-white',
-									}}
-									text={markdownToTxt(content ?? "")}
-								/>
-							</Tooltip>
-						</> : null}
+						<Tooltip title="Like this response">
+							<div
+								className="p-2 rounded-full bg-zinc-200 dark:bg-zinc-800 cursor-pointer transition-all text-zinc-700 dark:text-zinc-300 hover:bg-zinc-300 hover:text-zinc-600 dark:hover:bg-zinc-700 dark:hover:text-white">
+								<AiOutlineLike />
+							</div>
+						</Tooltip>
+						<Tooltip title="Unlike this response">
+							<div
+								className="p-2 rounded-full bg-zinc-200 dark:bg-zinc-800 cursor-pointer transition-all text-zinc-700 dark:text-zinc-300 hover:bg-zinc-300 hover:text-zinc-600 dark:hover:bg-zinc-700 dark:hover:text-white">
+								<AiOutlineDislike />
+							</div>
+						</Tooltip>
+						<Tooltip title="Unlike this response">
+							<div
+								className="p-2 rounded-full bg-zinc-200 dark:bg-zinc-800 cursor-pointer transition-all text-zinc-700 dark:text-zinc-300 hover:bg-zinc-300 hover:text-zinc-600 dark:hover:bg-zinc-700 dark:hover:text-white">
+								<FiEdit />
+							</div>
+						</Tooltip>
+						<Tooltip title="Copy">
+							<Copy
+								childrenProps={{
+									className:
+										'p-2 aspect-square rounded-full bg-zinc-200 dark:bg-zinc-800 cursor-pointer transition-all text-zinc-700 dark:text-zinc-300 hover:bg-zinc-300 hover:text-zinc-600 dark:hover:bg-zinc-700 dark:hover:text-white',
+								}}
+								text={markdownToTxt(content ?? '')}
+							/>
+						</Tooltip>
+					</> : null}
 				</div>
 			</div>
 		</div>
@@ -210,6 +233,7 @@ export default function MessageListRender() {
 									isNewMessage={index === messages.length - 1}
 									key={message.id}
 									ref={index === messages.length - 1 ? messageWrapperRef : null}
+									referenceLink={message.reference_link || []}
 									role={message.role}
 								/>
 							);

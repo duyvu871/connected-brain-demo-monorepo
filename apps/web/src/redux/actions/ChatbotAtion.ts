@@ -1,5 +1,6 @@
 // Actions.ts
 import type { ObjectId } from 'mongodb';
+import type { MessageHistoryType } from 'types/apps/chatbot/api.type.ts';
 
 export enum ChatActionTypes {
 	UPDATE_CHAT = 'UPDATE_CHAT',
@@ -19,6 +20,7 @@ interface UpdateChatAction {
 interface UpdateChatByIdAction {
 	type: ChatActionTypes.UPDATE_CHAT_BY_ID;
 	payload: {
+		reference_link?: MessageHistoryType['reference_link'];
 		message: string; // Update the message array
 		id: string;
 	};
@@ -63,9 +65,9 @@ export const updateChat = (newMessages: InsertMessageAction['payload']['messages
 	payload: { messages: newMessages },
 });
 
-export const updateChatById = (newMessage: string, id: string): UpdateChatByIdAction => ({
+export const updateChatById = (newMessage: string, ref_link: MessageHistoryType['reference_link'], id: string): UpdateChatByIdAction => ({
 	type: ChatActionTypes.UPDATE_CHAT_BY_ID,
-	payload: { message: newMessage, id },
+	payload: { message: newMessage, reference_link: ref_link, id },
 });
 
 export const insertMessage = (message: string, contentMedia: string[] = [''], role: 'user' | 'assistant', id: string): InsertMessageAction => ({

@@ -1,4 +1,4 @@
-import type { PDFDocumentProxy } from 'pdfjs-dist';
+
 import { pdfjs } from 'react-pdf';
 // this function takes an argument we named path that
 // can be a path to the file or can be an external link
