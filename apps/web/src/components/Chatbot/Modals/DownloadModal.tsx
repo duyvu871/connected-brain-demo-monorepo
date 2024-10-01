@@ -12,17 +12,20 @@ interface DownloadModalProps {
 // const DownloadModalTrigger: React.FC<{ chatHistoryCollapsed: boolean }> = () => {
 const DownloadModalTrigger: React.FC<DownloadModalProps> = ({ chatHistoryCollapsed }) => {
 	return (
-		<div className="flex justify-center items-center">
-			<div className="flex justify-center items-center p-2 dark:text-zinc-50 text-zinc-700 ">
-				<SlCloudDownload className="text-2xl" />
+		<div
+			className="w-full rounded-xl p-1 bg-transparent border text-zinc-700 dark:text-zinc-50 dark:border-0 border-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700 dark:bg-zinc-800 flex justify-center items-center transition-colors">
+			<div className="flex justify-center items-center cursor-pointer">
+				<div className="flex justify-center items-center p-2 dark:text-zinc-50 text-zinc-700 ">
+					<SlCloudDownload className="text-2xl" />
+				</div>
+				<span
+					className={cn(
+						'dark:text-zinc-50 text-zinc-700 leading-5 transition-all ml-4',
+						chatHistoryCollapsed ? 'w-0 invisible overflow-hidden' : 'ml-2 w-fit',
+					)}>
+					Download Chat History
+				</span>
 			</div>
-			<span
-				className={cn(
-					'dark:text-zinc-50 text-zinc-700 leading-5 transition-all ml-4',
-					chatHistoryCollapsed ? 'w-0 invisible overflow-hidden' : 'ml-2 w-fit',
-				)}>
-				Download Chat History
-			</span>
 		</div>
 	);
 };
@@ -75,7 +78,7 @@ const DownloadModalContent: React.FC<any> = () => {
 					className="rounded-xl py-2 w-full bg-zinc-200 dark:bg-zinc-600 flex justify-center items-center cursor-pointer"
 					onClick={downloadChatHistory}>
 					<IoDocumentTextOutline className="text-zinc-700 dark:text-zinc-50" size={26} />
-					<span className="text-zinc-700 dark:text-zinc-50p-2">Download as .txt</span>
+					<span className="text-zinc-700 dark:text-zinc-50 p-2">Download as .txt</span>
 				</div>
 			</div>
 		</div>

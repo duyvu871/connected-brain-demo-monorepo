@@ -30,7 +30,7 @@ function ChatSection({ classNames }: ChatSectionProps) {
 	return (
 		<div
 			className={cn(
-				' shadow rounded-xl p-4 max-w-3xl w-full h-full mx-auto flex flex-col justify-between items-center',
+				'animate-pulse shadow rounded-xl p-4 max-w-3xl w-full h-full mx-auto flex flex-col justify-between items-center',
 				classNames?.wrapper || '',
 			)}>
 			<div className="animate-pulse flex flex-col gap-5 overflow-hidden w-full">

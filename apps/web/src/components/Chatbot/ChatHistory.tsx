@@ -100,7 +100,7 @@ const ChatHistoryItem = ({
 		<div className="w-full flex justify-between overflow-hidden gap-1 pl-3">
 			<div
 				className={cn(
-					'flex w-full max-w-sm p-2 rounded-md gap-2 justify-between items-center hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-all duration-300 cursor-pointer',
+					'flex w-full max-w-sm p-2 rounded-md gap-2 justify-between items-center hover:bg-zinc-200 dark:hover:bg-zinc-900 transition-all duration-300 cursor-pointer',
 					isActive ? 'bg-zinc-200 dark:bg-zinc-900 ' : '',
 				)}>
 				<div className="flex justify-start items-center w-full">
@@ -263,7 +263,7 @@ function ChatHistory({ classnames }: ChatHistoryProps) {
 	return (
 		<div
 			className={cn(
-				' flex flex-col justify-between transition-all bottom-0 w-full md:max-w-[250px] lg:max-w-xs md:h-full md:relative md:p-2 md:py-4 md:pt-2 hidden:md:pr-0 border-r border-zinc-300 dark:border-zinc-800',
+				' flex flex-col justify-between transition-all bottom-0 w-full md:max-w-[250px] lg:max-w-xs md:h-full md:relative md:p-2 md:py-4 md:pt-2 hidden:md:pr-0 md:border-r border-zinc-300 dark:border-zinc-800',
 				chatHistoryCollapsed ? 'w-fit gap-0' : '',
 				classnames?.wrapper || '',
 			)}>
@@ -407,10 +407,7 @@ function ChatHistory({ classnames }: ChatHistoryProps) {
 						</div>
 					</div>
 				</div>
-				<div
-					className="w-full rounded-xl p-1 bg-transparent border text-zinc-700 dark:text-zinc-50 dark:border-0 border-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700 dark:bg-zinc-800 flex justify-center items-center transition-colors">
-					<DownloadModal chatHistoryCollapsed={chatHistoryCollapsed} />
-				</div>
+				<DownloadModal chatHistoryCollapsed={chatHistoryCollapsed} />
 			</div>
 		</div>
 	);

@@ -12,7 +12,7 @@ function ChatHistory({ totalChat = 4, classnames }: ChatHistoryProps) {
 	return (
 		<div
 			className={cn(
-				'border border-zinc-800 shadow rounded-xl p-4 max-w-lg w-full mx-auto',
+				'animate-pulse border border-zinc-800 shadow rounded-xl p-4 max-w-lg w-full mx-auto',
 				classnames?.wrapper || '',
 			)}>
 			<div className="animate-pulse flex flex-col justify-center items-start gap-3">

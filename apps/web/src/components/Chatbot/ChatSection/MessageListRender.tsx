@@ -50,8 +50,6 @@ const ChatMessage = forwardRef<
 		return { uri: link, fileType: type, fileName: name };
 	}) : [];
 
-	console.log(docs);
-
 	if (content === NewChatMessageEnum.NEW_MESSAGE && isAssistant) {
 		return <LeftChat />;
 	}

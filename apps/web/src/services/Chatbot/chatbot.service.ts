@@ -107,6 +107,8 @@ export class ChatbotService {
 		const sectionMessage = await this.sectionMessageCollection.findOne({ _id: sectionId });
 		if (!sectionMessage) throw new Error('Section not found');
 
+		const requestMessage = `${initAI().initPrompt[0].parts[0].text} Hãy trả lời câu hỏi này: ${message.textContent}`;
+
 		const chatRequest: ExcludeProperties<MessageHistoryType, '_id'> = {
 			message: message.textContent,
 			mediaMessage: message.mediaContent,
@@ -125,7 +127,7 @@ export class ChatbotService {
 			role: chat.role === 'assistant' ? 'model' : 'user',
 		})).reverse() as unknown as Content[];
 
-		const response = await this.chatbot.sendMessage(message, fitChatHistory, true);
+		const response = await this.chatbot.sendMessage({...message, textContent: requestMessage}, fitChatHistory, true);
 
 		const chatResponse: MessageHistoryType = {
 			_id: new ObjectId(),
