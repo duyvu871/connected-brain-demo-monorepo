@@ -36,7 +36,7 @@ export default ({app}: {app: Express}) => {
     app.use(cookieParser()); // parse cookies
     app.use(flash()); // flash messages
     app.use('/storage', express.static(path.join(process.cwd(), '/storage'))); // serve static files
-    app.use('/storage/brainx/chatbot/reference', express.static('/home/brainx/Data/Chatbot')); // serve static files
+    app.use('/storage/brainx/chatbot/reference', express.static('/media/brainx/Data/Chatbot')); // serve static files
     console.log('storage path: ', path.join(process.cwd(), '/storage'));
     console.log(AppConfig.path.storage);
     LoadRoutes({app}); // load routes
