@@ -13,7 +13,7 @@ interface DownloadModalProps {
 const DownloadModalTrigger: React.FC<DownloadModalProps> = ({ chatHistoryCollapsed }) => {
 	return (
 		<div
-			className="w-full rounded-xl p-1 bg-transparent border text-zinc-700 dark:text-zinc-50 dark:border-0 border-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700 dark:bg-zinc-800 flex justify-center items-center transition-colors">
+			className="w-full rounded-xl p-1 bg-transparent text-zinc-700 dark:text-zinc-50 dark:border-0 border-zinc-300 bg-zinc-100 hover:bg-zinc-200 dark:hover:bg-zinc-700 dark:bg-zinc-800 flex justify-center items-center transition-colors">
 			<div className="flex justify-center items-center cursor-pointer">
 				<div className="flex justify-center items-center p-2 dark:text-zinc-50 text-zinc-700 ">
 					<SlCloudDownload className="text-2xl" />

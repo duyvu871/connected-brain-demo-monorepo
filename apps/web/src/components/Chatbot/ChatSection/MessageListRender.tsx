@@ -153,6 +153,7 @@ export default function MessageListRender() {
 
 	const messageWrapperRef = useRef<HTMLDivElement & ChatMessageProps>(null);
 	const scrollRef = useRef<HTMLDivElement>(null);
+	const [generateUID] = useUID();
 
 	const scrollToMessage = () => {
 		if (messageWrapperRef.current) {
@@ -227,7 +228,7 @@ export default function MessageListRender() {
 									contentMedia={message.contentMedia}
 									id={message.id}
 									isNewMessage={index === messages.length - 1}
-									key={message.id}
+									key={`${generateUID()}-${message.id}`}
 									ref={index === messages.length - 1 ? messageWrapperRef : null}
 									referenceLink={message.reference_link || []}
 									role={message.role}

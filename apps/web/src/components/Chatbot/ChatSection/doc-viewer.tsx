@@ -70,10 +70,10 @@ function DocViewer({doc}: DocViewerProps) {
 		<Dialog onOpenChange={setOpen} open={open}>
 			<DialogTrigger asChild>
 				<div
-					className="relative p-4 cursor-pointer flex flex-col w-[150px] bg-zinc-800 h-40 rounded-lg break-all whitespace-break-spaces">
+					className="relative p-4 cursor-pointer flex flex-col w-[150px] bg-zinc-200 dark:bg-zinc-800 h-40 rounded-lg break-all whitespace-break-spaces">
 					<div className="text-sm font-semibold dark:text-zinc-100 text-zinc-600">{doc.fileName}</div>
 					<div className="absolute bottom-[10px] right-[10px]">
-						<span className="w-14">
+						<span className="w-10">
 							{icon[checkFileType(doc.fileType as `${ReferenceLinkType}`)]}
 						</span>
 					</div>

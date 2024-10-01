@@ -35,7 +35,7 @@ function ModelSelect() {
 			<PopoverTrigger>
 				<Button
 					// aria-expanded={open}
-					className="w-full justify-between dark:text-zinc-400 text-zinc-600 bg-zinc-100 dark:bg-zinc-900 border-zinc-300 dark:border-zinc-700"
+					className="w-full justify-between dark:text-zinc-400 text-zinc-700 bg-zinc-100 dark:bg-zinc-900 border-zinc-300 dark:border-zinc-700"
 					role="combobox"
 					variant="outline"
 				>
@@ -45,7 +45,7 @@ function ModelSelect() {
 					<CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
 				</Button>
 			</PopoverTrigger>
-			<PopoverContent className="z-[330] rounded-lg p-0">
+			<PopoverContent className="z-[330] rounded-lg overflow-hidden p-0">
 				{/*<DialogOverlay className="z-[240]" />*/}
 				{/*<DialogPrimitive.Content*/}
 				{/*	className={cn(*/}
@@ -60,14 +60,18 @@ function ModelSelect() {
 				{/*	<VisuallyHidden.Root asChild>*/}
 				{/*			<DialogDescription>Choose a model</DialogDescription>*/}
 				{/*	</VisuallyHidden.Root>*/}
-					<Command className="bg-zinc-900 border-zinc-300 dark:border-zinc-700">
-						<CommandInput className="h-9 border-zinc-300 dark:border-zinc-700" placeholder="Search model..." />
+					<Command className="bg-zinc-100 dark:bg-zinc-900 border-zinc-300 dark:border-zinc-700">
+						<CommandInput className="h-9 border-zinc-300 dark:border-zinc-700 text-zinc-700 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-800" placeholder="Search model..." />
 						<CommandList className="border-zinc-300 dark:border-zinc-700">
 							<CommandEmpty>No models found.</CommandEmpty>
 							<CommandGroup>
-								{models.map((model) => (
+								{models.map((model, index) => (
 									<CommandItem
-										className={cn("flex items-center p-2 cursor-pointer", value === model.code && "bg-zinc-200 dark:bg-zinc-800 text-muted-foreground")}
+										className={cn(
+											"flex items-center p-2 cursor-pointer hover:bg-zinc-200 dark:hover:bg-zinc-800",
+											value === model.code && "bg-zinc-200 dark:bg-zinc-800 text-muted-foreground",
+											index !== models.length - 1 && "mb-0.5"
+										)}
 										key={`model-${model.code}`}
 										onSelect={(currentValue) => {
 											setValue(model.code);
