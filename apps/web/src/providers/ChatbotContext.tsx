@@ -1,5 +1,5 @@
 'use client';
-import React, { createContext, useCallback, useContext, useLayoutEffect, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useLayoutEffect, useState } from 'react';
 import store from '@/redux/store';
 import {
 	insertMessage as InsertMessageAction,
@@ -268,7 +268,7 @@ function ChatbotProvider({ children }: { children: React.ReactNode }) {
 		}
 	}, [params]);
 
-	useLayoutEffect(() => {
+	useEffect(() => {
 		if (userSession) {
 			if (chat_id) {
 				clearMessages();
@@ -284,7 +284,7 @@ function ChatbotProvider({ children }: { children: React.ReactNode }) {
 				clearMessages();
 			}
 		}
-	}, [chat_id, userSession]);
+	}, [chat_id, user, userSession?.id]);
 
 	useLayoutEffect(() => {
 		if (userSession) {
