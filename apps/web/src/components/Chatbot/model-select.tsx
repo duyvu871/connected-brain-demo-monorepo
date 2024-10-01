@@ -61,7 +61,7 @@ function ModelSelect() {
 				{/*			<DialogDescription>Choose a model</DialogDescription>*/}
 				{/*	</VisuallyHidden.Root>*/}
 					<Command className="bg-zinc-100 dark:bg-zinc-900 border-zinc-300 dark:border-zinc-700">
-						<CommandInput className="h-9 border-zinc-300 dark:border-zinc-700 text-zinc-700 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-800" placeholder="Search model..." />
+						<CommandInput className="h-9 border-zinc-300 dark:border-zinc-700 text-zinc-700 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-400" placeholder="Search model..." />
 						<CommandList className="border-zinc-300 dark:border-zinc-700">
 							<CommandEmpty>No models found.</CommandEmpty>
 							<CommandGroup>
