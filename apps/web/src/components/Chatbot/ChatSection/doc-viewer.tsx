@@ -19,6 +19,10 @@ const DocumentViewerRestyled = styled(DocumentViewer)`
 	& #msdoc-iframe {
 			height: 60svh;
 	}	
+	& .react-pdf__Document	{
+      height: 60svh;
+      overflow: scroll;
+	}
 `;
 
 function DocViewer({doc}: DocViewerProps) {

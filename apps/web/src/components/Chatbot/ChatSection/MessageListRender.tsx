@@ -102,9 +102,7 @@ const ChatMessage = forwardRef<
 					}
 				</div>
 				<div className="flex flex-col gap-2 mt-4 w-full">
-					<div>
-						<div className="text-sm text-zinc-600 dark:text-zinc-300">Reference Links</div>
-					</div>
+					{(isAssistant && docs.length) ? <div className="text-sm font-semibold dark:text-zinc-100 text-zinc-600">Reference Links</div> : null}
 					<div className="w-full overflow-auto overflow-y-hidden">
 						<div className="flex gap-4 w-fit">
 							{(isAssistant && docs.length) ?
