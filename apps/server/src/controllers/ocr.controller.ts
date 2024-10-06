@@ -7,13 +7,15 @@ import {OCR} from '@repo/ocr';
 import isoLanguage, { getKeyByValue, type ISOLangType } from '@translate/utils/isoLanguage';
 import fsSync from "fs"
 import fs from 'fs/promises';
-// @ts-ignore
-import pdf2img from 'pdf2img';
 import path from 'path';
 import PDFParser from 'pdf-parse';
 import { pdfToImage } from '@ocr/pdf-to-image';
 import OcrModel from '@/models/ocr/ocr.model';
 import { ObjectId } from 'mongoose';
+import { NetworkSFTP } from '@repo/network-sftp';
+import { sftpHostCbrain } from '@/configs/sftp/host/cbrain';
+
+NetworkSFTP.setConfig('ocr:upload', sftpHostCbrain);
 
 export default class OCRController {
 	public static uploadFileWithoutAuth = AsyncMiddleware.asyncHandler(async (req: Request, res: Response) => {
@@ -91,11 +93,12 @@ export default class OCRController {
 				source_lang = `${source_lang}+${target_lang}`;
 			}
 
-			await fs.mkdir(tmp_file_path, {recursive: true});
+			await NetworkSFTP.writeFile('ocr:upload', path.posix.resolve('/media/cbrain/', tmp_file_path, tmp_file_name), file_data);
 
-			fsSync.writeFile(path.resolve(tmp_file_path, tmp_file_name), file_data, 'utf-8', (e) => {
-				console.log(e);
-			});
+			// await fs.mkdir(tmp_file_path, {recursive: true});
+			// fsSync.writeFile(path.resolve(tmp_file_path, tmp_file_name), file_data, 'utf-8', (e) => {
+			// 	console.log(e);
+			// });
 
 			if (file_type === 'application/pdf') {
 				const pdf = await PDFParser(file_data);

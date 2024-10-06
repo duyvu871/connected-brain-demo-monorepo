@@ -10,8 +10,12 @@ import AppConfig from "@/configs/app.config";
 import * as process from 'node:process';
 import { morganMiddleware } from '@/configs/morgan';
 import path from 'path';
+import { serveStaticOverSSH } from '@/middlewares/serveStaticOverSSH';
+import fs from 'fs';
+import { sftpHostCbrain } from '@/configs/sftp/host/cbrain';
 
 export default ({app}: {app: Express}) => {
+    const env_mode = process.env.NODE_ENV;
     // if (process.env.NODE_ENV === 'development') {
         app.use(morganMiddleware); // log http requests
     // }
@@ -36,7 +40,8 @@ export default ({app}: {app: Express}) => {
     app.use(cookieParser()); // parse cookies
     app.use(flash()); // flash messages
     app.use('/storage', express.static(path.join(process.cwd(), '/storage'))); // serve static files
-    app.use('/storage/brainx/chatbot/reference', express.static('/media/brainx/Data/Chatbot')); // serve static files
+    app.use('/assets/brainx/chatbot/reference', express.static('/media/brainx/Data/Chatbot')); // serve static files
+    app.use('/assets/cbrain/', serveStaticOverSSH('cbrain:statics', '/media/cbrain/', sftpHostCbrain)); // serve static files
     console.log('storage path: ', path.join(process.cwd(), '/storage'));
     console.log(AppConfig.path.storage);
     LoadRoutes({app}); // load routes

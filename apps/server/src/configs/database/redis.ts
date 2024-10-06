@@ -60,12 +60,16 @@ const handleEventConnect = (instanceRedis: Redis) => {
 };
 
 const initRedis = () => {
+	if (client.instanceRedis) {
+		console.log('Redis is already connected');
+		return;
+	}
 	const instanceRedis = new Redis({
 		enableAutoPipelining: true,
 		host: env.REDIS_HOST,
-		port: parseInt(env.REDIS_PORT),
-		password: env.REDIS_PASSWORD,
-		username: env.REDIS_USERNAME,
+		port: parseInt(process.env.REDIS_PORT||'6379'),
+		// password: env.REDIS_PASSWORD,
+		// username: env.REDIS_USERNAME,
 	});
 	client.instanceRedis = instanceRedis;
 	handleEventConnect(instanceRedis);

@@ -39,3 +39,20 @@ s2tRouter.route('/token').get(
 	validateHeader(UserValidation.getUserHeaders),
 	authenticate,
 	SpeechToTextController.get_token);
+
+s2tRouter.route('/upload/test').post(
+	(req, res, next) => {
+		upload({mimetype: /^audio\//}, {fileSize:1024 * 1024 * 100}).single('file')(req, res, function(err: any) {
+			if (err) {
+				return res.status(400).send({ message: err.message })
+			}
+			next();
+		});
+	},
+	SpeechToTextController.upload_file_without_auth
+)
+
+s2tRouter.route('/get-transcript/test').post(
+	SpeechToTextController.handle_remote_s2t
+)
+

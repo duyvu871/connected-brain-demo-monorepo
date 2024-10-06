@@ -1,4 +1,4 @@
-import {Client, FileEntryWithStats} from "ssh2";
+import { Client, FileEntryWithStats, SFTPWrapper } from 'ssh2';
 import { fromEvent, timer, Subject } from 'rxjs';
 import { switchMap, takeUntil, take, tap } from 'rxjs/operators';
 
@@ -18,10 +18,10 @@ export type SSHConfig = {
 }
 
 export class NetworkSFTP {
-	public static instanceClient: Record<string, Client>;
+	public static instanceClient: Record<string, Client> = {};
 	public static TIMEOUT: Record<string, number> = {};
 	public static lastActive: Record<string, number> = {};
-	public static sshConfig: Record<string, SSHConfig>;
+	public static sshConfig: Record<string, SSHConfig> = {};
 
 	public static async getInstance(name: string): Promise<Client|null> {
 		if (NetworkSFTP.instanceClient[name]) {
@@ -30,7 +30,7 @@ export class NetworkSFTP {
 		return await NetworkSFTP.connect(name);
 	}
 
-	public static setConfig(name: string,  config: SSHConfig) {
+	public static setConfig(name: string, config: SSHConfig) {
 		NetworkSFTP.sshConfig[name] = config;
 	}
 
@@ -145,70 +145,127 @@ export class NetworkSFTP {
 		}
 	}
 
-	public static async listFiles(name: string, path: string): Promise<FileEntryWithStats[]|null> {
+	private static async executeSFTPCommand<T>(
+		name: string,
+		command: (sftp: SFTPWrapper) => Promise<T>
+	): Promise<T | null> {
 		const conn = await this.getInstance(name);
 		if (!conn) {
 			return null;
 		}
-		return new Promise((resolve, reject) => {
-			conn.sftp((err, sftp) => {
+		return new Promise<T | null>((resolve, reject) => {
+			conn.sftp(async (err, sftp) => {
 				if (err) {
+					console.log(`[${name}] SFTP error:`, err);
 					reject(err);
 					return;
 				}
-				sftp.readdir(path, (err, list) => {
-					if (err) {
-						reject(null);
-						return;
-					}
-					resolve(list);
-				});
+				try {
+					const result = await command(sftp);
+					resolve(result);
+				} catch (error) {
+					reject(error);
+				}
 			});
 		});
 	}
 
-	public static async readFile(name: string, path: string): Promise<string|null> {
-		const conn = await this.getInstance(name);
-		if (!conn) {
-			return null;
-		}
-		return new Promise((resolve, reject) => {
-			conn.sftp((err, sftp) => {
-				if (err) {
-					console.log(`[${name}] SFTP error:`, err);
-					reject(null);
-					return;
-				}
-				sftp.readFile(path, (err, data) => {
-					if (err) {
-						reject(null);
-						return;
-					}
-					resolve(data.toString());
+	// List files
+	public static async listFiles(name: string, path: string): Promise<FileEntryWithStats[] | null> {
+		return this.executeSFTPCommand(name, (sftp) =>
+			new Promise((resolve, reject) => {
+				sftp.readdir(path, (err: any, list: FileEntryWithStats[] | PromiseLike<FileEntryWithStats[]>) => {
+					if (err) reject(err);
+					else resolve(list);
 				});
-			});
-		});
+			})
+		);
 	}
 
-	public static async writeFile(name: string, path: string, data: string | Buffer): Promise<boolean> {
-		const conn = await this.getInstance(name);
-		if (!conn) {
-			return false;
-		}
-		return new Promise((resolve, reject) => {
-			conn.sftp((err, sftp) => {
-				if (err) {
-					console.log(`[${name}] SFTP error:`, err);
-					reject(false);
-					return;
-				}
+	// Read file
+	public static async readFile(name: string, path: string, isBuffer: boolean = false): Promise<string | Buffer | null> {
+		return this.executeSFTPCommand(name, (sftp) =>
+			new Promise((resolve, reject) => {
+				sftp.readFile(path, (err: any, data: any) => {
+					if (err) reject(err);
+					else resolve(isBuffer ? data : data.toString());
+				});
+			})
+		);
+	}
+
+	// Write file
+	public static async writeFile(name: string, path: string, data: string | Buffer): Promise<boolean | null> {
+		return this.executeSFTPCommand(name, async (sftp) => {
+			return new Promise((resolve, reject) => {
 				const writeStream = sftp.createWriteStream(path);
-				writeStream.on('close', () => {
-					resolve(true);
+				writeStream.on('error', (e: any) => {
+					console.log(e);
+					resolve(false)
 				});
+				writeStream.on('close', () => resolve(true));
 				writeStream.write(data);
 				writeStream.end();
 			});
 		});
+	}
+
+	// Delete file
+	public static async deleteFile(name: string, path: string): Promise<boolean | null> {
+		return this.executeSFTPCommand(name, (sftp) =>
+			new Promise((resolve, reject) => {
+				sftp.unlink(path, (err: any) => {
+					if (err) reject(false);
+					else resolve(true);
+				});
+			})
+		);
+	}
+
+	public static async renameFile(name: string, oldPath: string, newPath: string): Promise<boolean | null> {
+		return this.executeSFTPCommand(name, (sftp) =>
+			new Promise((resolve, reject) => {
+				sftp.rename(oldPath, newPath, (err: any) => {
+					if (err) reject(err);
+					else resolve(true);
+				});
+			})
+		);
+	}
+
+	// Create directory
+	public static async createDirectory(name: string, path: string): Promise<boolean | null> {
+		return this.executeSFTPCommand(name, (sftp) =>
+			new Promise((resolve, reject) => {
+				sftp.mkdir(path, (err: any) => {
+					if (err) reject(err);
+					else resolve(true);
+				});
+			})
+		);
+	}
+
+	// Delete directory
+	public static async deleteDirectory(name: string, path: string): Promise<boolean | null> {
+		return this.executeSFTPCommand(name, (sftp) =>
+			new Promise((resolve, reject) => {
+				sftp.rmdir(path, (err: any) => {
+					if (err) reject(err);
+					else resolve(true);
+				});
+			})
+		);
+	}
+
+	// Check file existence
+	public static async accessFile(name: string, path: string): Promise<boolean | null> {
+		return this.executeSFTPCommand(name, (sftp) =>
+			new Promise((resolve, reject) => {
+				sftp.stat(path, (err: any) => {
+					if (err) reject(err);
+					else resolve(true);
+				});
+			})
+		);
 	}
 }

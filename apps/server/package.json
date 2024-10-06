@@ -27,6 +27,7 @@
     "@repo/cloud-storage": "*",
     "@repo/ocr": "*",
     "@repo/translate": "*",
+    "@repo/network-sftp": "*",
     "adm-zip": "^0.5.15",
     "assemblyai": "^4.5.0",
     "bcrypt": "^5.1.1",

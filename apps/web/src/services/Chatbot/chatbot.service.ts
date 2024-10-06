@@ -135,7 +135,7 @@ export class ChatbotService {
 			mediaMessage: [''],
 			reference_link: !response?.reference_link ? [] : response.reference_link.map((link) => ({
 				name: fileType.fileInformationFromPath(link).name,
-				link: `https://api.connectedbrain.com.vn/${link.replace('/media/brainx/Data/Chatbot', 'storage/brainx/chatbot/reference')}`,
+				link: `https://api.connectedbrain.com.vn/${link.replace('/media/brainx/Data/Chatbot', 'assets/brainx/chatbot/reference')}`,
 				type: ReferenceLinkType[(link.split('.').pop() || "doc") as keyof typeof ReferenceLinkType] as MessageHistoryType['reference_link'][number]['type'],
 			})),
 			role: 'assistant',

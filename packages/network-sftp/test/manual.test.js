@@ -53,19 +53,19 @@ const test = async (isForward = false) => {
 		console.error('Get instance fail by reason:', error);
 	}
 
-	try {
-		const files = await NetworkSFTP.listFiles(targetInstanceName, '/media/cbrain/9cdf9fac-bba1-4725-848d-cc089e577048/new_folder/CBrain/Study_and_Research/Test/OCR/OCR_API/');
-		console.log('Files:', files);
-	} catch (error) {
-		console.error('List files fail by reason:', error);
-	}
+	// try {
+	// 	const files = await NetworkSFTP.listFiles(targetInstanceName, '/media/cbrain/9cdf9fac-bba1-4725-848d-cc089e577048/new_folder/CBrain/Study_and_Research/Test/OCR/OCR_API/');
+	// 	console.log('Files:', files);
+	// } catch (error) {
+	// 	console.error('List files fail by reason:', error);
+	// }
 
-	try {
-		const file = await NetworkSFTP.readFile(targetInstanceName, '/media/cbrain/9cdf9fac-bba1-4725-848d-cc089e577048/new_folder/CBrain/Study_and_Research/Test/OCR/OCR_API/api.py')
-		console.log('File content:', file);
-	} catch (error) {
-		console.error('Get file fail by reason:', error);
-	}
+	// try {
+	// 	const file = await NetworkSFTP.readFile(targetInstanceName, '/media/brainx/Data/Chatbot/law-chatbot/DataChiHuyenCrawl/3873_QD-BTNMT_m_591258.doc')
+	// 	console.log('File content:', file);
+	// } catch (error) {
+	// 	console.error('Get file fail by reason:', error);
+	// }
 
 	try {
 		const write = await NetworkSFTP.writeFile(targetInstanceName, '/media/cbrain/9cdf9fac-bba1-4725-848d-cc089e577048/new_folder/CBrain/Study_and_Research/Test/test_storage.txt', 'Hello World');
