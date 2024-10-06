@@ -42,7 +42,7 @@ export default class SpeechToTextController {
 		const file_ext = file.originalname.split('.').pop();
 		let file_name = uuidv4();
 		NetworkSFTP.setConfig('upload-without-auth', sftpHostCbrain);
-		let remotePath = path.posix.join('/media/cbrain/9cdf9fac-bba1-4725-848d-cc089e577048/new_folder/CBrain/Study_and_Research/Test', `${file_name}.${file_ext||'mp3'}`);
+		let remotePath = path.posix.join('/media/cbrain/9cdf9fac-bba1-4725-848d-cc089e577048/new_folder/CBrain/Study_and_Research/Test/S2T/S2T_API/audios', `${file_name}.${file_ext||'mp3'}`);
 		try {
 			// const exists = await NetworkSFTP.accessFile('upload-without-auth', remotePath);
 			// if (exists) {
@@ -87,30 +87,17 @@ export default class SpeechToTextController {
 				return res.status(404).send('Process not found, please upload again');
 			}
 			console.log('file_data', file_data);
-			// const response = await fetch('http://localhost:8088/transcribe', {
-			// 	method: 'POST',
-			// 	body: JSON.stringify({
-			// 		audio_path: file_data.remote_path,
-			// 	}),
-			// 	headers: {
-			// 		'Content-Type': 'application/json'
-			// 	}
-			// });
-			//
-			// if (!response.ok) {
-			// 	return res.status(response.status).send('Có lỗi sảy ra khi thực hiện speech-to-text, vui lòng liên hệ với quản trị viên để được hỗ trợ');
-			// }
-			//
-			// const data = await response.json();
-			//
-			// response_header_template(res).status(HttpStatusCode.Ok).send({
-			// 	...data
-			// });
+			const parsed_file_data = JSON.parse(file_data);
+			if (parsed_file_data.transcript) {
+				return res.status(200).send({
+					...parsed_file_data.transcript
+				});
+			}
 			const myHeaders = new Headers();
 			myHeaders.append("Content-Type", "application/json");
 
 			const raw = JSON.stringify({
-				"audio_path": JSON.parse(file_data).remote_path//"/media/cbrain/9cdf9fac-bba1-4725-848d-cc089e577048/new_folder/CBrain/Study_and_Research/Test/5b6cc220-bd79-4097-9238-459d4726db46.mp3"
+				"audio_path": parsed_file_data.remote_path//"/media/cbrain/9cdf9fac-bba1-4725-848d-cc089e577048/new_folder/CBrain/Study_and_Research/Test/5b6cc220-bd79-4097-9238-459d4726db46.mp3"
 			});
 
 			const response = await fetch("http://localhost:8088/transcribe", {
@@ -125,7 +112,10 @@ export default class SpeechToTextController {
 			}
 
 			const data = await response.json();
-
+			const storeProcessInfo = await setKey(`upload-without-auth:${parsed_file_data.file_name}`, JSON.stringify({
+				...parsed_file_data,
+				transcript: data
+			}), 60*60*24);
 			response_header_template(res).status(HttpStatusCode.Ok).send({
 				...data
 			});
