@@ -1,6 +1,7 @@
 "use client";
 
-import type { PropsWithChildren, FC } from "react";
+import type { PropsWithChildren, FC} from 'react';
+import { useEffect } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import {
   DEFAULT_FROM_QUERY_LANGUAGE,
@@ -83,6 +84,10 @@ export const LanguageProvider: FC<PropsWithChildren> = ({ children }) => {
       toLanguage: fromLanguage,
     });
   };
+
+  useEffect(() => {
+    
+  }, []);
 
   return (
     <languageContext.Provider

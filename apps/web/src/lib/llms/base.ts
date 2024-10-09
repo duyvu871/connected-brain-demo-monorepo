@@ -53,7 +53,7 @@ export abstract class ChatbotService {
 		this.generationConfig = {
 			temperature: 1,
 			topP: 0.95,
-			topK: 64,
+			topK: 39, // 0 means no top-k sampling
 			maxOutputTokens: 8192,
 			responseMimeType: 'text/plain',
 		};

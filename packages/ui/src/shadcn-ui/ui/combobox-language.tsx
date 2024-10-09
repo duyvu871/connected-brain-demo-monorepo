@@ -55,14 +55,14 @@ const ComboboxLanguage: FC<Props> = ({ options, value, onChange }) => {
             "p-5 md:w-[460px] md:p-0 bg-opacity-0 border-0"
           )}
         >
-          <Command className=" bg-white">
+          <Command className="bg-white">
             <CommandInput className="h-9" placeholder="Search language..." />
             <CommandList>
               <CommandEmpty>No language found.</CommandEmpty>
               <CommandGroup>
                 {options.map((option) => (
                   <CommandItem
-                    className="cursor-pointer hover:bg-zinc-100 transition-all"
+                    className="text-zinc-700 cursor-pointer hover:bg-zinc-100 transition-all"
                     key={option.value}
                     onSelect={(currentValue) => {
                       onChange(currentValue === value ? "" : currentValue);

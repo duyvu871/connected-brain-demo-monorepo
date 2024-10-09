@@ -1,9 +1,11 @@
 "use client";
 
 import type { PropsWithChildren, FC} from 'react';
-import { useCallback , useEffect, useContext, useState } from 'react';
-
+import { useLayoutEffect , useCallback , useEffect, useContext, useState } from 'react';
 import { useSearchParams } from "next/navigation";
+
+import type { Socket } from 'socket.io-client';
+import { io as SocketIO } from 'socket.io-client';
 
 import {
   DEBOUNCE_TIME,
@@ -16,10 +18,10 @@ import {
 import { languageContext, textContext } from '@/providers';
 import axios from '@/libs/axios/v1/axios';
 import { useDebounce } from '@uidotdev/usehooks';
+import { constants } from '@repo/utils';
 
 export const TextProvider: FC<PropsWithChildren> = ({ children }) => {
-  // const router = useRouter();
-  // const pathname = usePathname();
+  const {api_route: APIRoute} = constants;
   const searchParams = useSearchParams();
 
   const textToTranslate = searchParams.get(SearchParams.TEXT) ?? "";
@@ -28,6 +30,7 @@ export const TextProvider: FC<PropsWithChildren> = ({ children }) => {
     useState<string>(textToTranslate);
   const textToTranslateDebounce = useDebounce(textToTranslateState, DEBOUNCE_TIME);
   const [completion, setCompletion] = useState<string>("");
+  const [io, setIo] = useState<Socket | null>(null);
   const { fromLanguage, toLanguage } = useContext(languageContext);
 
   const getCompletion = useCallback(async (text: string) => {
@@ -37,6 +40,16 @@ export const TextProvider: FC<PropsWithChildren> = ({ children }) => {
     }
 
     try {
+      // console.log(io);
+      if (io?.connected) {
+        io.emit('translate:transmit', {
+          text,
+          from: languageByValue[fromLanguage].query,
+          to: languageByValue[toLanguage].query,
+        });
+        return;
+      }
+
       const response = await axios.v1.translate({
         text,
         from: languageByValue[fromLanguage].query ,
@@ -73,7 +86,7 @@ export const TextProvider: FC<PropsWithChildren> = ({ children }) => {
     if (textToTranslate.trim().length > MAX_TEXT_TO_TRANSLATE_LENGTH) return;
 
     setTextToTranslate(textToTranslate);
-    console.log(textToTranslate);
+    // console.log(textToTranslate);
     if (textToTranslate.trim().length < MIN_TEXT_TO_TRANSLATE_LENGTH)
       return setCompletion("");
 
@@ -90,6 +103,30 @@ export const TextProvider: FC<PropsWithChildren> = ({ children }) => {
       })();
   }, [fromLanguage, getCompletion, textToTranslateDebounce, toLanguage]);
 
+  useEffect(() => {
+    const socketIO = SocketIO(process.env.NEXT_PUBLIC_API_BASE_URL, {
+      transports: ["websocket"], // use websocket only
+      addTrailingSlash: false, // remove trailing slash
+      path: APIRoute.API.feature.TRANSLATE.socket,
+    });
+
+    socketIO.on('connect', () => {
+      console.log('connected');
+    });
+
+    socketIO.on('translate-completion', (data: { completion: string }) => {
+      console.log(data);
+      setCompletion(data.completion);
+    });
+
+    setIo(socketIO);
+    return () => {
+      if (io?.connected) {
+        io.close();
+      }
+    }
+  }, []);
+  
   return (
     <textContext.Provider
       value={{

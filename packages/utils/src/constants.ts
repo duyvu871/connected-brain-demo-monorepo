@@ -1,6 +1,9 @@
 const api_route = {
 	API: {
 		feature: {
+			TRANSLATE: {
+				socket: '/socket/v1/feature/translate',
+			},
 			OCR: {
 				socket: '/socket/v1/feature/ocr',
 			},

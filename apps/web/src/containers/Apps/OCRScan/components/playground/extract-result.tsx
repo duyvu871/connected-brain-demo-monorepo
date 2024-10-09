@@ -16,10 +16,7 @@ import {
 	selectedSourceLang,
 } from '@/containers/Apps/OCRScan/states/starter.ts';
 import {useDebounceCallback} from 'usehooks-ts';
-// import PdfViewer from '@/containers/Apps/OCRScan/components/playground/pdf-result.tsx';
 import { isPDFAtom } from '@/containers/Apps/OCRScan/states/playground.ts';
-// import VisualTextSegment from '@/containers/Apps/OCRScan/components/visual-text-segment.tsx';
-import dynamic from 'next/dynamic';
 import { useAuth } from '@/hooks/useAuth.ts';
 import ViewExtracted from '@/containers/Apps/OCRScan/components/playground/view-extracted.tsx';
 
