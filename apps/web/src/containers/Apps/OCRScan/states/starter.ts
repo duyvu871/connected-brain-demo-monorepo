@@ -14,7 +14,7 @@ type ForwardedDialog = {
 }
 
 const initialSourceLang: Selection = new Set(['en']);
-const initialOcrLang: Selection = new Set(['en']);
+const initialOcrLang: Selection = new Set(['vi']);
 
 export const selectedSourceLang = atom<Selection>(initialSourceLang);
 export const selectedOcrLang = atom<Selection>(initialOcrLang);

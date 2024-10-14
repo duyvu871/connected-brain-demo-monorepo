@@ -13,7 +13,7 @@ export class TranslateService {
 				console.log('Translate socket disconnected');
 			});
 
-			socket.on('translate:transmit', async (data: {
+			socket.on('translate-transmit', async (data: {
 				text: string;
 				from: ISOLangType;
 				to: ISOLangType;
@@ -28,7 +28,7 @@ export class TranslateService {
 					}
 
 					const translateResponse = await translator.translate(text, { from, to });
-					socket.emit('translate-completion', { completion: translateResponse });
+					socket.emit('translate-completion', { completion: translateResponse.translation });
 				} catch (e) {
 					if (e instanceof ZodError) {
 						// handling errors from zod

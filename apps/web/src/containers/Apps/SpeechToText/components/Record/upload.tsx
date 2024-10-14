@@ -125,7 +125,7 @@ const UploadAudio: React.FC<UploadAudioProps> = ({
 							</svg>
 							<p className="mb-2 text-sm text-zinc-500 dark:text-zinc-400"><span className="font-semibold">Click to upload</span> or
 								drag and drop</p>
-							<p className="text-xs text-zinc-500 dark:text-zinc-400">SVG, PNG, JPG or GIF</p>
+							<p className="text-xs text-zinc-500 dark:text-zinc-400">MP3, WAV, FLAC</p>
 						</div>
 						<input accept={allowedFileTypes.join(', ')} className="hidden" id="dropzone-file" onChange={handleFileChange}
 									 type="file" />

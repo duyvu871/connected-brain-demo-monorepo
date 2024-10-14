@@ -1,39 +1,39 @@
 import * as path from 'node:path';
 import { cwd } from 'node:process';
 
-interface Point {
+export interface Point {
 	x: number;
 	y: number;
 }
 
-interface Box {
+export interface Box {
 	topLeft: Point;
 	bottomRight: Point;
 }
 
-interface Bbox {
+export interface Bbox {
 	x0: number;
 	y0: number;
 	x1: number;
 	y1: number;
 }
 
-interface Word {
+export interface Word {
 	text: string;
 	confidence: number;
 	bbox: Bbox;
 }
 
-interface Choice {
+export interface Choice {
 	text: string;
 	confidence: number;
 }
 
-interface InputData {
-	results: Array<{ box: number[][], text: string }[]>;
+export interface InputData {
+	results: { box: number[][], text: string }[][];
 }
 
-interface OutputData {
+export interface OutputData {
 	words: Word[];
 	choices: Choice[];
 	text: string;
@@ -65,7 +65,7 @@ export function transformData(inputData: InputData): OutputData {
 			};
 
 			words.push(word);
-			text += item.text + ' ';
+			text += item.text + ' \n';
 		});
 	});
 

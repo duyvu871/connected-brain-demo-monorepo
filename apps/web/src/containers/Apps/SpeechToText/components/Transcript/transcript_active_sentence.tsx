@@ -29,11 +29,11 @@ export default function TranscriptActiveSentence() {
 	}, [activeWord, currentTime, currentTranscript]);
 	return (
 		<Box className="p-5 sm:p-8 relative h-fit bg-zinc-900 w-full" >
-			<Box className="" >
+			<Box className="w-[inherit] overflow-hidden">
 				{/*<div className="w-full">*/}
 				{/*	a*/}
 				{/*</div>*/}
-				<div className="text-zinc-100">
+				<div className="text-zinc-100 break-words">
 					{activeSentence?.words.map((word, index) => {
 						return (
 							index === activeWord ?

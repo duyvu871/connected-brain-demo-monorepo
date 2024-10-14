@@ -5,7 +5,7 @@ import { CloudStorage } from '@repo/cloud-storage';
 import { TranslateService } from '@repo/translate';
 import * as crypto from 'node:crypto';
 import { randomRange } from '@repo/utils/true-random';
-import { constants } from './utils.ts';
+import { constants, InputData, transformData } from './utils.ts';
 import { socket_event } from '@repo/utils/constants';
 import Jimp from 'jimp';
 
@@ -183,6 +183,46 @@ export class OCR {
 		} catch (err: any) {
 			console.error('ERROR OCR package:', err);
 			throw err;
+		}
+	}
+
+	public static async processImageConnectedBrain(
+		path: string,
+		targetLang: string = 'eng',
+		onProgress?: (loggerMessage: Tesseract.LoggerMessage) => void
+	) {
+		try {
+			console.log(path, targetLang);
+			// const formdata = new FormData();
+			// formdata.append("path", path);
+			// formdata.append("language", targetLang);
+			//
+			// const data = await fetch("http://localhost:5208/ocr", {
+			// 	method: "POST",
+			// 	body: formdata,
+			// 	redirect: "follow"
+			// })
+			// const responseBody = await data.json() as InputData;
+			const myHeaders = new Headers();
+
+			const formdata = new FormData();
+			formdata.append("path", "/media/cbrain/9cdf9fac-bba1-4725-848d-cc089e577048/new_folder/CBrain/Study_and_Research/Test/OCR/OCR_API/storage/9ba72c01d83619f60f01f89935ab1efe.png");
+			formdata.append("language", "vi");
+
+			const data = await fetch("http://localhost:5208/ocr", {
+				method: "POST",
+				headers: myHeaders,
+				body: formdata,
+				redirect: "follow"
+			})
+
+			const responseBody = await data.json() as InputData;
+			console.log(JSON.stringify(responseBody));
+			if (!responseBody?.results) return null;
+			return transformData(responseBody);
+		}	catch (err: any) {
+			console.error('ERROR OCR package:', err);
+			return null
 		}
 	}
 }

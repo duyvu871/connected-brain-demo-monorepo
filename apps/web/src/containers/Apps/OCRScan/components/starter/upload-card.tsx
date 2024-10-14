@@ -91,7 +91,7 @@ export default function UploadCard(): JSX.Element {
 					<Box className="flex flex-col gap-2">
 						<Box className="flex gap-1 justify-center items-center">
 							<LanguageSelect
-								defaultSelectedKeys={['en']}
+								defaultSelectedKeys={['vi']}
 								label="OCR result"
 								languages={languages}
 								onSelectionChange={(selectKey) => setSelectedOcrLang(selectKey)}

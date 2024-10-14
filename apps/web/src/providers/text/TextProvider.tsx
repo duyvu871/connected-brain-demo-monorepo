@@ -42,7 +42,7 @@ export const TextProvider: FC<PropsWithChildren> = ({ children }) => {
     try {
       // console.log(io);
       if (io?.connected) {
-        io.emit('translate:transmit', {
+        io.emit('translate-transmit', {
           text,
           from: languageByValue[fromLanguage].query,
           to: languageByValue[toLanguage].query,
@@ -65,17 +65,6 @@ export const TextProvider: FC<PropsWithChildren> = ({ children }) => {
   
   const setTextToTranslate = (value: string) => {
     setTextToTranslateState(value);
-
-    // const newSearchParams = new URLSearchParams(searchParams);
-    //
-    // if (value.trim().length) {
-    //   newSearchParams.set(SearchParams.TEXT, value);
-    // } else {
-    //   newSearchParams.delete(SearchParams.TEXT);
-    // }
-    //
-    // const queryString = newSearchParams.toString();
-    // router.replace(`${pathname}?${queryString}`);
   };
 
   const handleSetTextToTranslate = (value: string) => {
@@ -86,11 +75,8 @@ export const TextProvider: FC<PropsWithChildren> = ({ children }) => {
     if (textToTranslate.trim().length > MAX_TEXT_TO_TRANSLATE_LENGTH) return;
 
     setTextToTranslate(textToTranslate);
-    // console.log(textToTranslate);
     if (textToTranslate.trim().length < MIN_TEXT_TO_TRANSLATE_LENGTH)
       return setCompletion("");
-
-    // void getCompletion(textToTranslateState);
   }, []);
 
   useEffect(() => {
@@ -115,7 +101,6 @@ export const TextProvider: FC<PropsWithChildren> = ({ children }) => {
     });
 
     socketIO.on('translate-completion', (data: { completion: string }) => {
-      console.log(data);
       setCompletion(data.completion);
     });
 

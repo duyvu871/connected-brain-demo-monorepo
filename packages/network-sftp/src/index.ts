@@ -164,6 +164,7 @@ export class NetworkSFTP {
 					const result = await command(sftp);
 					resolve(result);
 				} catch (error) {
+					console.log(`[${name}] SFTP command error:`, error);
 					reject(error);
 				}
 			});
@@ -262,6 +263,17 @@ export class NetworkSFTP {
 		return this.executeSFTPCommand(name, (sftp) =>
 			new Promise((resolve, reject) => {
 				sftp.stat(path, (err: any) => {
+					if (err) reject(err);
+					else resolve(true);
+				});
+			})
+		);
+	}
+
+	public static async copyToRemote(name: string, localPath: string, remotePath: string): Promise<boolean | null> {
+		return this.executeSFTPCommand(name, (sftp) =>
+			new Promise((resolve, reject) => {
+				sftp.fastPut(localPath, remotePath, (err: any) => {
 					if (err) reject(err);
 					else resolve(true);
 				});
