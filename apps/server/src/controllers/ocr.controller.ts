@@ -184,20 +184,20 @@ export default class OCRController {
 				sourceLang = `${sourceLang}+${targetLang}`;
 			}
 
-			// const imagePath = path.join(process.cwd(), 'storage', 'Assets', 'ocr', id, `output-${pageIndex.toString().padStart(3, '0')}.png`);
+			const imagePath = path.join(process.cwd(), 'storage', 'Assets', 'ocr', id, `output-${pageIndex.toString().padStart(3, '0')}.png`);
 			//
-			// const page = await OCR.processImage(imagePath, sourceLang, (progress) => {
-			// 	global.__io.emit(`ocr:extract-status:${clientId}`, progress);
-			// });
+			const page = await OCR.processImage(imagePath, sourceLang, (progress) => {
+				global.__io.emit(`ocr:extract-status:${clientId}`, progress);
+			});
 			// const id = crypto.randomBytes(16).toString('hex');
-			const tmpFilePath = path.posix.resolve(TMP_FILE_PATH, id, `source.${fileExtension}`);
+			// const tmpFilePath = path.posix.resolve(TMP_FILE_PATH, id, `source.${fileExtension}`);
 
 			await NetworkSFTP.createDirectory('ocr:upload', path.posix.resolve(TMP_FILE_PATH, id));
-			const isUploaded = await NetworkSFTP.writeFile('ocr:upload', tmpFilePath, fileData);
-			if (!isUploaded) {
-				throw new Error('Cannot upload file');
-			}
-			const page = await extractTextFromImage(tmpFilePath, targetLang);
+			// const isUploaded = await NetworkSFTP.writeFile('ocr:upload', tmpFilePath, fileData);
+			// if (!isUploaded) {
+			// 	throw new Error('Cannot upload file');
+			// }
+			// const page = await extractTextFromImage(tmpFilePath, targetLang);
 
 			global.__io.emit(`ocr:extract-status:${clientId}`, {
 				jobId: 0,
