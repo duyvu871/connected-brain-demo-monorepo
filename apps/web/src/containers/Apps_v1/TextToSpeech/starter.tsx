@@ -188,7 +188,7 @@ export default function Starter() {
 	return (
 		<div className="min-h-screen">
 			<div className="container mx-auto p-4 max-w-3xl">
-				<Card className="bg-background text-foreground">
+				<Card className="bg-background text-foreground dark:border-zinc-800">
 					<CardHeader className="flex flex-row items-center justify-between">
 						<CardTitle className="text-2xl font-bold">Text to Speech App</CardTitle>
 						{/*<div className="flex items-center space-x-2">*/}
@@ -204,7 +204,7 @@ export default function Starter() {
 					<CardContent className="space-y-6">
 						<div className="relative">
 							<Textarea
-								className="min-h-[150px] pr-12"
+								className="min-h-[150px] pr-12 dark:border-zinc-800"
 								onChange={(e) => setText(e.target.value)}
 								placeholder="Enter text to be spoken..."
 								value={text}
@@ -213,11 +213,12 @@ export default function Starter() {
 						</div>
 						<div className="space-y-4">
 							<div className="flex flex-wrap gap-4 items-center justify-between">
-								<Select onValueChange={(value) => {
-									const selectedVoice = voices.find(v => v.name === value);
-									setVoice(selectedVoice || null);
-								}}>
-									<SelectTrigger className="w-[200px]">
+								<Select
+									onValueChange={(value) => {
+										const selectedVoice = voices.find(v => v.name === value);
+										setVoice(selectedVoice || null);
+									}}>
+									<SelectTrigger className="w-[200px] dark:border-zinc-800">
 										<SelectValue placeholder="Select a voice" />
 									</SelectTrigger>
 									<SelectContent className="dark:bg-zinc-800 bg-zinc-100">
@@ -231,7 +232,8 @@ export default function Starter() {
 								<div className="flex items-center space-x-2">
 									<VolumeX className="h-4 w-4" />
 									<Slider
-										className="w-[100px]"
+										className="w-[100px] [&_span:nth-child(2)_span]:bg-zinc-100 [&_span_span]:border-zinc-700 dark:[&_span:nth-child(1)]:bg-zinc-900 [&_span:nth-child(1)_span]:!bg-zinc-700"
+
 										max={1}
 										min={0}
 										onValueChange={(value) => setVolume(value[0])}
@@ -245,7 +247,7 @@ export default function Starter() {
 								<div className="space-y-2 flex-1">
 									<Label className="text-sm font-medium" htmlFor="pitch">Pitch: {pitch.toFixed(1)}</Label>
 									<Slider
-										className="w-full"
+										className="w-full [&_span:nth-child(2)_span]:bg-zinc-100 [&_span_span]:border-zinc-700 dark:[&_span:nth-child(1)]:bg-zinc-900 [&_span:nth-child(1)_span]:!bg-zinc-700"
 										id="pitch"
 										max={2}
 										min={0.5}
@@ -257,7 +259,7 @@ export default function Starter() {
 								<div className="space-y-2 flex-1">
 									<Label className="text-sm font-medium" htmlFor="rate">Rate: {rate.toFixed(1)}</Label>
 									<Slider
-										className="w-full"
+										className="w-full  [&_span:nth-child(2)_span]:bg-zinc-100 [&_span_span]:border-zinc-700 dark:[&_span:nth-child(1)]:bg-zinc-900 [&_span:nth-child(1)_span]:!bg-zinc-700"
 										id="rate"
 										max={2}
 										min={0.5}
@@ -269,18 +271,18 @@ export default function Starter() {
 							</div>
 						</div>
 						<div className="space-y-4">
-							<Progress className="w-full h-2" value={progress} />
+							<Progress className="w-full h-2 bg-zinc-700" value={progress} />
 							<div className="flex justify-center space-x-4">
-								<Button disabled={!text} onClick={handlePlay}>
+								<Button className="text-zinc-700 dark:text-zinc-100 dark:bg-zinc-800 bg-zinc-100 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors" disabled={!text} onClick={handlePlay}>
 									<Play className="mr-2 h-4 w-4" /> Play
 								</Button>
-								<Button disabled={!utterance && !audioRef.current || isPaused} onClick={handlePause}>
+								<Button className="text-zinc-700 dark:text-zinc-100 dark:bg-zinc-800 bg-zinc-100 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors" disabled={!utterance && !audioRef.current || isPaused} onClick={handlePause}>
 									<Pause className="mr-2 h-4 w-4" /> Pause
 								</Button>
-								<Button disabled={!utterance && !audioRef.current} onClick={handleStop}>
+								<Button className="text-zinc-700 dark:text-zinc-100 dark:bg-zinc-800 bg-zinc-100 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors" disabled={!utterance && !audioRef.current} onClick={handleStop}>
 									<Square className="mr-2 h-4 w-4" /> Stop
 								</Button>
-								<Button disabled={!text} onClick={handleDownload}>
+								<Button className="text-zinc-700 dark:text-zinc-100 dark:bg-zinc-800 bg-zinc-100 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors" disabled={!text} onClick={handleDownload}>
 									<Download className="mr-2 h-4 w-4" /> Download
 								</Button>
 							</div>
