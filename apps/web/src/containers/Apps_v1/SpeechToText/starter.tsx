@@ -51,7 +51,7 @@ export default function SpeechToTextApp() {
 		formData.append('url', 'string')
 
 		try {
-			const response = await fetch('http://14.224.188.206:8502/api/v1/s2t', {
+			const response = await fetch('/api/v1/s2t', {
 				method: 'POST',
 				body: formData,
 			})

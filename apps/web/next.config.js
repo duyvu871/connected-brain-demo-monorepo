@@ -16,4 +16,16 @@ module.exports = {
     config.externals = [...config.externals, { canvas: "canvas" }]; // required for the canvas to work
     return config;
   },
+  async rewrites() {
+    return [
+      {
+        source: "/api/v1/s2t",
+        destination: "http://14.224.188.206:8502/api/v1/s2t",
+      },
+      {
+        source: "/api/v1/t2s",
+        destination: "http://14.224.188.206:8502/api/v1/t2s",
+      }
+    ]
+  }
 };

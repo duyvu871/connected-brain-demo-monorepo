@@ -48,7 +48,7 @@ export default function Starter() {
 				const systemVoices = synth.current!.getVoices()
 				const externalVoice: ExternalVoice = {
 					name: "Giọng miền bắc",
-					apiUrl: "http://14.224.188.206:8502/api/v1/t2s/"
+					apiUrl: "/api/v1/t2s/"
 				}
 				setVoices([...systemVoices, externalVoice])
 			}
