@@ -9,6 +9,7 @@ const config: Omit<Config, "content"> = {
     "./src/containers/**/*.{tsx,ts,js,jsx}",
     "./src/components/**/*.{tsx,ts,js,jsx}",
     "./src/layouts/**/*.{tsx,ts,js,jsx}",
+    "./src/providers/**/*.{tsx,ts,js,jsx}",
     "../../node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
     '../../packages/ui/src/**/*.{ts,tsx}'
   ],

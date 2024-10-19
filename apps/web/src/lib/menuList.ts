@@ -11,9 +11,7 @@ import { MessageSquareQuote,
 	LayoutGrid
 } from 'lucide-react';
 
-
-
-import { TbTextScan2 } from "react-icons/tb";
+import { TbChartBubble, TbTextScan2 } from "react-icons/tb";
 import type { IconType } from 'react-icons';
 import { BsTranslate } from 'react-icons/bs';
 
@@ -74,6 +72,13 @@ export function getMenuList(pathname: string): Group[] {
 					submenus: []
 				},
 				{
+					href: "/app/text-to-speech",
+					label: "Text to Speech",
+					active: pathname.includes("/app/text-to-speech"),
+					icon: TbChartBubble,
+					submenus: []
+				},
+				{
 					href: "/app/ocr",
 					label: "OCR",
 					active: pathname.includes("/app/ocr"),
@@ -86,7 +91,7 @@ export function getMenuList(pathname: string): Group[] {
 					active: pathname.includes("/app/translate"),
 					icon: BsTranslate,
 					submenus: []
-				}
+				},
 			]
 		},
 		{
