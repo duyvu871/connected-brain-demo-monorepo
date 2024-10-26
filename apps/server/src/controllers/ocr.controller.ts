@@ -5,7 +5,8 @@ import { HttpStatusCode } from '@/helpers/http_status_code';
 import * as crypto from 'node:crypto';
 import { OCR } from '@repo/ocr';
 import isoLanguage, { getKeyByValue, type ISOLangType } from '@translate/utils/isoLanguage';
-import fs from 'fs/promises';
+import fsPromise from 'fs/promises';
+import fs from 'fs';
 import path from 'path';
 import PDFParser from 'pdf-parse';
 import { pdfToImage } from '@ocr/pdf-to-image';
@@ -13,37 +14,40 @@ import OcrModel from '@/models/ocr/ocr.model';
 import { ObjectId } from 'mongoose';
 import { NetworkSFTP } from '@repo/network-sftp';
 import { sftpHostCbrain } from '@/configs/sftp/host/cbrain';
-import { InputData, transformData } from '@ocr/utils';
+import { InputData, OutputData, transformData } from '@ocr/utils';
+import * as process from 'node:process';
+// import FormData from 'form-data';
+import axios from 'axios';
 
 NetworkSFTP.setConfig('ocr:upload', sftpHostCbrain);
 
 const TMP_FILE_PATH = '/media/cbrain/9cdf9fac-bba1-4725-848d-cc089e577048/new_folder/CBrain/Study_and_Research/Test/OCR/OCR_API/storage';
-const OCR_API_URL = 'http://127.0.0.1:5207/ocr';
+const OCR_API_URL = 'http://127.0.0.1:8502/api/v1/ocr';
 
-const extractTextFromImage = async (filePath: string, targetLang: string) => {
-	const myHeaders = new Headers();
-	myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
+const extractTextFromImage = async (filePath: string, targetLang: string, contentType: string): Promise<OutputData> => {
+	const fileName = path.basename(filePath);
+	console.log('file-name', fileName);
+	return new Promise(async (res, rej) => {
+		try {
+			const file = await fsPromise.readFile(filePath);
+			const fileBlob = new Blob([file], { type: contentType });
+			console.log(fileName, targetLang);
+			const formData = new FormData();
+			formData.append('file', fileBlob, fileName);
+			formData.append('language', targetLang);
+			const api = process.env.NODE_ENV === 'development' ? "http://14.224.188.206:8502/api/v1/ocr" : OCR_API_URL;
 
-	const urlencoded = new URLSearchParams();
-	urlencoded.append('path', filePath);
-	urlencoded.append('language', targetLang);
-
-	const response = await fetch(OCR_API_URL, {
-		method: 'POST',
-		headers: myHeaders,
-		body: urlencoded,
-		redirect: 'follow',
-	});
-
-	const responseBody = await response.json() as InputData;
-	if (!responseBody?.results) throw new Error('Cannot extract text from image');
-
-	const page = transformData(responseBody);
-	if (!page) {
-		throw new Error('Cannot extract text from image');
-	}
-
-	return page;
+			const response = await fetch(api, {
+				method: "POST",
+				body: formData,
+			})
+			const data = (await response.json()).data;
+			const transformedData = transformData(data as InputData);
+			res(transformedData);
+		} catch (e) {
+			rej(e);
+		}
+	})
 };
 
 const getNormalizedLanguage = (lang: string) => {
@@ -65,19 +69,18 @@ export default class OCRController {
 			if (sourceLang === targetLang) {
 				sourceLang = `${sourceLang}+${targetLang}`;
 			}
-
-			const id = crypto.randomBytes(16).toString('hex');
-			const tmpFilePath = path.posix.resolve(TMP_FILE_PATH, id, `source.${fileExtension}`);
-
-			await NetworkSFTP.createDirectory('ocr:upload', path.posix.resolve(TMP_FILE_PATH, id));
-			const isUploaded = await NetworkSFTP.writeFile('ocr:upload', tmpFilePath, fileData);
-			if (!isUploaded) {
-				throw new Error('Cannot upload file');
-			}
-
+			const directoryPath = path.resolve(process.cwd(), `storage/Assets/ocr/${clientId}`);
+			await fsPromise.mkdir(directoryPath, { recursive: true }).then(() => {
+				console.log('create dir');
+			});
+			const filePath = path.resolve(directoryPath, `source.${fileExtension}`);
+			await fsPromise.writeFile(filePath, fileData).then(() => {
+				console.log('write file');
+			});
 			try {
-				const page = await extractTextFromImage(tmpFilePath, targetLang);
-
+				const page = await extractTextFromImage(filePath, targetLang, fileType);
+				console.log(targetLang);
+				console.log(page);
 				global.__io.emit(`ocr:extract-status:${clientId}`, {
 					jobId: 0,
 					progress: 100,
@@ -91,9 +94,11 @@ export default class OCRController {
 					words: page.words.map((word) => ({ bbox: word.bbox, baseline: 0 })),
 				});
 			} catch (e) {
+				console.log("Upload error", e);
 				response_header_template(res).status(HttpStatusCode.InternalServerError).send({ message: 'Cannot extract text from image' });
 			}
 		} catch (error: any) {
+			console.log(error);
 			response_header_template(res).status(error.statusCode || HttpStatusCode.InternalServerError).send({ message: error.message });
 		}
 	});

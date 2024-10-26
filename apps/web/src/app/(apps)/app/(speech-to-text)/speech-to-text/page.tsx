@@ -1,11 +1,11 @@
 import React from 'react';
-// import Playground from '@/containers/Apps/SpeechToText/playground.tsx';
+import Playground from '@/containers/Apps/SpeechToText/playground.tsx';
 import AppLayout from '@/providers/app-provider.tsx';
 import MainSidebarLayout from '@/layouts/main-sidebar.tsx';
 import { getServerAuthSession } from '@/lib/nextauthOptions';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-import Starter from '@/containers/Apps_v1/SpeechToText/starter.tsx';
+// import Starter from '@/containers/Apps_v1/SpeechToText/starter.tsx';
 
 
 async function Page() {
@@ -18,7 +18,7 @@ async function Page() {
     return (
       <AppLayout>
         <MainSidebarLayout customHeader={<></>}>
-          <Starter />
+          <Playground />
         </MainSidebarLayout>
       </AppLayout>
     );

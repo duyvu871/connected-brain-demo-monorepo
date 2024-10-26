@@ -32,16 +32,16 @@ export const TranslationBox: FC<TranslationBoxProps> = ({
 
   return (
     <div className={cn(
-      "flex flex-col gap-2 w-full rounded-lg border border-zinc-800 bg-zinc-900 text-sm shadow-sm text-white p-3 pb-0 pr-1",
+      "flex flex-col gap-2 w-full rounded-lg border border-zinc-200 bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-900 shadow-none text-sm text-white p-3 pb-0 pr-1",
       {
-        "bg-zinc-800 border-0": TranslationBoxTypes.TARGET === type
+        "border-zinc-200 bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-800 border-0": TranslationBoxTypes.TARGET === type
       }
     )}>
       <div className="flex gap-1 flex-1 rounded-lg">
         <ResizeWithContent
           autoComplete="off"
           autoresize={value.toString().length > 0}
-          className="w-full resize-none min-h-20 md:min-h-32 max-h-72 border-none outline-none focus-visible:ring-0 overflow-auto"
+          className="shadow-none w-full resize-none min-h-20 md:min-h-32 max-h-72 border-none outline-none focus-visible:ring-0 overflow-auto"
           {...textareaProps} />
 
         {TranslationBoxTypes.SOURCE === type && value !== "" && (

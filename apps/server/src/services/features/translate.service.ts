@@ -2,13 +2,16 @@ import { Server } from 'socket.io';
 import { TranslateService as Translate, ISOLangType } from '@translate/index';
 import { TranslateValidation } from '@/validations/translate.validation';
 import { ZodError } from 'zod';
+import * as http from 'node:http';
+import { constants } from '@repo/utils';
 
 export class TranslateService {
 	public static connection(io: Server) {
-		io.on('connection', (socket) => {
+
+		const namespace = io.of(constants.api_route.API.feature.TRANSLATE.socket)
+		namespace.on('connection', (socket) => {
 			console.log('Translate socket connected');
 			const translator = new Translate();
-
 			socket.on('disconnect', () => {
 				console.log('Translate socket disconnected');
 			});

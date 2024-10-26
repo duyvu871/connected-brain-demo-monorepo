@@ -40,7 +40,7 @@ export const TextProvider: FC<PropsWithChildren> = ({ children }) => {
     }
 
     try {
-      // console.log(io);
+      console.log(io);
       if (io?.connected) {
         io.emit('translate-transmit', {
           text,
@@ -90,10 +90,11 @@ export const TextProvider: FC<PropsWithChildren> = ({ children }) => {
   }, [fromLanguage, getCompletion, textToTranslateDebounce, toLanguage]);
 
   useEffect(() => {
-    const socketIO = SocketIO(process.env.NEXT_PUBLIC_API_BASE_URL, {
+    console.log(process.env.NEXT_PUBLIC_API_BASE_URL + APIRoute.API.feature.TRANSLATE.socket);
+    const socketIO = SocketIO(process.env.NEXT_PUBLIC_API_BASE_URL + APIRoute.API.feature.TRANSLATE.socket, {
       transports: ["websocket"], // use websocket only
       addTrailingSlash: false, // remove trailing slash
-      path: APIRoute.API.feature.TRANSLATE.socket,
+      path: '/socket/socket.io',
     });
 
     socketIO.on('connect', () => {
@@ -103,14 +104,14 @@ export const TextProvider: FC<PropsWithChildren> = ({ children }) => {
     socketIO.on('translate-completion', (data: { completion: string }) => {
       setCompletion(data.completion);
     });
-
+    console.log(socketIO);
     setIo(socketIO);
     return () => {
       if (io?.connected) {
         io.close();
       }
     }
-  }, []);
+  }, [io]);
   
   return (
     <textContext.Provider

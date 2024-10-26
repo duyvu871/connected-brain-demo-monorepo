@@ -25,6 +25,24 @@ interface TranscriptResponses {
 	full: Transcript;
 }
 
+export interface TranscriptSentence {
+	start: number;
+	end: number;
+	speaker: string;
+	text: string;
+	words: TranscriptWord[];
+}
+
+export interface TranscriptWord {
+	start: number;
+	end: number;
+	text: string;
+	confidence: number;
+	speaker: string;
+}
+
+export type Sentences = TranscriptSentence[]
+
 export default class CloudSpeech {
 	private static client: any;
 	public static getInstance(): AssemblyAI {
@@ -197,5 +215,11 @@ public static async getTemporaryToken(): Promise<string> {
 			console.error('Error uploading file:', error);
 			return null;
 		}
+	}
+
+	public static async getTranscriptConnectedBrain(
+		filePath: string
+	): Promise<{sentences: TranscriptSentence[], audio_duration: number} | null> {
+
 	}
 }

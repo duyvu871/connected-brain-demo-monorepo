@@ -30,14 +30,14 @@ async function startServer() {
             origin: "*",
             methods: ["GET", "POST"]
         },
-        path: '/socket',
+        path: '/socket'
     });
 
     app.use(helmet({
         crossOriginResourcePolicy: false,
     })); // Secure your app by setting various HTTP headers
 
-    await Loaders({ expressApp: app, io: global.__io });
+    await Loaders({ expressApp: app, io: global.__io, httpServer });
 
     // listen to port
     httpServer.listen(listenPort).on("listening", () => {

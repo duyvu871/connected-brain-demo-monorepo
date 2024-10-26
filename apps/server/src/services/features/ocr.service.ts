@@ -5,6 +5,7 @@ import workerpool from 'workerpool';
 import PDFParser from 'pdf-parse';
 import path from 'path';
 import fs from 'fs/promises';
+import * as http from 'node:http';
 
 type OCRData = Page
 
@@ -42,8 +43,8 @@ const pool = workerpool.pool(path.join(__dirname + '../../../../apps/workers/dis
 export default class OCRService {
 	public static connection(io: Server) {
 		console.log('OCR socket connected', api_route.API.feature.OCR.socket);
-		const namespace = io.of(api_route.API.feature.OCR.socket)
-			.on('connect', (socket) => {
+
+		const namespace = io.of(api_route.API.feature.OCR.socket).on('connect', (socket) => {
 				console.log('OCR socket connected');
 				socket.on('disconnect', () => {
 					console.log('OCR socket disconnected');

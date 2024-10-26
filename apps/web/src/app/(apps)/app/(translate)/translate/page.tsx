@@ -6,6 +6,7 @@ import MainSidebarLayout from '@/layouts/main-sidebar.tsx';
 import { redirect } from 'next/navigation';
 import { headers } from 'next/headers';
 import { getServerAuthSession } from '@/lib/nextauthOptions.ts';
+import HeaderNavigateItem from '@/components/Chatbot/HeaderNavigateItem.tsx';
 
 async function Page() {
   const session = await getServerAuthSession();
@@ -17,7 +18,7 @@ async function Page() {
   return (
     <Suspense fallback={<></>}>
       <AppLayout>
-          <MainSidebarLayout>
+          <MainSidebarLayout customHeader={<><HeaderNavigateItem /></>}>
             <LanguageProvider>
               <TextProvider>
                   <Translate />

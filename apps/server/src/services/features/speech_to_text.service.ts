@@ -9,11 +9,13 @@ import { Request } from 'express';
 import { Server } from 'socket.io';
 import { api_route } from '@repo/utils/constants';
 import path from 'path';
+import * as http from 'node:http';
 
 export default class SpeechToTextService {
 	public static connection(io: Server) {
 		console.log('S2T socket connected', api_route.API.feature.SPEECH_TO_TEXT.socket);
-		io.of(api_route.API.feature.SPEECH_TO_TEXT.socket).on('connection', (socket) => {
+		const namespace = io.of(api_route.API.feature.SPEECH_TO_TEXT.socket);
+		namespace.on('connection', (socket) => {
 			console.log('user connected to speech to text');
 			socket.on('disconnect', () => {
 				console.log('user disconnected');
@@ -108,7 +110,7 @@ export default class SpeechToTextService {
 		return audit;
 	}
 	// update audit
-	public static async update_audit(id: string|ObjectId, audit: Partial<IS2tDTO>) {
+	public static async update_audit(id: string|ObjectId, audit: Partial<IS2tDTO>): Promise<IS2tDTO| null> {
 		const auditPath = `${process.cwd()}/storage/Assets/s2t/${id.toString()}/audit.json`;
 		const rewriteAudit = FileStorageService.read_file(auditPath);
 		const auditJson = JSON.parse(rewriteAudit);
@@ -118,10 +120,11 @@ export default class SpeechToTextService {
 			new Types.ObjectId(id.toString()), newAudit, {new: true}
 		).exec();
 		if (!updateAuditRepo) {
-			throw new ApiError(HttpStatusCode.InternalServerError, "fail update audit");
+			console.log(new ApiError(HttpStatusCode.InternalServerError, "fail update audit"));
+			return null;
 		}
 		// console.log('update audit:', updateAuditRepo);
-		return;
+		return newAudit;
 	}
 	// get transcript by id
 	public static async get_transcript(id: string|ObjectId) {
