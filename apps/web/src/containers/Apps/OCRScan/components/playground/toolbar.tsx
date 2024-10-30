@@ -15,12 +15,12 @@ function Toolbar() {
 
 	return (
 		<form className="grid w-full items-start gap-5 max-w-[400px]">
-			<fieldset className="grid gap-6 rounded-lg border border-zinc-800 p-4">
-				<legend className="-ml-1 px-1 text-sm font-medium">
+			<fieldset className="grid gap-6 rounded-lg border border-zinc-300 dark:border-zinc-800 p-4">
+				<legend className="-ml-1 px-1 text-sm font-medium text-zinc-700 dark:text-zinc-100">
 					Settings
 				</legend>
 				<div className="grid gap-3">
-					<Label htmlFor="source-lang">Source</Label>
+					<Label className="dark:text-zinc-100 text-zinc-700" htmlFor="source-lang">Source</Label>
 					<ComboboxLanguage
 						onChange={(fromLanguage: string) => {
 							setSelectedSourceLang(new Set([languageByValue[fromLanguage].query]));
@@ -30,7 +30,7 @@ function Toolbar() {
 					/>
 				</div>
 				<div className="grid gap-3">
-					<Label htmlFor="target-lang">Target</Label>
+					<Label className="dark:text-zinc-100 text-zinc-700" htmlFor="target-lang">Target</Label>
 					<ComboboxLanguage
 						onChange={(targetLang: string) => {
 							// console.log(languageByValue[targetLang].query);
@@ -44,7 +44,7 @@ function Toolbar() {
 					<div className="flex flex-col items-center justify-center w-full max-w-2xl gap-6 mx-auto">
 						<SelectZone>
 							<div
-								className="relative p-2 w-full h-32 p-6 border-2 border-dashed rounded-lg border-primary hover:border-primary-foreground transition-colors">
+								className="relative p-2 w-full h-32 p-6 border-2 border-dashed rounded-lg border-zinc-300 dark:border-zinc-800 transition-colors">
 								<div
 									className="absolute inset-0 flex items-center justify-center text-center text-muted-foreground cursor-pointer">
 									<div className="text-md">
@@ -67,7 +67,7 @@ function Toolbar() {
 					</div>
 					</div>
 				<div className="grid gap-3">
-					<UploadButton />
+					<UploadButton loading />
 				</div>
 			</fieldset>
 		</form>

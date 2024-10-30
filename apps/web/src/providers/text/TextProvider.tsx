@@ -111,7 +111,7 @@ export const TextProvider: FC<PropsWithChildren> = ({ children }) => {
         io.close();
       }
     }
-  }, [io]);
+  }, []);
   
   return (
     <textContext.Provider

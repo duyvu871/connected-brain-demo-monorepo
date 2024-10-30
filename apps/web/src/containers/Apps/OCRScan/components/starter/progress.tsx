@@ -8,6 +8,7 @@ function Progress() {
 
 	return (
 		<ProgressNextui
+			aria-label="OCR Progress"
 			className="max-w-md"
 			classNames={{
 				label: "text-zinc-600 capitalize",

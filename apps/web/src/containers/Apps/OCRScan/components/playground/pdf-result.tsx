@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import type { PDFDocumentProxy } from 'pdfjs-dist';
 import  { getDocument } from 'pdfjs-dist';
-import { pdfjs } from 'react-pdf';
+import 'pdfjs-dist/build/pdf.worker.entry';
+// import { pdfjs } from 'react-pdf';
 import { Box } from '@mantine/core';
 import { useAtom } from 'jotai/index';
 import {
@@ -12,11 +13,12 @@ import Pagination from '@/containers/Apps/OCRScan/components/playground/paginati
 import { useUpload } from '@/hooks/ocr/useUpload.ts';
 import VisualTextSegment from '@/containers/Apps/OCRScan/components/visual-text-segment.tsx';
 
-pdfjs.GlobalWorkerOptions.workerSrc = '/workers/pdf.worker.mjs'//'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.4.168/build/pdf.worker.mjs'//new URL('pdfjs-dist/legacy/build/pdf.worker.min.mjs', import.meta.url).toString()
+// pdfjs.GlobalWorkerOptions.workerSrc = '/workers/pdf.worker.mjs'//'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.4.168/build/pdf.worker.mjs'//new URL('pdfjs-dist/legacy/build/pdf.worker.min.mjs', import.meta.url).toString()
 
 const PdfViewer: React.FC = () => {
 	const {getExtractFromPDFPage} = useUpload();
 	const [file] = useAtom(starterAssetsPreUpload);
+	const [pdfResultStore] = useAtom(pdfPageStore)
 	const [state, setPaginationState] = useAtom(paginationState);
 	const [pdfData, setPdfData] = useState<PDFDocumentProxy | null>(null);
 	const [, setCurrentPage] = useState(1);
@@ -75,7 +77,7 @@ const PdfViewer: React.FC = () => {
 						<VisualTextSegment image={imageExtracted || '/placeholder.svg'} imageType="url" />
 					</Box>
 				</> : null}
-			<Pagination />
+			{pdfResultStore ? <Pagination /> : null}
 		</div>
 	);
 };

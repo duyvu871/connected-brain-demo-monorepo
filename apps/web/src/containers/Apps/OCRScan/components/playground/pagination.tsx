@@ -22,7 +22,7 @@ const PaginateIndex = forwardRef<HTMLDivElement, PaginateIndexProps>((props, ref
 					"border-zinc-300 hover:bg-zinc-100 hover:text-zinc-700 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-400",
 					"dark:hover:bg-zinc-700 dark:hover:text-white cursor-pointer",
 					{
-						"dark:bg-zinc-700 dark:text-white hover:bg-blue-100 hover:text-blue-700": isActive
+						"bg-blue-100 dark:bg-zinc-700 dark:text-white hover:bg-blue-200 hover:text-blue-700": isActive
 					}
 				)}
 			>

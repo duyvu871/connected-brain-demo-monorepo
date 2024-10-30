@@ -5,7 +5,7 @@ export async function retryWrapper<ResponseType>(
 		retryIndex: number;
 		MAX_RETRY: number;
 		RETRY_WAIT: number;
-		condition?: (result: ResponseType) => boolean;
+		condition?: (result: ResponseType) => Promise<boolean>;
 		failAction?: () => void;
 		fallbackAction?: () => void;
 	}
@@ -13,7 +13,7 @@ export async function retryWrapper<ResponseType>(
 	const { retryIndex, MAX_RETRY, RETRY_WAIT, condition, fallbackAction, failAction } = retryOpt;
 	try {
 		const result = await fn();
-		if (condition && !condition(result)) {
+		if (condition && !await condition(result)) {
 			throw new Error('Condition not met');
 		}
 		return result;

@@ -7,19 +7,49 @@ import { HttpStatusCode } from '@/helpers/http_status_code';
 import { MakeRequired } from '@/types/helper';
 import { Request } from 'express';
 import { Server } from 'socket.io';
-import { api_route } from '@repo/utils/constants';
+import { constants } from '@repo/utils';
 import path from 'path';
 import * as http from 'node:http';
+import { getRedis } from '@/configs/database/redis';
+
+const {api_route} = constants;
 
 export default class SpeechToTextService {
 	public static connection(io: Server) {
 		console.log('S2T socket connected', api_route.API.feature.SPEECH_TO_TEXT.socket);
 		const namespace = io.of(api_route.API.feature.SPEECH_TO_TEXT.socket);
-		namespace.on('connection', (socket) => {
+		namespace.on('connection', async (socket) => {
 			console.log('user connected to speech to text');
 			socket.on('disconnect', () => {
 				console.log('user disconnected');
 			});
+			const redis = getRedis().instanceRedis;
+			const channel = "s2t:transcript";
+			// @ts-ignore
+			redis && await redis.subscribe(channel, (message: string) => {
+				console.log("redis subscribe s2t message: ", message);
+				socket.emit("s2t:transcript", message);
+			});
+
+			socket.on("get-s2t-status", async (data: {id: string}) => {
+					try {
+						const s2tStore = await S2t.findOne({_id: new Types.ObjectId(data.id)});
+						if (!s2tStore) {
+							throw new Error("Transcript not found");
+						}
+						// @ts-ignore
+						const extractData = await s2tStore.exec();
+						if (!extractData) {
+							throw new Error("Transcript not found");
+						}
+
+						socket.emit("s2t:transcript", extractData);
+
+					} catch (e: any) {
+						console.log(e);
+						socket.emit("error", e.message);
+					}
+			})
 		});
 	}
 	// create database repo to store audio record

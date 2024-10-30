@@ -16,6 +16,11 @@ module.exports = {
     config.externals = [...config.externals, { canvas: "canvas" }]; // required for the canvas to work
     return config;
   },
+
+  images: {
+    domains: ["localhost", "api.connectedbrain.com.vn"],
+  },
+
   async rewrites() {
     return [
       {
@@ -24,7 +29,7 @@ module.exports = {
       },
       {
         source: "/api/v1/t2s",
-        destination: "http://14.224.188.206:8502/api/v1/t2s",
+        destination: "http://14.224.188.206:8502/api/v1/t2s/version2",
       }
     ]
   }

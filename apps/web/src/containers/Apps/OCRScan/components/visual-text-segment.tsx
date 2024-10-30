@@ -58,20 +58,25 @@ function VisualTextSegment({image, imageType}: VisualTextSegmentProps) {
 		}
 	}, [blobURL, clearTexture, currentPage, placementTexture]);
 
+	useEffect(() => {
+		clearTexture();
+	}, [blobURL]);
+
 	return (
 		<Box className="flex-1 relative overflow-hidden">
 			<canvas className="absolute max-w-full box-border" ref={textureWrapRef}/>
 			<Image
 				alt="image source"
 				className="max-w-full box-border rounded-lg"
-				height={700}
+				height={1100}
+				loading='lazy'
 				onLoad={() => {
 					clearTexture();
 				}}
 				ref={imageSourceRef}
 				src={blobURL}
-				unoptimized
-				width={500}
+				// unoptimized
+				width={850}
 			/>
 		</Box>
 	);

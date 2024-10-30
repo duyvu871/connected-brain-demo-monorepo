@@ -105,7 +105,7 @@ export function RegisterForm(props: PaperProps) {
 						error={formState.errors?.phone?.message}
 						label="phone"
 						onChange={(event) => setValue('phone', event.currentTarget.value)}
-						placeholder="contract@connectedbrain.com"
+						placeholder="Your phone"
 						radius="md"
 						required
 						spellCheck={false}

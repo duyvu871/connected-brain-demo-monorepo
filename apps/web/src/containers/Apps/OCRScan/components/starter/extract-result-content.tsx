@@ -67,9 +67,9 @@ function ExtractResultContent() {
 			<Box>
 				<Title className="inline-flex justify-center items-center gap-2.5 font-thin">Result <TbScanEye/></Title>
 			</Box>
-			<Box className="flex flex-col justify-center lg:flex-row w-full" ref={extractResultRef}>
-				<Box className="p-5 bg-zinc-300">
-					<Box className="w-72 sm:w-[350px] flex justify-center items-center my-4 mb-6">
+			<Box className="flex flex-col justify-center items-center lg:items-stretch lg:flex-row w-fit" ref={extractResultRef}>
+				<Box className="p-5 bg-zinc-300 w-full sm:max-w-[420px] flex flex-col items-center">
+					<Box className="w-full sm:w-[350px] flex justify-center items-center my-4 mb-6">
 						<Box className="flex justify-center items-center gap-2">
 							<h2 className="text-xl text-zinc-900 font-normal">Source image</h2>
 							<span
@@ -81,15 +81,15 @@ function ExtractResultContent() {
 						<VisualTextSegment image={uploadedImageUrl ?? "/placeholder.svg"} imageType="url" />
 					</Box>
 				</Box>
-				<Box className="p-5 bg-zinc-100">
-					<Box className="w-72 sm:w-[350px] flex justify-center items-center my-4 mb-6">
+				<Box className="p-5 bg-zinc-100 w-full sm:max-w-[420px] flex flex-col items-center">
+					<Box className="w-full sm:w-[350px] flex justify-center items-center my-4 mb-6">
 						<Box className="flex justify-center items-center gap-2">
 							<h2 className="text-xl text-zinc-900 font-normal">OCR result</h2>
 							<span
 								className="text-xl text-zinc-500 flex justify-center items-center capitalize">{OCRLang} <LiaAngleDownSolid /></span>
 						</Box>
 					</Box>
-					<Box className="mb-3">
+					<Box className="mb-3 w-full">
 						<Progress />
 					</Box>
 					<Card
@@ -107,7 +107,7 @@ function ExtractResultContent() {
 					<Box className="w-full flex justify-center items-center pt-4 gap-4">
 						<Copy
 							childrenProps={{
-								className: "w-fit rounded-lg",
+								className: "w-fit rounded-lg bg-zinc-500 text-zinc-100 hover:bg-zinc-600",
 								type: "button",
 							}}
 							text={extractedText ?? "no text extracted"}

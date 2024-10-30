@@ -2,6 +2,10 @@ import { getDownloadURL, getMetadata, ref, uploadBytesResumable } from 'firebase
 import { storage } from '@/configs/firebase';
 import { Storage } from '@google-cloud/storage';
 import { AssemblyAI, ParagraphsResponse, SentencesResponse, Transcript } from 'assemblyai';
+import path from 'path';
+import fsPromise from 'fs/promises';
+import process from 'node:process';
+import { FileTypeResult } from 'file-type';
 
 interface UploadFileProps {
 	file: File|Uint8Array|Blob|Buffer;
@@ -218,8 +222,59 @@ public static async getTemporaryToken(): Promise<string> {
 	}
 
 	public static async getTranscriptConnectedBrain(
-		filePath: string
-	): Promise<{sentences: TranscriptSentence[], audio_duration: number} | null> {
+		filePath: string,
+	): Promise<{sentences: TranscriptSentence[]} | null> {
+		const S2T_API_ENDPOINT = 'http://127.0.0.1:8502/api/v1/s2t/version2'
+		const fileName = path.basename(filePath);
+		console.log('file-name', fileName);
+		return new Promise(async (res, rej) => {
+			try {
+				const fileType = (await import('file-type')).fileTypeFromBuffer;
+				const file = await fsPromise.readFile(filePath);
+				const contentType =  <FileTypeResult>await fileType(file);
+				const fileBlob = new Blob([file], { type: contentType.mime });
+				console.log(fileName);
+				const formData = new FormData();
+				formData.append('file', fileBlob, fileName);
+				const api = process.env.NODE_ENV === 'development' ? "http://14.224.188.206:8502/api/v1/s2t/version2" : S2T_API_ENDPOINT;
 
+				const response = await fetch(api, {
+					method: "POST",
+					body: formData,
+				})
+				const responseChunking = (await response.json()) as {
+					success: boolean;
+					message: string;
+					data: {
+						transcript: TranscriptSentence[]
+					}
+				};
+				if (!responseChunking.success) {
+					console.log(
+						`s2t error with status: ${response.status}, response: ${JSON.stringify(responseChunking)}`,
+					);
+				}
+				const transcript = responseChunking.data.transcript;
+				
+				const transformTimeToMilliSecond = (second: number): number => {
+					return parseInt((second*1000).toFixed(0))
+				}
+
+				res({
+					sentences: transcript.map((sentence) => ({
+						...sentence,
+						start: transformTimeToMilliSecond(sentence.start),
+						end: transformTimeToMilliSecond(sentence.end),
+						words: sentence.words.map(word => ({
+							...word,
+							start: transformTimeToMilliSecond(word.start),
+							end: transformTimeToMilliSecond(word.end),
+						}))
+					}))
+				});
+			} catch (e) {
+				rej(e);
+			}
+		})
 	}
 }

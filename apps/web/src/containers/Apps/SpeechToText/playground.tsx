@@ -1,5 +1,5 @@
 'use client';
-import React, { useLayoutEffect } from 'react';
+import React, { useEffect, useLayoutEffect } from 'react';
 import { Center, Flex } from '@mantine/core';
 import TranscriptResultProgress from '@/containers/Apps/SpeechToText/components/Analytics/Progress';
 import Duration from '@/containers/Apps/SpeechToText/components/Transcript/Transcript_spec/Duration';
@@ -11,16 +11,45 @@ import TranscriptSearch from '@/containers/Apps/SpeechToText/components/Transcri
 import TranscriptFeatureTab from '@/containers/Apps/SpeechToText/components/Transcript/Transcript_feature_tab';
 import TranscriptWrapper from '@/containers/Apps/SpeechToText/components/Transcript/transcript_wrapper';
 import { useTranscript } from '@/containers/Apps/SpeechToText/hooks/useSpeechToText';
-import { transcript } from '@/containers/Apps/SpeechToText/states/transcript';
+import { IOSocketAtom, transcript } from '@/containers/Apps/SpeechToText/states/transcript';
 import TranscriptFeature from '@/containers/Apps/SpeechToText/components/Transcript/Transcript_feature';
-
+import { io } from 'socket.io-client';
+import { constants } from '@repo/utils';
+import RotateLoader from '@ui/resource-ui/Loader/spinner.tsx';
 
 function AppS2T() {
+	const {api_route} = constants;
 	const [isSectionLoad, _] = useAtom(isSectionLoaded);
 	const [currentSection] = useAtom(sectionId);
 	const [transcript_data, setTranscriptData] = useAtom(transcript);
 	const [getC, setCurrentFile] = useAtom(audioFile);
+	// const [setIOSocket] = useAtom(IOSocketAtom);
 	const { getTranscript, getTranscriptList } = useTranscript();
+
+	useEffect(() => {
+		const socketConnectEndpoint =
+			`${process.env.NEXT_PUBLIC_API_BASE_URL}${api_route.API.feature.SPEECH_TO_TEXT.socket}`
+		console.log("socket place:", socketConnectEndpoint);
+		const socket = io(socketConnectEndpoint,
+			{
+				transports: ["websocket"], // use websocket only
+				addTrailingSlash: false, // remove trailing slash
+				path: "/socket/socket.io",
+			});
+		socket.on("connect", () => {
+			console.log("socket connected");
+			socket.on("s2t:transcript", (data) => {
+				console.log(data);
+			})
+		});
+		socket.on('disconnet', () => {
+			console.log("socket dis connected");
+		})
+
+		return () => {
+			if (socket) socket.close();
+		}
+	}, [])
 
 	useLayoutEffect(() => {
 		if (currentSection) {
@@ -44,7 +73,6 @@ function AppS2T() {
 						url: transcriptData.cloudPath,
 						name: transcriptData.originName,
 					});
-					
 				}
 			})();
 		}
@@ -53,37 +81,52 @@ function AppS2T() {
 		<DynamicContentLoaded>
 			<Center className="bg-zinc-950 h-[calc(100vh_-_59px)]">
 				<Flex align="center" className="gap-0" direction="row" h="100%" justify="center" w="100%">
-					<Flex align="center" className="rounded-[2rem] gap-5 flex-grow-[7]" direction="column" h="100%"
-								justify="center">
-						{
-							isSectionLoad
-								? (
-									<Flex align="center"
-												className="flex-grow w-full h-full gap-5"
-												direction="column"
-												justify="center"
-									>
-										<Flex align="center" className="gap-5 flex-grow w-full h-full"
-													direction="row"
-													justify="center">
-											<Flex className="w-full h-full bg-zinc-950 rounded-xl ">
-												<TranscriptWrapper />
+					{transcript_data ? (
+						<>
+							<Flex align="center" className="rounded-[2rem] gap-5 flex-grow-[7]" direction="column" h="100%"
+										justify="center">
+								{
+									isSectionLoad
+										? (
+											<Flex align="center"
+														className="flex-grow w-full h-full gap-5"
+														direction="column"
+														justify="center"
+											>
+												<Flex align="center" className="gap-5 flex-grow w-full h-full"
+															direction="row"
+															justify="center">
+													<Flex className="w-full h-full bg-zinc-950 rounded-xl ">
+														<TranscriptWrapper />
+													</Flex>
+												</Flex>
 											</Flex>
-										</Flex>
-									</Flex>
-								)
-								: (<StarterScreen />)
-						}
-					</Flex>
-					{
-						isSectionLoad ? <Center className="max-w-md min-w-96 flex-grow-[3] border-0 border-l border-zinc-800" h="100%" w="1/2">
-							<Flex align="center" className="flex-grow h-full bg-zinc-950 rounded-2xl p-5 gap-3" direction="column"
-										justify="start">
-								<TranscriptSearch />
-								<TranscriptFeatureTab />
-								<TranscriptFeature />
+										)
+										: (<StarterScreen />)
+								}
 							</Flex>
-						</Center> : null
+							{
+								isSectionLoad ?
+									<Center className="max-w-md min-w-96 flex-grow-[3] border-0 border-l border-zinc-800" h="100%" w="1/2">
+									<Flex align="center" className="flex-grow h-full bg-zinc-950 rounded-2xl p-5 gap-3" direction="column"
+												justify="start">
+										<TranscriptSearch />
+										<TranscriptFeatureTab />
+										<TranscriptFeature />
+									</Flex>
+								</Center>
+									: null
+							}
+						</>
+					)
+						: <Flex align="center" className="gap-4">
+								<RotateLoader classNames={{
+									spinner: "w-20 h-20"
+									}} />
+								<span className="dark:text-zinc-100 text-zinc-700 text-2xl">
+								Wait a few minutes for the server to handle this audio...
+								</span>
+							</Flex>
 					}
 				</Flex>
 			</Center>

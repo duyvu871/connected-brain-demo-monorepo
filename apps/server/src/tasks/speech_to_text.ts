@@ -1,5 +1,5 @@
 import { ConvertToWavJob } from '@/services/queue/utils';
-import CloudSpeech from '@/services/google-cloud/cloud_speech.service';
+import CloudSpeech, { TranscriptSentence } from '@/services/google-cloud/cloud_speech.service';
 import FileStorageService from '@/services/CURD/file_storage.service';
 import SpeechToTextService from '@/services/features/speech_to_text.service';
 import { SentencesResponse } from 'assemblyai';
@@ -11,6 +11,7 @@ export default async function SpeechToText(data: ConvertToWavJob['job_data']) {
 		const isDevelopment = process.env.NODE_ENV === 'development';
 		await mongoLoader();
 		const redis = getRedis().instanceRedis;
+		const channel = "s2t:transcript";
 
 		const file_path = data.file_name;
 		// const file_content = FileStorageService.read_file(file_path);
@@ -28,29 +29,35 @@ export default async function SpeechToText(data: ConvertToWavJob['job_data']) {
 		// 	filePath: file_path
 		// });
 		const audio_storage_url =
-			`https://api.connectedbrain.com.vn/storage/Assets/s2t/${data.id.toString()}/audio.mp3`;
+			isDevelopment ? `http://localhost:3001/storage/Assets/s2t/${data.id.toString()}/audio.mp3` : `https://api.connectedbrain.com.vn/storage/Assets/s2t/${data.id.toString()}/audio.mp3`;
 		// const transcripts = await CloudSpeech.recognizeAudio(
 		// 	audio_storage_url
 		// );
 		// // console.log('Transcript:', transcripts);
 		// const transcripts_parse = await CloudSpeech.getTranscript(transcripts.transcriptId, 'sentences') as SentencesResponse;
+		const parallelHandle = await Promise.all([
+			CloudSpeech.getTranscriptConnectedBrain(file_path),
+			FileStorageService.get_audio_duration(file_path)
+		])
+		const transcripts_parse = parallelHandle[0];
+		const audio_duration = parallelHandle[1];
 
-		const transcripts_parse = await CloudSpeech.getTranscriptConnectedBrain(data.id.toString());
 		if (!transcripts_parse) {
 			throw new Error('Transcript not found');
 		}
+
 		const newAudit = await SpeechToTextService.update_audit(data.id, {
 			cloudPath: audio_storage_url,
 			// cloudPath: upload_to_firebase?.downloadURL ?? '',
 			audio: {
 				path: file_path,
-				duration: transcripts_parse.audio_duration ?? 0,
+				duration: audio_duration || 0,
 			},
-			transcript: transcripts_parse.sentences as SentencesResponse['sentences'],
+			transcript: transcripts_parse.sentences as TranscriptSentence[],
 			status: 'done'
 		});
 		if (newAudit && newAudit.status !== 'done') {
-			redis && redis.publish('s2t:transcript', JSON.stringify(newAudit));
+			redis && redis.publish(channel, JSON.stringify(newAudit));
 		}
 		// console.log('global', global.__io);
 		// global.__io.emit(`s2t:transcript:${data.id}`, transcripts_parse.sentences);

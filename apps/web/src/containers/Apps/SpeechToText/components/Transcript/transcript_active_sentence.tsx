@@ -7,13 +7,14 @@ import { Box } from '@mantine/core';
 import useUID from '@/hooks/useUID.ts';
 
 export default function TranscriptActiveSentence() {
-	const [currentTime, setCurrentTime] = useAtom<number>(audioCurrentTime);
+	const [currentTime, setCurrentTime] = useAtom(audioCurrentTime);
 	const [currentTranscript] = useAtom(transcript);
 	const [activeSentence, setActiveSentence] = useState<TranscriptSentence | null>(null);
 	const [activeWord, setActiveWord] = useState<number>(0);
 	const [genUID] = useUID();
 	
 	useEffect(() => {
+		// console.log(currentTime, activeWord, currentTranscript);
 		if (currentTranscript) {
 			const currentSentence = currentTranscript?.transcript.find((sentence) => {
 				return currentTime >= sentence.start && currentTime <= sentence.end;

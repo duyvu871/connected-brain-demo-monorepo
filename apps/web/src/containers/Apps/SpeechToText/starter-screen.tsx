@@ -26,14 +26,14 @@ function StarterScreen() {
 					selectedKey={activeTab}
 					size="lg"
 				>
-					<Tab key="Record" title="Recording">
-						<Center className="p-5 w-full h-60">
-							<VoiceRecord size={{
-								wrapper: 'xl',
-								icon: 'xl',
-							}} />
-						</Center>
-					</Tab>
+					{/*<Tab key="Record" title="Recording">*/}
+					{/*	<Center className="p-5 w-full h-60">*/}
+					{/*		<VoiceRecord size={{*/}
+					{/*			wrapper: 'xl',*/}
+					{/*			icon: 'xl',*/}
+					{/*		}} />*/}
+					{/*	</Center>*/}
+					{/*</Tab>*/}
 					<Tab key="Upload" title="Upload">
 						<Center className="p-5 w-full h-60">
 							<UploadAudio

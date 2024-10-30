@@ -45,14 +45,14 @@ export default function Starter() {
 			synth.current = window.speechSynthesis
 			audioContext.current = new (window.AudioContext || (window as any).webkitAudioContext)()
 			const updateVoices = () => {
-				const systemVoices = synth.current!.getVoices()
+				// const systemVoices = synth.current!.getVoices()
 				const externalVoice: ExternalVoice = {
 					name: "Giọng miền bắc",
 					apiUrl: "/api/v1/t2s/"
 				}
-				setVoices([...systemVoices, externalVoice])
+				setVoices([externalVoice])
 			}
-			synth.current.onvoiceschanged = updateVoices
+			// synth.current.onvoiceschanged = updateVoices
 			updateVoices()
 		}
 	}, [])
@@ -217,11 +217,12 @@ export default function Starter() {
 									onValueChange={(value) => {
 										const selectedVoice = voices.find(v => v.name === value);
 										setVoice(selectedVoice || null);
-									}}>
+									}}
+								>
 									<SelectTrigger className="w-[200px] dark:border-zinc-800">
 										<SelectValue placeholder="Select a voice" />
 									</SelectTrigger>
-									<SelectContent className="dark:bg-zinc-800 bg-zinc-100">
+									<SelectContent className="dark:bg-zinc-900 dark:border-zinc-800 bg-zinc-100">
 										{voices.map((v) => (
 											<SelectItem className="text-zinc-700 dark:text-zinc-100 hover:bg-zinc-200 dark:hover:bg-zinc-700" key={v.name} value={v.name}>
 												{v.name}

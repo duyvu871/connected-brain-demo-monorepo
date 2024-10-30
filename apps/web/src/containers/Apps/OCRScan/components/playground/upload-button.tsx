@@ -7,10 +7,15 @@ import { starterAssetsPreUpload } from '@/containers/Apps/OCRScan/states/starter
 import { useAuth } from '@/hooks/useAuth.ts';
 import { IoIosReturnLeft } from 'react-icons/io';
 import { useUpload } from '@/hooks/ocr/useUpload';
+import { Loader2 } from 'lucide-react';
 
-export default function UploadButton() {
+type UploadButtonProps = {
+	loading?: boolean;
+}
+
+export default function UploadButton(props: UploadButtonProps) {
 	const [isPdf] = useAtom(isPDFAtom);
-	const {uploadImage, uploadPDF} = useUpload();
+	const {uploadImage, uploadPDF, uploading} = useUpload();
 
 	const uploadAction = async (file: File, source: string, target: string) => {
 		if (isPdf) {
@@ -24,6 +29,7 @@ export default function UploadButton() {
 			className="w-full bg-zinc-800 text-zinc-100"
 			uploadAction={uploadAction}
 		>
+			{(props.loading && uploading) ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
 			Process <IoIosReturnLeft size={24} />
 		</UploadForward>
 	)

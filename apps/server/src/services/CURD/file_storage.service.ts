@@ -182,7 +182,7 @@ public static async convert_to_flac(file_name: string) {
 		});
 	}
 	// get audio duration
-	public static async get_audio_duration(filePath: string) {
+	public static async get_audio_duration(filePath: string): Promise<number|undefined> {
 		return new Promise((resolve, reject) => {
 			ffprobe(filePath, (err, metadata) => {
 				if (err) {

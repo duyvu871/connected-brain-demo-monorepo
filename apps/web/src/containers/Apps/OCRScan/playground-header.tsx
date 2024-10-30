@@ -28,8 +28,8 @@ export default function PlaygroundHeader() {
 				!isStarterScreen && (
 					<Link href="/app/ocr/p" passHref>
 						<Box className="text-white text-lg font-bold">
-							<Button className="bg-zinc-800" variant="bordered">
-								<TbTextScan2 size={24} /> New Scan
+							<Button className="dark:bg-zinc-800 dark:text-zinc-100 bg-zinc-100 text-zinc-700 aspect-square sm:aspect-auto min-w-fit !w-fit" variant="bordered">
+								<TbTextScan2 size={24} /> <span className="hidden sm:block">New Scan</span>
 							</Button>
 						</Box>
 					</Link>

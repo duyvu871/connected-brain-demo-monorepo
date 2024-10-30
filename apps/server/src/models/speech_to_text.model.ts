@@ -1,8 +1,9 @@
 import { Document, ObjectId, Schema } from 'mongoose';
 import mongoose from 'mongoose';
 import { toJSON } from '@/models/plugins';
-import { TranscriptSentence } from 'assemblyai';
+// import { TranscriptSentence } from 'assemblyai';
 import env from '@/configs/env';
+import { TranscriptSentence } from '@/services/google-cloud/cloud_speech.service';
 
 const connection = mongoose;
 

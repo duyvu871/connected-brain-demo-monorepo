@@ -120,7 +120,7 @@ export const TranscriptTranslate = () => {
 				</div>
 			</div>
 
-			<div className="flex flex-col gap-2 h-full">
+			<div className="flex flex-col gap-4 h-full">
 				<Textarea
 					className="disabled:opacity-100 border-0 dark:text-zinc-100 text-zinc-700 max-h-24 lg:max-h-72 !h-full p-3 w-full resize-none overflow-auto"
 					disabled

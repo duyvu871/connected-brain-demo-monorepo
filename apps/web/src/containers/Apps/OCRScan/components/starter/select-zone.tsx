@@ -57,7 +57,7 @@ export default function SelectZone({children}:  SelectZoneProps): React.ReactNod
 
 	return (
 		<div className="flex items-center justify-center w-full">
-			<label className="flex flex-col items-center justify-center rounded-lg cursor-pointer hover:bg-zinc-700 bg-zinc-100 dark:bg-zinc-800 group transition-all w-full"
+			<label className="flex flex-col items-center justify-center rounded-lg cursor-pointer hover:bg-zinc-200 dark:hover:bg-zinc-700 bg-zinc-100 dark:bg-zinc-800 group transition-all w-full"
 						 htmlFor="dropzone-file">
 				{!children ? <div className="flex items-center justify-center gap-1 px-2 py-1 h-10">
 					<svg aria-hidden="true"

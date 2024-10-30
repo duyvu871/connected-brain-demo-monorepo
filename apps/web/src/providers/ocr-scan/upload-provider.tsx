@@ -10,6 +10,7 @@ import { useAuth } from '@/hooks/useAuth.ts';
 import type { UploadPDFResponse } from 'types/apps/ocr/api.type.ts';
 import { useToast } from '@/hooks/useToast';
 import { useAtomCallback } from 'jotai/utils';
+// import path from 'node:path';
 
 export interface UploadContextType {
 	uploading: boolean;
@@ -110,6 +111,7 @@ export const UploadProvider = ({ children }: {children: React.ReactNode}) => {
 		setUploading(false);
 		setImageLoading(false);
 	}
+
 	const uploadImageAndStoreByIndex = async (file: File, source: string, target: string, index: number) => {
 		if (index < 0) return;
 		if (tesseractPageStore[index]) {
@@ -187,11 +189,18 @@ export const UploadProvider = ({ children }: {children: React.ReactNode}) => {
 			const pdfUploadStore = get(pdfPageStore);
 			console.log('getExtractFromPDFPage', page, pdfUploadStore);
 			if (!pdfUploadStore) return;
-			setImageExtracted(`${process.env.NEXT_PUBLIC_API_BASE_URL}/${pdfUploadStore.path}/output-${page.toString().padStart(3, '0')}.png`);
+			setImageExtracted(
+				[
+					process.env.NEXT_PUBLIC_API_BASE_URL,
+					pdfUploadStore.path,
+					`output-${(page + 1).toString().padStart(3, '0')}.png`
+				].join('/')
+			);
+
 			const response = await axios.v1.ocr.getExtractFromPDFPage(
 				clientId,
 				pdfUploadStore.id,
-				page,
+				page + 1,
 			);
 			if (response) {
 				setCurrentPage(response);
