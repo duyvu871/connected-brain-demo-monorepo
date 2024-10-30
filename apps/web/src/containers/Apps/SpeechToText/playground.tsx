@@ -81,13 +81,26 @@ function AppS2T() {
 		<DynamicContentLoaded>
 			<Center className="bg-zinc-950 h-[calc(100vh_-_59px)]">
 				<Flex align="center" className="gap-0" direction="row" h="100%" justify="center" w="100%">
-					{transcript_data ? (
-						<>
-							<Flex align="center" className="rounded-[2rem] gap-5 flex-grow-[7]" direction="column" h="100%"
-										justify="center">
+					{(isSectionLoad) ? !transcript_data?.transcript.length && (
+							<Flex align="center" className="gap-8 flex-col">
+								<RotateLoader
+									classNames={{
+										spinner: "scale-[2]",
+										// wrapper: "w-20 h-20"
+									}}
+								/>
+								<span className="text-zinc-100 (-dark:text-zinc-100 -text-zinc-700) text-2xl">
+								Wait a few minutes for the server to handle this audio...
+								</span>
+							</Flex>
+						) : null}
+					<>
+
 								{
-									isSectionLoad
-										? (
+									(isSectionLoad)
+										? Boolean(transcript_data?.transcript.length) && (
+										<Flex align="center" className="rounded-[2rem] gap-5 flex-grow-[7]" direction="column" h="100%"
+													justify="center">
 											<Flex align="center"
 														className="flex-grow w-full h-full gap-5"
 														direction="column"
@@ -101,12 +114,13 @@ function AppS2T() {
 													</Flex>
 												</Flex>
 											</Flex>
-										)
+										</Flex>
+									)
 										: (<StarterScreen />)
 								}
-							</Flex>
+
 							{
-								isSectionLoad ?
+								(isSectionLoad && Boolean(transcript_data?.transcript.length)) ?
 									<Center className="max-w-md min-w-96 flex-grow-[3] border-0 border-l border-zinc-800" h="100%" w="1/2">
 									<Flex align="center" className="flex-grow h-full bg-zinc-950 rounded-2xl p-5 gap-3" direction="column"
 												justify="start">
@@ -118,16 +132,6 @@ function AppS2T() {
 									: null
 							}
 						</>
-					)
-						: <Flex align="center" className="gap-4">
-								<RotateLoader classNames={{
-									spinner: "w-20 h-20"
-									}} />
-								<span className="dark:text-zinc-100 text-zinc-700 text-2xl">
-								Wait a few minutes for the server to handle this audio...
-								</span>
-							</Flex>
-					}
 				</Flex>
 			</Center>
 

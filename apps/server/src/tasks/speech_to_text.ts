@@ -4,12 +4,13 @@ import FileStorageService from '@/services/CURD/file_storage.service';
 import SpeechToTextService from '@/services/features/speech_to_text.service';
 import { SentencesResponse } from 'assemblyai';
 import mongoLoader from '@/loaders/mongo.loader';
-import { getRedis } from '@/configs/database/redis';
+import { getRedis, initRedis } from '@/configs/database/redis';
 
 export default async function SpeechToText(data: ConvertToWavJob['job_data']) {
 	try {
 		const isDevelopment = process.env.NODE_ENV === 'development';
 		await mongoLoader();
+		await initRedis();
 		const redis = getRedis().instanceRedis;
 		const channel = "s2t:transcript";
 
@@ -57,6 +58,7 @@ export default async function SpeechToText(data: ConvertToWavJob['job_data']) {
 			status: 'done'
 		});
 		if (newAudit && newAudit.status !== 'done') {
+			console.log(`redis publish to ${channel}, with data: ${JSON.stringify(newAudit)}`);
 			redis && redis.publish(channel, JSON.stringify(newAudit));
 		}
 		// console.log('global', global.__io);
