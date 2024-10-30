@@ -13,6 +13,7 @@ export async function POST(req: NextRequest) {
 		const { text } = (await req.json()) as {text: string};
 
 		const response = await fetch('http://14.224.188.206:8502/api/v1/t2s', {
+			method: "POST",
 			headers: {
 				'accept': 'application/json',
 				'Content-Type': 'application/x-www-form-urlencoded',
