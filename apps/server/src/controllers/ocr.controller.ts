@@ -53,7 +53,7 @@ const extractTextFromImage = async (filePath: string, targetLang: string, conten
 };
 
 const getNormalizedLanguage = (lang: string) => {
-	return isoLanguage[lang as ISOLangType] || lang || 'en';
+	return isoLanguage[lang as ISOLangType] || lang || 'vi';
 };
 
 export default class OCRController {

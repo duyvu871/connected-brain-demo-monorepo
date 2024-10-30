@@ -284,7 +284,7 @@ export default function Starter() {
 									<Square className="mr-2 h-4 w-4" /> Stop
 								</Button>
 								<Button className="text-zinc-700 dark:text-zinc-100 dark:bg-zinc-800 bg-zinc-100 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors" disabled={!text} onClick={handleDownload}>
-									<Download className="mr-2 h-4 w-4" /> Download 
+									<Download className="mr-2 h-4 w-4" /> Download
 								</Button>
 							</div>
 						</div>

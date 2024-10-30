@@ -55,6 +55,8 @@ export default class OCRValidation {
 		target: TranslateValidation.translateIsoCode("target"),
 	});
 	public static getExtractQuery = z.object({
+		// source: TranslateValidation.translateIsoCode("target"),
+		// target: TranslateValidation.translateIsoCode("target"),
 		clientId: z.string(),
 	});
 	public static getExtractParams = z.object({
