@@ -48,7 +48,7 @@ export default function Starter() {
 				// const systemVoices = synth.current!.getVoices()
 				const externalVoice: ExternalVoice = {
 					name: "Giọng miền bắc",
-					apiUrl: "/api/v1/t2s/"
+					apiUrl: "/api/v1/t2s"
 				}
 				setVoices([externalVoice])
 			}
@@ -79,9 +79,11 @@ export default function Starter() {
 						method: 'POST',
 						headers: {
 							'accept': 'application/json',
-							'Content-Type': 'application/x-www-form-urlencoded',
+							'Content-Type': 'application/json',
 						},
-						body: `text=${encodeURIComponent(text)}`
+						body: JSON.stringify({
+							text
+						})
 					});
 					const data: APIResponse = await response.json();
 					if (data.success) {

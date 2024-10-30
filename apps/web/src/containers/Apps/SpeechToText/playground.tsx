@@ -27,29 +27,31 @@ function AppS2T() {
 	const { getTranscript, getTranscriptList } = useTranscript();
 
 	useEffect(() => {
-		const socketConnectEndpoint =
-			`${process.env.NEXT_PUBLIC_API_BASE_URL}${api_route.API.feature.SPEECH_TO_TEXT.socket}`
-		console.log("socket place:", socketConnectEndpoint);
-		const socket = io(socketConnectEndpoint,
-			{
-				transports: ["websocket"], // use websocket only
-				addTrailingSlash: false, // remove trailing slash
-				path: "/socket/socket.io",
+		if (isSectionLoad) {
+			const socketConnectEndpoint =
+				`${process.env.NEXT_PUBLIC_API_BASE_URL}${api_route.API.feature.SPEECH_TO_TEXT.socket}`
+			console.log("socket place:", socketConnectEndpoint);
+			const socket = io(socketConnectEndpoint,
+				{
+					transports: ["websocket"], // use websocket only
+					addTrailingSlash: false, // remove trailing slash
+					path: "/socket/socket.io",
+				});
+			socket.on("connect", () => {
+				console.log("socket connected");
+				socket.on("s2t:transcript", (data) => {
+					console.log(data);
+				})
 			});
-		socket.on("connect", () => {
-			console.log("socket connected");
-			socket.on("s2t:transcript", (data) => {
-				console.log(data);
+			socket.on('disconnet', () => {
+				console.log("socket dis connected");
 			})
-		});
-		socket.on('disconnet', () => {
-			console.log("socket dis connected");
-		})
 
-		return () => {
-			if (socket) socket.close();
+			return () => {
+				if (socket) socket.close();
+			}
 		}
-	}, [])
+	}, [isSectionLoad])
 
 	useLayoutEffect(() => {
 		if (currentSection) {

@@ -10,7 +10,7 @@ import { Server } from 'socket.io';
 import { constants } from '@repo/utils';
 import path from 'path';
 import * as http from 'node:http';
-import { getRedis } from '@/configs/database/redis';
+import { getRedis, initRedis } from '@/configs/database/redis';
 
 const {api_route} = constants;
 
@@ -23,6 +23,7 @@ export default class SpeechToTextService {
 			socket.on('disconnect', () => {
 				console.log('user disconnected');
 			});
+			await initRedis()
 			const redis = getRedis().instanceRedis;
 			const channel = "s2t:transcript";
 			// @ts-ignore
@@ -30,6 +31,10 @@ export default class SpeechToTextService {
 				console.log("redis subscribe s2t message: ", message);
 				socket.emit("s2t:transcript", message);
 			});
+
+			redis && redis.on('message', function(channel, message) {
+				console.log(channel, message);
+			})
 
 			socket.on("get-s2t-status", async (data: {id: string}) => {
 					try {

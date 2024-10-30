@@ -57,9 +57,9 @@ export default async function SpeechToText(data: ConvertToWavJob['job_data']) {
 			transcript: transcripts_parse.sentences as TranscriptSentence[],
 			status: 'done'
 		});
-		if (newAudit && newAudit.status !== 'done') {
+		if (newAudit && newAudit.status == 'done') {
 			console.log(`redis publish to ${channel}, with data: ${JSON.stringify(newAudit)}`);
-			redis && redis.publish(channel, JSON.stringify(newAudit));
+			redis && await redis.publish(channel, JSON.stringify(newAudit));
 		}
 		// console.log('global', global.__io);
 		// global.__io.emit(`s2t:transcript:${data.id}`, transcripts_parse.sentences);
