@@ -23,14 +23,14 @@ function AppS2T() {
 	const [currentSection] = useAtom(sectionId);
 	const [transcript_data, setTranscriptData] = useAtom(transcript);
 	const [getC, setCurrentFile] = useAtom(audioFile);
-	// const [setIOSocket] = useAtom(IOSocketAtom);
+	const [, setIOSocket] = useAtom(IOSocketAtom);
 	const { getTranscript, getTranscriptList } = useTranscript();
 
 	useEffect(() => {
 		if (isSectionLoad) {
 			const socketConnectEndpoint =
 				`${process.env.NEXT_PUBLIC_API_BASE_URL}${api_route.API.feature.SPEECH_TO_TEXT.socket}`
-			console.log("socket place:", socketConnectEndpoint);
+			// console.log("socket place:", socketConnectEndpoint);
 			const socket = io(socketConnectEndpoint,
 				{
 					transports: ["websocket"], // use websocket only
@@ -38,15 +38,23 @@ function AppS2T() {
 					path: "/socket/socket.io",
 				});
 			socket.on("connect", () => {
-				console.log("socket connected");
+				// console.log("socket connected");
 				socket.on("s2t:transcript", (data) => {
-					console.log(data);
+					// console.log(data);
+					const transcriptData = JSON.parse(data);
+					console.log("transcriptData", transcriptData);
+					setTranscriptData(transcriptData);
+					setCurrentFile({
+						url: transcriptData.cloudPath,
+						name: transcriptData.originName,
+					});
 				})
 			});
 			socket.on('disconnet', () => {
-				console.log("socket dis connected");
-			})
-
+				// console.log("socket dis connected");
+			});
+			socket.emit("get-s2t-status", {id: currentSection});
+			setIOSocket(socket);
 			return () => {
 				if (socket) socket.close();
 			}
@@ -58,24 +66,23 @@ function AppS2T() {
 			(async () => {
 				await getTranscriptList();
 				// get transcript data if transcript data not have data
-				if (!transcript_data) {
-					const transcriptData = await getTranscript(currentSection);
-					setTranscriptData(transcriptData);
-					setCurrentFile({
-						url: transcriptData.cloudPath,
-						name: transcriptData.originName,
-					});
-					return;
-				}
-				// check if current section has local data
-				if (!transcript_data.auditPath.includes(currentSection)) {
-					const transcriptData = await getTranscript(currentSection);
-					setTranscriptData(transcriptData);
-					setCurrentFile({
-						url: transcriptData.cloudPath,
-						name: transcriptData.originName,
-					});
-				}
+				// if (!transcript_data) {
+				// 	const transcriptData = await getTranscript(currentSection);
+				// 	setTranscriptData(transcriptData);
+				// 	setCurrentFile({
+				// 		url: transcriptData.cloudPath,
+				// 		name: transcriptData.originName,
+				// 	});
+				// }
+				// // check if current section has local data
+				// if (!transcript_data?.auditPath.includes(currentSection)) {
+				// 	const transcriptData = await getTranscript(currentSection);
+				// 	setTranscriptData(transcriptData);
+				// 	setCurrentFile({
+				// 		url: transcriptData.cloudPath,
+				// 		name: transcriptData.originName,
+				// 	});
+				// }
 			})();
 		}
 	}, [currentSection]);

@@ -37,7 +37,7 @@ export default async function SpeechToText(data: ConvertToWavJob['job_data']) {
 		// // console.log('Transcript:', transcripts);
 		// const transcripts_parse = await CloudSpeech.getTranscript(transcripts.transcriptId, 'sentences') as SentencesResponse;
 		const parallelHandle = await Promise.all([
-			CloudSpeech.getTranscriptConnectedBrain(file_path),
+			CloudSpeech.getTranscriptConnectedBrainV1(file_path),
 			FileStorageService.get_audio_duration(file_path)
 		])
 		const transcripts_parse = parallelHandle[0];
@@ -57,10 +57,10 @@ export default async function SpeechToText(data: ConvertToWavJob['job_data']) {
 			transcript: transcripts_parse.sentences as TranscriptSentence[],
 			status: 'done'
 		});
-		if (newAudit && newAudit.status == 'done') {
-			console.log(`redis publish to ${channel}, with data: ${JSON.stringify(newAudit)}`);
-			redis && await redis.publish(channel, JSON.stringify(newAudit));
-		}
+
+		console.log(`redis publish to ${channel}`);
+		console.log('redis', redis?.status);
+		redis && await redis.publish(channel, JSON.stringify(newAudit));
 		// console.log('global', global.__io);
 		// global.__io.emit(`s2t:transcript:${data.id}`, transcripts_parse.sentences);
 		return 'DONE';

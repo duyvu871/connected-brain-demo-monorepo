@@ -11,6 +11,7 @@ import { constants } from '@repo/utils';
 import path from 'path';
 import * as http from 'node:http';
 import { getRedis, initRedis } from '@/configs/database/redis';
+import Redis from 'ioredis';
 
 const {api_route} = constants;
 
@@ -23,33 +24,26 @@ export default class SpeechToTextService {
 			socket.on('disconnect', () => {
 				console.log('user disconnected');
 			});
-			await initRedis()
-			const redis = getRedis().instanceRedis;
-			const channel = "s2t:transcript";
-			// @ts-ignore
-			redis && await redis.subscribe(channel, (message: string) => {
-				console.log("redis subscribe s2t message: ", message);
-				socket.emit("s2t:transcript", message);
-			});
-
-			redis && redis.on('message', function(channel, message) {
-				console.log(channel, message);
-			})
 
 			socket.on("get-s2t-status", async (data: {id: string}) => {
+				console.log("get-s2t-status", data);
 					try {
-						const s2tStore = await S2t.findOne({_id: new Types.ObjectId(data.id)});
-						if (!s2tStore) {
-							throw new Error("Transcript not found");
-						}
-						// @ts-ignore
-						const extractData = await s2tStore.exec();
-						if (!extractData) {
-							throw new Error("Transcript not found");
-						}
+						const auditData = await this.get_audit(data.id);
+						if (auditData.status === 'done') {
+							socket.emit("s2t:transcript", JSON.stringify(auditData));
+						} else if (auditData.status === 'processing') {
+							await initRedis();
+							const redis = <Redis>getRedis().instanceRedis;
+							const channel = "s2t:transcript";
+							// @ts-ignore
+							redis && await redis.subscribe(channel);
+							redis && redis.on('message', (channel: string, message:string) => {
+								console.log("channel: ", channel);
+								console.log("redis subscribe s2t message: ", message);
+								socket.emit("s2t:transcript", message);
+							})
 
-						socket.emit("s2t:transcript", extractData);
-
+						}
 					} catch (e: any) {
 						console.log(e);
 						socket.emit("error", e.message);

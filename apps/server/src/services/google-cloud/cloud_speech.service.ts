@@ -29,6 +29,23 @@ interface TranscriptResponses {
 	full: Transcript;
 }
 
+export type TranscriptResponseOrigin = {
+	success: boolean;
+	message: string|null;
+	retry: boolean;
+	data: {
+		transcript: string;
+		language: string;
+		timestamps: {
+			id: number;
+			seek: number;
+			start: number;
+			end: number;
+			text: string;
+		}[];
+	};
+}
+
 export interface TranscriptSentence {
 	start: number;
 	end: number;
@@ -45,7 +62,9 @@ export interface TranscriptWord {
 	speaker: string;
 }
 
-export type Sentences = TranscriptSentence[]
+export type Sentences = TranscriptSentence[];
+
+
 
 export default class CloudSpeech {
 	private static client: any;
@@ -221,7 +240,7 @@ public static async getTemporaryToken(): Promise<string> {
 		}
 	}
 
-	public static async getTranscriptConnectedBrain(
+	public static async getTranscriptConnectedBrainV2(
 		filePath: string,
 	): Promise<{sentences: TranscriptSentence[]} | null> {
 		const S2T_API_ENDPOINT = 'http://127.0.0.1:8502/api/v1/s2t/version2'
@@ -271,6 +290,74 @@ public static async getTemporaryToken(): Promise<string> {
 							end: transformTimeToMilliSecond(word.end),
 						}))
 					}))
+				});
+			} catch (e) {
+				rej(e);
+			}
+		})
+	}
+
+	public static async getTranscriptConnectedBrainV1(
+		filePath: string,
+	): Promise<{sentences: TranscriptSentence[]} | null> {
+		const S2T_API_ENDPOINT = 'http://127.0.0.1:8502/api/v1/s2t'
+		const fileName = path.basename(filePath);
+		console.log('file-name', fileName);
+		return new Promise(async (res, rej) => {
+			try {
+				const fileType = (await import('file-type')).fileTypeFromBuffer;
+				const file = await fsPromise.readFile(filePath);
+				const contentType = <FileTypeResult>await fileType(file);
+				const fileBlob = new Blob([file], { type: contentType.mime });
+				console.log(fileName);
+				const formData = new FormData();
+				formData.append('file', fileBlob, fileName);
+				const api = process.env.NODE_ENV === 'development' ? "http://14.224.188.206:8502/api/v1/s2t" : S2T_API_ENDPOINT;
+
+				const response = await fetch(api, {
+					method: "POST",
+					body: formData,
+				})
+				const responseChunking = (await response.json()) as TranscriptResponseOrigin;
+				if (!responseChunking.success) {
+					console.log(
+						`s2t error with status: ${response.status}, response: ${JSON.stringify(responseChunking)}`,
+					);
+				}
+				const transcript = responseChunking.data.transcript;
+				const timestamp = responseChunking.data.timestamps;
+				const transformTimeToMilliSecond = (second: number): number => {
+					return parseInt((second*1000).toFixed(0))
+				}
+
+				res({
+					sentences: timestamp.map((sentence) => {
+						const start = transformTimeToMilliSecond(sentence.start);
+						const end = transformTimeToMilliSecond(sentence.end);
+						const duration = end - start;
+						const eachCharacterDuration = duration / sentence.text.length;
+						let previousWordEnd = start;
+						const words = sentence.text.split(' ').map((word, index) => {
+							const startWordTime = previousWordEnd + eachCharacterDuration;
+							const endWordTime = startWordTime + (word.length * eachCharacterDuration);
+							previousWordEnd = endWordTime;
+							return {
+								start: startWordTime,
+								end: endWordTime,
+								text: word,
+								confidence: 1,
+								speaker: 'speaker',
+							}
+						})
+
+						return ({
+							...sentence,
+							start: start,
+							end: end,
+							words: words,
+							speaker: 'speaker',
+						})
+					})
 				});
 			} catch (e) {
 				rej(e);

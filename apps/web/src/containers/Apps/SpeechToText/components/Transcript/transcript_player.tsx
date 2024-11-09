@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useRef } from 'react';
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { Center, Flex } from '@mantine/core';
 import { Tooltip } from '@nextui-org/react';
 import { cn } from '@repo/utils';
@@ -25,6 +25,7 @@ import { useInterval } from '@/hooks/client/useInterval';
 import { Howl } from 'howler';
 
 function TranscriptPlayer() {
+	const [currentPlayerTime, setCurrentPlayerTime] = useState<number>(0);
 	const [currentTime, setCurrentTime] = useAtom<number>(audioCurrentTime);
 	const [duration, _] = useAtom<number>(audioDuration);
 	const [enableEdit, setEnableEdit] = useAtom<boolean>(enableTranscriptEdit);
@@ -38,11 +39,15 @@ function TranscriptPlayer() {
 	const transcriptItemRef = useRef<Record<string, HTMLDivElement>>({});
 
 	const { start: startInterval, stop: stopInterval } = useInterval(
-		() => setCurrentTime((s) => s + 200),
-		200,
+		() => setCurrentTime((s) => s + 50),
+		50,
 	);
+	// const { start: startPLayerInterval, stop: stopPLayerInterval } = useInterval(
+	// 	() => setCurrentPlayerTime((s) => s + 1000),
+	// 	1000,
+	// );
 
-	useEffect(() => {
+	const initializeAudio = useCallback(() => {
 		if (currentFile) {
 			const audioSegments = transcriptList?.transcript.map((sentence) => {
 				const start = sentence.start;
@@ -59,46 +64,101 @@ function TranscriptPlayer() {
 				src: [currentFile.url],
 				autoplay: false,
 				html5: true, // use html5 audio
-				onload: () => {
-
-				},
+				onload: () => {},
 				onplay: () => {
 					console.log('onplay');
 					setIsPlaying(true);
 					startInterval();
+					// startPLayerInterval();
 				},
 				onpause: () => {
 					console.log('onpause');
 					setIsPlaying(false);
 					stopInterval();
+					// stopPLayerInterval();
 				},
 				onend: () => {
 					console.log('onend');
 					setIsPlaying(false);
 					stopInterval();
+					// startPLayerInterval();
 					setCurrentTime(0);
 				},
-				onseek: (soundId) => {
-					// // console.log('onseek', soundId);
-					// const currentSeek = soundRef.current?.seek() as number * 1000;
-					// console.log('currentSeek', currentSeek);
-					// // setCurrentTime(currentSeek);
-					// const findActiveSentence = transcriptList?.transcript.findIndex((sentence) => {
-					// 	return currentSeek >= sentence.start && currentSeek <= sentence.end;
-					// });
-					// // console.log('findActiveSentence: ', findActiveSentence);
-					// if (findActiveSentence !== -1 && `audio-${currentFile.name}-${findActiveSentence}` !== activeSentence) {
-					// 	// setActiveTranscriptSentence(`audio-${currentFile.name}-${findActiveSentence}`);
-					// }
-				},
+				onseek: (soundId) => {},
 			});
 			setAudioPlayerInstance(soundRef.current);
 		}
+	}, [currentFile, setAudioPlayerInstance, setCurrentTime, setIsPlaying, startInterval, stopInterval, transcriptList]);
 
+	useEffect(() => {
+		document.addEventListener('click', initializeAudio, { once: true });
 		return () => {
-			soundRef.current?.unload(); // clear sound data
+			document.removeEventListener('click', initializeAudio);
 		};
-	}, [currentFile]);
+	}, [initializeAudio]);
+
+	useEffect(() => {
+		document.addEventListener('click', initializeAudio, { once: true });
+		return () => {
+			document.removeEventListener('click', initializeAudio);
+		};
+	}, [initializeAudio]);
+
+	// useEffect(() => {
+	// 	if (currentFile) {
+	// 		const audioSegments = transcriptList?.transcript.map((sentence) => {
+	// 			const start = sentence.start;
+	// 			const end = sentence.end;
+	// 			const text = sentence.text;
+	// 			return {
+	// 				start,
+	// 				end,
+	// 				text,
+	// 			};
+	// 		});
+	//
+	// 		soundRef.current = new Howl({
+	// 			src: [currentFile.url],
+	// 			autoplay: false,
+	// 			html5: true, // use html5 audio
+	// 			onload: () => {},
+	// 			onplay: () => {
+	// 				console.log('onplay');
+	// 				setIsPlaying(true);
+	// 				startInterval();
+	// 			},
+	// 			onpause: () => {
+	// 				console.log('onpause');
+	// 				setIsPlaying(false);
+	// 				stopInterval();
+	// 			},
+	// 			onend: () => {
+	// 				console.log('onend');
+	// 				setIsPlaying(false);
+	// 				stopInterval();
+	// 				setCurrentTime(0);
+	// 			},
+	// 			onseek: (soundId) => {
+	// 				// // console.log('onseek', soundId);
+	// 				// const currentSeek = soundRef.current?.seek() as number * 1000;
+	// 				// console.log('currentSeek', currentSeek);
+	// 				// // setCurrentTime(currentSeek);
+	// 				// const findActiveSentence = transcriptList?.transcript.findIndex((sentence) => {
+	// 				// 	return currentSeek >= sentence.start && currentSeek <= sentence.end;
+	// 				// });
+	// 				// // console.log('findActiveSentence: ', findActiveSentence);
+	// 				// if (findActiveSentence !== -1 && `audio-${currentFile.name}-${findActiveSentence}` !== activeSentence) {
+	// 				// 	// setActiveTranscriptSentence(`audio-${currentFile.name}-${findActiveSentence}`);
+	// 				// }
+	// 			},
+	// 		});
+	// 		setAudioPlayerInstance(soundRef.current);
+	// 	}
+	//
+	// 	return () => {
+	// 		soundRef.current?.unload(); // clear sound data
+	// 	};
+	// }, [currentFile]);
 
 	const togglePause = () => {
 		// console.log(soundRef.current);
@@ -125,9 +185,10 @@ function TranscriptPlayer() {
 		soundRef.current?.seek(newTime / 1000);
 	};
 	const handleSeek = (value: number) => {
-		if (soundRef.current) {
-			soundRef.current.seek(value / 1000);
-		}
+		// if (soundRef.current) {
+		// 	console.log('handleSeek', value);
+		// 	soundRef.current.seek(value / 1000);
+		// }
 	};
 	const share = () => {
 	};
@@ -151,8 +212,10 @@ function TranscriptPlayer() {
 	useEffect(() => {
 		if (currentTime >= duration) {
 			stopInterval();
+			// stopPLayerInterval();
 			setIsPlaying(false);
 			setCurrentTime(0);
+			setCurrentPlayerTime(0);
 		} else if (isPlaying) {
 				handleSeek(currentTime);
 			}

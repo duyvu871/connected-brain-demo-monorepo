@@ -20,7 +20,7 @@ export class ConnectedbrainBot extends ChatbotService {
 	protected errorResponse = 'Xin lỗi, Brainiac gặp sự cố trong quá trình xử lý yêu cầu của bạn. Vui lòng thử lại sau.';
 	constructor() {
 		super();
-		this.apiRoute = 'http://localhost:9090';
+		this.apiRoute = 'http://localhost:8502/';
 		this.developmentMode = false//process.env.NODE_ENV === 'development';
 	}
 	async startChat(isUsePrompt: boolean){
