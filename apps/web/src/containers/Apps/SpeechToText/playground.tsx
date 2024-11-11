@@ -30,7 +30,7 @@ function AppS2T({id}: {id?: string}) {
 		if (!isSectionLoad && id) {
 			setCurrentSection(id);
 		}
-	}, []);
+	}, [id, isSectionLoad, setCurrentSection]);
 
 	useEffect(() => {
 		if (isSectionLoad) {
@@ -44,7 +44,8 @@ function AppS2T({id}: {id?: string}) {
 					path: "/socket/socket.io",
 				});
 			socket.on("connect", () => {
-				// console.log("socket connected");
+				socket.emit("get-s2t-status", { id: currentSection });
+				console.log("socket connected");
 				socket.on("s2t:transcript", (data) => {
 					// console.log(data);
 					const transcriptData = JSON.parse(data);
@@ -56,10 +57,12 @@ function AppS2T({id}: {id?: string}) {
 					});
 				})
 			});
-			socket.on('disconnet', () => {
-				// console.log("socket dis connected");
+			socket.on('disconnect', () => {
+				console.log("socket dis connected");
 			});
-			socket.emit("get-s2t-status", {id: currentSection});
+			socket.on("connect_error", (error) => {
+				console.error("Socket connection error:", error);
+			});
 			setIOSocket(socket);
 			return () => {
 				if (socket) socket.close();

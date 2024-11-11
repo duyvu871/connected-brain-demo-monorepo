@@ -26,17 +26,22 @@ export async function workerProcessor(taskName: string ,data: Promise<any>, job:
 }
 
 export async function workerHandler(job: Job<WorkerJob>){
-	switch (job.data.type) {
-		case 'example_task':
-			return await workerProcessor('example_task', handleHeavyTask(job.data.job_data), job);
-		case 'convert_to_wav':
-			const wavData = job.data as ConvertToWavJob;
-			return await workerProcessor('convert_to_wav', ConvertToWavTask(wavData.job_data), job);
-		case 'speech_to_text':
-			const s2tData = job.data as SpeechToTextJob;
-			return await workerProcessor('speech_to_text', SpeechToText(s2tData.job_data), job);
-		default:
-			return Promise.resolve('DONE');
+	try {
+		switch (job.data.type) {
+			case 'example_task':
+				return await workerProcessor('example_task', handleHeavyTask(job.data.job_data), job);
+			case 'convert_to_wav':
+				const wavData = job.data as ConvertToWavJob;
+				return await workerProcessor('convert_to_wav', ConvertToWavTask(wavData.job_data), job);
+			case 'speech_to_text':
+				const s2tData = job.data as SpeechToTextJob;
+				return await workerProcessor('speech_to_text', SpeechToText(s2tData.job_data), job);
+			default:
+				return Promise.resolve('DONE');
+		}
+	} catch (error) {
+		console.error(`Error in worker type:${job.data.type} handler`, error);
+		return Promise.resolve("ERROR");
 	}
 }
 
@@ -47,6 +52,10 @@ const redisInstance = new Redis({
 	connectTimeout: 3600000, // 1 hour
 	...(process.env.REDIS_PASSWORD ? { password: process.env.REDIS_PASSWORD } : {}),
 	...(process.env.REDIS_USERNAME ? { username: process.env.REDIS_USERNAME } : {}),
+	retryStrategy: (times) => {
+		// Retry after 2 seconds
+		return Math.min(times * 100, 2000);
+	},
 });
 
 if (!redisInstance) {

@@ -25,6 +25,10 @@ export default class BackgroundTaskService {
 					// 	password: env.REDIS_PASSWORD,
 					// 	username: env.REDIS_USERNAME,
 					// } : {}),
+					retryStrategy: (times) => {
+						// Retry after 2 seconds
+						return Math.min(times * 100, 2000);
+					},
 				},
 			});
 		}
