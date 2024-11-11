@@ -29,12 +29,13 @@ export default class SpeechToTextService {
 				// console.log("get-s2t-status", data);
 					try {
 						const auditData = await this.get_audit(data.id);
+						console.log('status:', auditData.status);
 						if (auditData.status === 'done') {
 							socket.emit("s2t:transcript", JSON.stringify(auditData));
 						} else if (auditData.status === 'processing') {
 							await initRedis();
 							const redis = <Redis>getRedis().instanceRedis;
-							const channel = "s2t:transcript";
+							const channel = `s2t:transcript:${data.id.toString()}`;
 							// @ts-ignore
 							redis && await redis.subscribe(channel);
 							redis && redis.on('message', (channel: string, message:string) => {

@@ -10,21 +10,20 @@ interface DynamicContentLoadedProps {
 };
 
 function DynamicContentLoaded({ children }: DynamicContentLoadedProps) {
-	const router = useRouter();
 	const [ready, setReady] = useState<boolean>(false);
-	const [currentSection, setCurrentSection] = useAtom(sectionId);
-	const pathname = usePathname();
+	// const [currentSection, setCurrentSection] = useAtom(sectionId);
+	// const pathname = usePathname();
 	// check if section
 	useEffect(() => {
-		const url = new URL(window.location.href);
-		const section = url.searchParams.get('section');
-		setCurrentSection(section);
+		// const url = new URL(window.location.href);
+		// const section = url.searchParams.get('section');
+		// setCurrentSection(section);
 		setReady(true);
-	}, [pathname]);
+	}, []);
 
 	if (!ready)
 		return (
-			<Center h={'100%'} w={'100%'}>
+			<Center h="100%" w="100%">
 				<Loader color="green" size="lg" />
 			</Center>
 		);

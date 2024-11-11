@@ -12,7 +12,7 @@ export default async function SpeechToText(data: ConvertToWavJob['job_data']) {
 		await mongoLoader();
 		await initRedis();
 		const redis = getRedis().instanceRedis;
-		const channel = "s2t:transcript";
+		const channel = `s2t:transcript:${data.id.toString()}`;
 
 		const file_path = data.file_name;
 		// const file_content = FileStorageService.read_file(file_path);

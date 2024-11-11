@@ -66,7 +66,7 @@ const UploadAudio: React.FC<UploadAudioProps> = ({
 				success('Audio uploaded successfully!');
 				setSectionId(uploadResponse.id);
 				if (uploadResponse.id) {
-					router.push('/app/speech-to-text?section=' + uploadResponse.id);
+					router.push('/app/speech-to-text/' + uploadResponse.id);
 				}
 				setSelectedFile(null);
 			} catch (uploadError) {

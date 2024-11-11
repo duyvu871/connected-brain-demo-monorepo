@@ -17,14 +17,20 @@ import { io } from 'socket.io-client';
 import { constants } from '@repo/utils';
 import RotateLoader from '@ui/resource-ui/Loader/spinner.tsx';
 
-function AppS2T() {
+function AppS2T({id}: {id?: string}) {
 	const {api_route} = constants;
 	const [isSectionLoad, _] = useAtom(isSectionLoaded);
-	const [currentSection] = useAtom(sectionId);
+	const [currentSection, setCurrentSection] = useAtom(sectionId);
 	const [transcript_data, setTranscriptData] = useAtom(transcript);
 	const [getC, setCurrentFile] = useAtom(audioFile);
 	const [, setIOSocket] = useAtom(IOSocketAtom);
 	const { getTranscript, getTranscriptList } = useTranscript();
+
+	useLayoutEffect(() => {
+		if (!isSectionLoad && id) {
+			setCurrentSection(id);
+		}
+	}, []);
 
 	useEffect(() => {
 		if (isSectionLoad) {

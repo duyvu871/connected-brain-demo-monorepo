@@ -7,7 +7,6 @@ import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 // import Starter from '@/containers/Apps_v1/SpeechToText/starter.tsx';
 
-
 async function Page() {
   const session = await getServerAuthSession();
   const header = headers();
