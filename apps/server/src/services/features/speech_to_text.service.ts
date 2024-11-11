@@ -26,7 +26,7 @@ export default class SpeechToTextService {
 			});
 
 			socket.on("get-s2t-status", async (data: {id: string}) => {
-				console.log("get-s2t-status", data);
+				// console.log("get-s2t-status", data);
 					try {
 						const auditData = await this.get_audit(data.id);
 						if (auditData.status === 'done') {

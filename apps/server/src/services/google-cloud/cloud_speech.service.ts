@@ -330,13 +330,14 @@ public static async getTemporaryToken(): Promise<string> {
 					return parseInt((second*1000).toFixed(0))
 				}
 
-				res({
+				const resolveTranscript = {
 					sentences: timestamp.map((sentence) => {
 						const start = transformTimeToMilliSecond(sentence.start);
 						const end = transformTimeToMilliSecond(sentence.end);
 						const duration = end - start;
 						const eachCharacterDuration = duration / sentence.text.length;
 						let previousWordEnd = start;
+
 						const words = sentence.text.split(' ').map((word, index) => {
 							const startWordTime = previousWordEnd + eachCharacterDuration;
 							const endWordTime = startWordTime + (word.length * eachCharacterDuration);
@@ -358,7 +359,11 @@ public static async getTemporaryToken(): Promise<string> {
 							speaker: 'speaker',
 						})
 					})
-				});
+				}
+
+				console.log('transcript', JSON.stringify(resolveTranscript));
+
+				res(resolveTranscript);
 			} catch (e) {
 				rej(e);
 			}

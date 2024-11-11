@@ -66,10 +66,10 @@ const initRedis = () => {
 	}
 	const instanceRedis = new Redis({
 		enableAutoPipelining: true,
-		host: env.REDIS_HOST,
+		host: process.env.REDIS_HOST,
 		port: parseInt(process.env.REDIS_PORT||'6379'),
-		// password: env.REDIS_PASSWORD,
-		// username: env.REDIS_USERNAME,
+		...(process.env.REDIS_PASSWORD ? { password: process.env.REDIS_PASSWORD } : {}),
+		...(process.env.REDIS_USERNAME ? { username: process.env.REDIS_USERNAME } : {}),
 	});
 	client.instanceRedis = instanceRedis;
 	handleEventConnect(instanceRedis);

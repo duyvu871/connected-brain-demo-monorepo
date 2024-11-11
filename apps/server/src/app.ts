@@ -16,7 +16,7 @@ global.__rootdir = path.resolve(__dirname, '../');
 async function startServer() {
     const isProduction = process.env.NODE_ENV === 'production';
     const DOTENV = dotenv.config({
-        path: path.resolve(__dirname, isProduction ? '../.env' : '../.env.example')
+        path: path.resolve(__dirname, isProduction ? '../.env' : '../.env')
     }); // Load environment variables from .env file
     loadEnv(DOTENV.parsed);
     const listenPort = process.env.PORT;

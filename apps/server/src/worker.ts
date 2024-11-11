@@ -13,7 +13,7 @@ import path from 'path';
 const isProduction = process.env.NODE_ENV === 'production';
 
 const DOTENV = dotenv.config({
-	path: path.resolve(__dirname, isProduction ? '../.env' : '../.env.example') //process.cwd() + '/.env',
+	path: path.resolve(__dirname, isProduction ? '../.env' : '../.env') //process.cwd() + '/.env',
 });
 
 loadEnv(DOTENV.parsed);
@@ -45,10 +45,8 @@ const redisInstance = new Redis({
 	port: parseInt(process.env.REDIS_PORT as string),
 	maxRetriesPerRequest: null,
 	connectTimeout: 3600000, // 1 hour
-	// ...(isProduction ? {
-	// 	password: process.env.REDIS_PASSWORD,
-	// 	username: process.env.REDIS_USERNAME
-	// } : {}),
+	...(process.env.REDIS_PASSWORD ? { password: process.env.REDIS_PASSWORD } : {}),
+	...(process.env.REDIS_USERNAME ? { username: process.env.REDIS_USERNAME } : {}),
 });
 
 if (!redisInstance) {
