@@ -87,7 +87,9 @@ export async function signIn(credentials: UserRecord<'role'>) {
 		// redirect: "follow"
 	};
 
-	const response = await fetch(process.env.API_ENDPOINT + '/api/v1/auth/login', requestOptions);
+	const api_endpoint = 'http://localhost:3001'//process.env.API_ENDPOINT;
+
+	const response = await fetch(api_endpoint + '/api/v1/auth/login', requestOptions);
 	const result = await response.json();
 	// console.log(result);
 	if (response.status !== 200) {

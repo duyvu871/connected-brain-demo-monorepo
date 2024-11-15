@@ -36,7 +36,7 @@ function AppS2T({id}: {id?: string}) {
 		if (isSectionLoad) {
 			const socketConnectEndpoint =
 				`${process.env.NEXT_PUBLIC_API_BASE_URL}${api_route.API.feature.SPEECH_TO_TEXT.socket}`
-			// console.log("socket place:", socketConnectEndpoint);
+			console.log("socket place:", socketConnectEndpoint);
 			const socket = io(socketConnectEndpoint,
 				{
 					transports: ["websocket"], // use websocket only
@@ -65,7 +65,7 @@ function AppS2T({id}: {id?: string}) {
 			});
 			setIOSocket(socket);
 			return () => {
-				if (socket) socket.close();
+				if (socket) socket.disconnect();
 			}
 		}
 	}, [isSectionLoad])
