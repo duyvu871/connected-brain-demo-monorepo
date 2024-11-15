@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { file } from '@repo/utils';
 import { useAtom } from 'jotai/index';
 import { currentTesseractPage } from '@/containers/Apps/OCRScan/states/starter.ts';
+import LoadingRotate from '@/containers/Apps/OCRScan/components/loading-rotate.tsx';
 
 interface VisualTextSegmentProps {
 	image: string | Buffer | ArrayBuffer | DataView;
@@ -78,6 +79,7 @@ function VisualTextSegment({image, imageType}: VisualTextSegmentProps) {
 				// unoptimized
 				width={850}
 			/>
+			<LoadingRotate />
 		</Box>
 	);
 }

@@ -186,6 +186,7 @@ export const UploadProvider = ({ children }: {children: React.ReactNode}) => {
 
 	const getExtractFromPDFPage = useAtomCallback(async (get, set, page: number) => {
 		try {
+			setUploading(true);
 			const pdfUploadStore = get(pdfPageStore);
 			console.log('getExtractFromPDFPage', page, pdfUploadStore);
 			if (!pdfUploadStore) return;
@@ -203,9 +204,11 @@ export const UploadProvider = ({ children }: {children: React.ReactNode}) => {
 				page + 1,
 			);
 			if (response) {
+				setUploading(false);
 				setCurrentPage(response);
 				setExtractedText(response.text);
 			} else {
+				setUploading(false);
 				setOcrError('An error occurred while extracting text from the PDF');
 			}
 		} catch (error) {

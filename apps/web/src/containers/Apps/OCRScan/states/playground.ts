@@ -24,3 +24,4 @@ export const pageStore = atom<TesseractPage[]>([]);
 export const isPDFAtom = atom<boolean>(false);
 export const pdfPageStore = atom<UploadPDFResponse|null>(null);
 export const currentImageExtracted = atom<string | null>(null);
+export const loadingAtom = atom<boolean>(false);

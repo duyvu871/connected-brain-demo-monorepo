@@ -249,17 +249,19 @@ export default class OCRController {
 					sourceLang = `${sourceLang}+${targetLang}`;
 				}
 
+				console.log('getExtract', id, pageIndex);
+
 				const ocrStore = await OcrModel.findOne({ _id: new Types.ObjectId(id) });
 				if (!ocrStore) {
 					throw new Error('Id not found');
 				}
 
-				const pageResult = ocrStore.pages[parseInt(pageIndex)].result;
+				const pageResult = ocrStore.pages[parseInt(pageIndex) - 1].result;
 				if (pageResult) {
 					response_header_template(res).status(HttpStatusCode.Ok).send({
 						text: pageResult.text,
 						words: pageResult.words.map((word) => ({ bbox: word.bbox, baseline: 0 })),
-					});
+					}).end();
 				}
 
 				const imagePath = path.join(
@@ -279,7 +281,7 @@ export default class OCRController {
 					ocrStore.pages[parseInt(pageIndex)].result = page;
 					await ocrStore.save();
 				} catch (updateError: any) {
-					console.error(updateError);
+					console.error('update error:', updateError);
 				}
 
 				if (!page) {
@@ -302,6 +304,7 @@ export default class OCRController {
 					words: page.words.map((word) => ({ bbox: word.bbox, baseline: 0})),
 				});
 			} catch (error: any) {
+
 				response_header_template(res)
 					.status(error.statusCode || HttpStatusCode.InternalServerError)
 					.send({ message: error.message });

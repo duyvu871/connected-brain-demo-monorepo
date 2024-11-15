@@ -91,7 +91,7 @@ export async function signIn(credentials: UserRecord<'role'>) {
 	console.log('api_endpoint', api_endpoint);
 	const response = await fetch(api_endpoint + '/api/v1/auth/login', requestOptions);
 	const result = await response.json();
-	// console.log(result);
+	console.log(result);
 	if (response.status !== 200) {
 		throw new Error(result.errors || result.message);
 	}
