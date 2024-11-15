@@ -21,7 +21,7 @@ export default function RootLayout({
         <html lang="en" suppressHydrationWarning>
             <body className={cn(
               fontSans.className,
-              "flex justify-center items-center w-full min-h-screen h-fit font-sans ",
+              "flex justify-center items-center w-full min-h-screen h-fit font-sans overflow-hidden",
             )}>
             <ThemeProvider
               attribute="class"

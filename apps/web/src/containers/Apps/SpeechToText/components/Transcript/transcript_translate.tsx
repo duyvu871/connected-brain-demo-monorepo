@@ -122,11 +122,11 @@ export const TranscriptTranslate = () => {
 
 			<div className="flex flex-col gap-4 h-full">
 				<Textarea
-					className="disabled:opacity-100 border-0 dark:text-zinc-100 text-zinc-700 max-h-24 lg:max-h-72 !h-full p-3 w-full resize-none overflow-auto"
+					className="cursor-text disabled:opacity-100 border-0 dark:text-zinc-100 text-zinc-700 max-h-24 lg:max-h-72 !h-full p-3 w-full resize-none overflow-auto"
 					disabled
 					value={rawText} />
 				<Textarea
-					className="disabled:opacity-100 border-0 dark:text-zinc-100 text-zinc-70 max-h-24 lg:max-h-72 !h-full p-3 w-full resize-none overflow-auto"
+					className="cursor-text disabled:opacity-100 border-0 dark:text-zinc-100 text-zinc-70 max-h-24 lg:max-h-72 !h-full p-3 w-full resize-none overflow-auto"
 					disabled
 					value={translatedText} />
 			</div>

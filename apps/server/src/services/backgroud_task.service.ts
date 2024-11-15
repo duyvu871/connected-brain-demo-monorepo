@@ -6,10 +6,10 @@ type queue_name = 'background_task' | 'audio_handle_queue' | 'example_task';
 export default class BackgroundTaskService {
 	public static DEFAULT_REMOVE_CONFIG = {
 		removeOnComplete: {
-			age: 3600, // 1 hour
+			age: 60, // 60 seconds
 		},
 		removeOnFail: {
-			age: 24 * 3600, // 24 hours
+			age: 60 * 15, // 15 minutes
 		},
 	};
 	private static queue: Queue;

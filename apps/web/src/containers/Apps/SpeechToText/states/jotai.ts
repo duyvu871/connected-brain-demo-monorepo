@@ -28,6 +28,7 @@ export const audioDuration = atom<number>((get) => {
 	
 });
 export const audioCurrentTime = atom<number>(0);
+export const audioCurrentTimeActiveSentence = atom<number>(0);
 export const audioPlaying = atom<boolean>(false);
 export const audioFile = atom<AudioFile>({
 	url: '',
@@ -35,6 +36,7 @@ export const audioFile = atom<AudioFile>({
 });
 
 export const audioInstance = atom<Howl | null>(null as Howl | null);
+
 
 export const playbackSettings = atom<PlaybackSettings>({
 	speed: 1,
