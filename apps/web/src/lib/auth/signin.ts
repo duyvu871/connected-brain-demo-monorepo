@@ -87,8 +87,8 @@ export async function signIn(credentials: UserRecord<'role'>) {
 		// redirect: "follow"
 	};
 
-	const api_endpoint = 'https://api.connectedbrain.com.vn'//'http://localhost:3001'//process.env.API_ENDPOINT;
-
+	const api_endpoint = 'http://localhost:3001'//process.env.API_ENDPOINT;
+	console.log('api_endpoint', api_endpoint);
 	const response = await fetch(api_endpoint + '/api/v1/auth/login', requestOptions);
 	const result = await response.json();
 	// console.log(result);
