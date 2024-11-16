@@ -66,7 +66,7 @@ export default async function SpeechToText(data: ConvertToWavJob['job_data']) {
 		return 'DONE';
 	}
 	catch (error: any) {
-		console.error(error);
+		console.error('speech to text task error', error);
 		await SpeechToTextService.update_audit(data.id, {
 			status: 'error'
 		});

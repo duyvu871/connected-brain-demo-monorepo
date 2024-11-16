@@ -5,6 +5,19 @@
       <excludeFolder url="file://$MODULE_DIR$/.tmp" />
       <excludeFolder url="file://$MODULE_DIR$/temp" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/apps/server/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/apps/web/.next" />
+      <excludeFolder url="file://$MODULE_DIR$/node_modules" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/chatbot/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/cloud-storage/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/conversation/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/database/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/network-sftp/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/ocr/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/speech-to-text/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/translate/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/utils/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/validation/dist" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

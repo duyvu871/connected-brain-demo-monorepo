@@ -32,7 +32,7 @@ function AppS2T({id}: {id?: string}) {
 		}
 	}, [id, isSectionLoad, setCurrentSection]);
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		if (isSectionLoad) {
 			const socketConnectEndpoint =
 				`${process.env.NEXT_PUBLIC_API_BASE_URL}${api_route.API.feature.SPEECH_TO_TEXT.socket}`
@@ -76,7 +76,7 @@ function AppS2T({id}: {id?: string}) {
 	useLayoutEffect(() => {
 		if (currentSection) {
 			(async () => {
-				await getTranscriptList();
+				// await getTranscriptList();
 				// get transcript data if transcript data not have data
 				// if (!transcript_data) {
 				// 	const transcriptData = await getTranscript(currentSection);

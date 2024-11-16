@@ -15,6 +15,9 @@ import Redis from 'ioredis';
 
 const {api_route} = constants;
 
+initRedis();
+const RedisInstance = getRedis().instanceRedis;
+
 export default class SpeechToTextService {
 	public static connection(io: Server) {
 		console.log('S2T socket connected', api_route.API.feature.SPEECH_TO_TEXT.socket);
@@ -37,14 +40,12 @@ export default class SpeechToTextService {
 						if (auditData.status === 'done') {
 							socket.emit("s2t:transcript", JSON.stringify(auditData));
 						} else if (auditData.status === 'processing') {
-							await initRedis();
-							const redis = <Redis>getRedis().instanceRedis;
 							const channel = `s2t:transcript:${data.id.toString()}`;
 							// @ts-ignore
-							redis && await redis.subscribe(channel);
-							redis && redis.on('message', (channel: string, message:string) => {
+							RedisInstance && await RedisInstance.subscribe(channel);
+							RedisInstance && RedisInstance.on('message', (channel: string, message:string) => {
 								console.log("channel: ", channel);
-								console.log("redis subscribe s2t message: ", message);
+								console.log("redis subscribe s2t message: ", message ? 'ok' : 'no message');
 								socket.emit("s2t:transcript", message);
 							})
 
