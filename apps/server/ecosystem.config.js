@@ -15,5 +15,20 @@ module.exports = {
                 PORT: 3001
             },
         },
+        // {
+        //     name: 'connected-brain-api-worker',
+        //     script: './dist/worker.js',
+        //     out_file: "./worker-out.log",
+        //     error_file: "./worker-error.log",
+        //     log_date_format: "DD-MM HH:mm:ss Z",
+        //     env: {
+        //         NODE_ENV: 'development',
+        //         PORT: 3002
+        //     },
+        //     env_production: {
+        //         NODE_ENV: 'production',
+        //         PORT: 3002
+        //     },
+        // }
     ],
 }

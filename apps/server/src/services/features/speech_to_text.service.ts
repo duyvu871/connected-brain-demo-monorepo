@@ -86,10 +86,14 @@ export default class SpeechToTextService {
 			},
 			"transcript": []
 		};
-		const createAuditFile = await FileStorageService.write_file(
-			directoryPath+'/audit.json',
-			Buffer.from(JSON.stringify(auditContent))
-		);
+		try {
+			const createAuditFile = await FileStorageService.write_file(
+				directoryPath+'/audit.json',
+				Buffer.from(JSON.stringify(auditContent))
+			);
+		} catch (error: any) {
+			console.error('create audit error', error);
+		}
 
 		return auditContent;
 	}
@@ -107,32 +111,37 @@ export default class SpeechToTextService {
 		audit:MakeRequired<Partial<Awaited<ReturnType<typeof SpeechToTextService.create_audit>>>, 'audio'>
 	) => {
 		return new Promise((resolve, reject) => {
-			const writeStream = FileStorageService.create_write_stream(
-				path.join(process.cwd(), audit.audio.path)
-			);
+			try {
+				const writeStream = FileStorageService.create_write_stream(
+					path.join(process.cwd(), audit.audio.path)
+				);
 
-			const file = req.file as Express.Multer.File;
-			const buffer = file.buffer;
-			writeStream.write(buffer);
-			// event stream
-			writeStream.on("open", () => {
-				console.log('Start stream .... !!!!');
-				req.pipe(writeStream);
-			});
-			writeStream.on("drain", () => {
-				const written = parseInt(writeStream.bytesWritten.toString());
-				const total = parseInt(req.headers['content-length'] || '0');
-				const pWritten = ((written / total) * 100).toFixed(2);
-				console.log(`Processing  ...  ${pWritten}% done`);
-			});
-			writeStream.on("close", () => {
-				console.log('Processing  ...  100%');
-				resolve(audit.audio.path);
-			});
-			writeStream.on("error", (err) => {
-				console.error('stream write', err);
-				reject(err);
-			});
+				const file = req.file as Express.Multer.File;
+				const buffer = file.buffer;
+				writeStream.write(buffer);
+				// event stream
+				writeStream.on("open", () => {
+					console.log('Start stream .... !!!!');
+					req.pipe(writeStream);
+				});
+				writeStream.on("drain", () => {
+					const written = parseInt(writeStream.bytesWritten.toString());
+					const total = parseInt(req.headers['content-length'] || '0');
+					const pWritten = ((written / total) * 100).toFixed(2);
+					console.log(`Processing  ...  ${pWritten}% done`);
+				});
+				writeStream.on("close", () => {
+					console.log('Processing  ...  100%');
+					resolve(audit.audio.path);
+				});
+				writeStream.on("error", (err) => {
+					console.error('stream write', err);
+					reject(err);
+				});
+			} catch (e) {
+				console.error('create audio stream error', e);
+				reject(e);
+			}
 		});
 	}
 
@@ -148,6 +157,10 @@ export default class SpeechToTextService {
 	public static async update_audit(id: string|ObjectId, audit: Partial<IS2tDTO>): Promise<IS2tDTO| null> {
 		const auditPath = `${process.cwd()}/storage/Assets/s2t/${id.toString()}/audit.json`;
 		const rewriteAudit = FileStorageService.read_file(auditPath);
+		if (!rewriteAudit) {
+			console.log(new ApiError(HttpStatusCode.InternalServerError, "fail read audit"));
+			return null;
+		}
 		const auditJson = JSON.parse(rewriteAudit);
 		const newAudit = {...auditJson, ...audit};
 		const writeNewAudit = await FileStorageService.write_file(auditPath, Buffer.from(JSON.stringify(newAudit)));
@@ -174,9 +187,13 @@ export default class SpeechToTextService {
 	}
 	// update transcript
 	public static async update_transcript(id: string|ObjectId, transcript: string) {
-		const audit = await SpeechToTextService.get_audit(id);
-		const auditContent = FileStorageService.read_file(process.cwd() + audit.auditPath);
-		const auditJson = JSON.parse(auditContent);
-		auditJson.transcript.push(transcript);
+		try {
+			const audit = await SpeechToTextService.get_audit(id);
+			const auditContent = FileStorageService.read_file(process.cwd() + audit.auditPath);
+			const auditJson = JSON.parse(auditContent);
+			auditJson.transcript.push(transcript);
+		} catch (error: any) {
+			console.error('update transcript error', error);
+		}
 	}
 }

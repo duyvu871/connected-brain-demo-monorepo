@@ -13,7 +13,7 @@ import path from 'path';
 const isProduction = process.env.NODE_ENV === 'production';
 
 const DOTENV = dotenv.config({
-	path: path.resolve(__dirname, isProduction ? '../.env' : '../.env') //process.cwd() + '/.env',
+	path: path.resolve(__dirname, isProduction ? '../.env' : '../.env.example') //process.cwd() + '/.env',
 });
 
 loadEnv(DOTENV.parsed);
