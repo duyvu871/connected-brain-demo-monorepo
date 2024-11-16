@@ -1,0 +1,31 @@
+
+
+.mantine-Drawer-inner {
+    @apply bg-zinc-950;
+
+    width: fit-content;
+    padding: 0;
+    right: 0;
+}
+
+.mantine-Drawer-content {
+    @apply bg-zinc-950;
+    display: flex;
+    flex-direction: column;
+}
+
+.mantine-Drawer-header {
+    @apply bg-zinc-950 py-0 pt-2 border-0 border-l border-zinc-800 min-h-fit h-fit;
+
+}
+
+.mantine-Drawer-body {
+    @apply bg-zinc-950;
+    flex-grow: 1;
+    height: 100%;
+    padding: 0;
+}
+
+.mantine-Paper-root {
+    overflow: unset;
+}

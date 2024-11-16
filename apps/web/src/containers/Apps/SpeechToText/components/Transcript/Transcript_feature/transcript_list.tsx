@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useRef, useState } from 'react';
 import { Center, Flex, ScrollArea, Stack } from '@mantine/core';
 import { transcript, transcriptListAudioPlayerInstance } from '@/containers/Apps/SpeechToText/states/transcript';

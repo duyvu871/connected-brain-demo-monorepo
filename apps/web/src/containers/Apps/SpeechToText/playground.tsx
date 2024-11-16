@@ -16,6 +16,7 @@ import TranscriptFeature from '@/containers/Apps/SpeechToText/components/Transcr
 import { io } from 'socket.io-client';
 import { constants } from '@repo/utils';
 import RotateLoader from '@ui/resource-ui/Loader/spinner.tsx';
+import TranscriptPanel from '@/containers/Apps/SpeechToText/components/playground/transcript-panel.tsx';
 
 function AppS2T({id}: {id?: string}) {
 	const {api_route} = constants;
@@ -142,14 +143,7 @@ function AppS2T({id}: {id?: string}) {
 
 							{
 								(isSectionLoad && Boolean(transcript_data?.transcript.length)) ?
-									<Center className="max-w-md min-w-96 flex-grow-[3] border-0 border-l border-zinc-800" h="100%" w="1/2">
-									<Flex align="center" className="flex-grow h-full bg-zinc-950 rounded-2xl p-5 gap-3" direction="column"
-												justify="start">
-										<TranscriptSearch />
-										<TranscriptFeatureTab />
-										<TranscriptFeature />
-									</Flex>
-								</Center>
+									<TranscriptPanel className="!hidden lg:!flex" />
 									: null
 							}
 						</>

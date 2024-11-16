@@ -37,8 +37,12 @@ const envSchema = z.object({
 	REDIS_SECRET_KEY: z.string(),
 	REDIS_HOST: z.string(),
 	REDIS_PORT: z.string().refine((port) => parseInt(port) > 0, "Invalid port number"),
-	REDIS_PASSWORD: z.string(),
-	REDIS_USERNAME: z.string(),
+	...(process.env.REDIS_PASSWORD ? {
+		REDIS_PASSWORD: z.string()
+	} : {}),
+	...(process.env.REDIS_USERNAME ? {
+		REDIS_USERNAME: z.string()
+	} : {}),
 	// app
 	NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
 	// ...

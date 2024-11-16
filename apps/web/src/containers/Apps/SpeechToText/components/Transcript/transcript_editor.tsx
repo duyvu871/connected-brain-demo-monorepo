@@ -15,7 +15,7 @@ function TranscriptList() {
 				<TranscriptSentencesList />
 				<TranscriptActiveSentence />
 			</Center>
-			<div className="lg:max-w-[50%] w-full h-full flex flex-col flex-grow p-3">
+			<div className="lg:max-w-[50%] w-full h-fit lg:h-full flex flex-col flex-grow p-3">
 				<TranscriptTranslate />
 			</div>
 		</Center>

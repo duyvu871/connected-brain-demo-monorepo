@@ -14,6 +14,8 @@ export interface AudioFile {
 	name: string;
 };
 
+export const visibleDrawerPanel = atom<boolean>(false);
+
 export const isSectionLoaded = atom<boolean>((get) => Boolean(get(sectionId)));
 export const sectionId = atom<string | null>(null as string | null);
 
