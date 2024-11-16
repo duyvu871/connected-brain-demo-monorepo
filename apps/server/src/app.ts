@@ -28,9 +28,9 @@ async function startServer() {
     global.__io = new io.Server(httpServer, {
         cors: {
             origin: "*",
-            methods: ["GET", "POST"]
+            methods: 'GET,HEAD,PUT,PATCH,POST,DELETE'
         },
-        path: '/socket'
+        path: '/socket',
     });
 
     app.use(helmet({

@@ -41,6 +41,9 @@ function AppS2T({id}: {id?: string}) {
 				{
 					transports: ["websocket"], // use websocket only
 					addTrailingSlash: false, // remove trailing slash
+					timeout: 20000, // 20 seconds timeout
+					reconnectionAttempts: 5, // retry 5 times
+					reconnectionDelay: 3000, // delay 3 seconds
 					path: "/socket/socket.io",
 				});
 			socket.on("connect", () => {

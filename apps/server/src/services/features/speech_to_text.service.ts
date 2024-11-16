@@ -25,6 +25,10 @@ export default class SpeechToTextService {
 				console.log('user disconnected');
 			});
 
+			socket.on('error', (error) => {
+				console.error('error', error);
+			});
+
 			socket.on("get-s2t-status", async (data: {id: string}) => {
 				// console.log("get-s2t-status", data);
 					try {
