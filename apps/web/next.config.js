@@ -24,8 +24,8 @@ module.exports = {
   async rewrites() {
     return [
       {
-        source: "/api/v1/s2t",
-        destination: "http://localhost:8502/api/v1/s2t",
+        source: "/api/v1/t2s",
+        destination: "http://localhost:8502/api/v1/t2s",
       },
     ]
   }
