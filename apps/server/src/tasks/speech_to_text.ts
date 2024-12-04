@@ -37,7 +37,7 @@ export default async function SpeechToText(data: ConvertToWavJob['job_data']) {
 		// // console.log('Transcript:', transcripts);
 		// const transcripts_parse = await CloudSpeech.getTranscript(transcripts.transcriptId, 'sentences') as SentencesResponse;
 		const parallelHandle = await Promise.all([
-			CloudSpeech.getTranscriptConnectedBrainV1(file_path),
+			CloudSpeech.getTranscriptConnectedBrainV2(file_path),
 			FileStorageService.get_audio_duration(file_path)
 		])
 		const transcripts_parse = parallelHandle[0];

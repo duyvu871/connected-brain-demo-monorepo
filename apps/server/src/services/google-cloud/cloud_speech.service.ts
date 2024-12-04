@@ -254,6 +254,7 @@ public static async getTemporaryToken(): Promise<string> {
 				const fileBlob = new Blob([file], { type: contentType.mime });
 				console.log(fileName);
 				const formData = new FormData();
+
 				formData.append('file', fileBlob, fileName);
 				const api = process.env.NODE_ENV === 'development' ? "http://14.224.188.206:8502/api/v1/s2t/version2" : S2T_API_ENDPOINT;
 

@@ -39,9 +39,9 @@ export const TranscriptTranslate = () => {
 			const toLanguage = Array.from(targetLang)[0];
 			console.log(fromLanguage, toLanguage);
 			const response = await axios.v1.translate({
-				text,
-				from: fromLanguage.toString(),
-				to: toLanguage.toString(),
+					text,
+					from: fromLanguage.toString(),
+					to: toLanguage.toString(),
 			});
 			if (response) {
 				console.log(response);

@@ -7,7 +7,6 @@ function Page() {
 		<Suspense>
 			<AppProvider>
 				<AuthMethodPage />
-
 			</AppProvider>
 		</Suspense>
 	);

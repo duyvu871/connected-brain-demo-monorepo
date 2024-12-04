@@ -27,7 +27,7 @@ import CloudSpeech from '@/services/google-cloud/cloud_speech.service';
 import {v4 as uuidv4} from 'uuid';
 import { NetworkSFTP } from '@repo/network-sftp';
 import { sftpHostCbrain } from '@/configs/sftp/host/cbrain';
-import { getRedis, initRedis } from '@/configs/database/redis';
+// import { getRedis, initRedis } from '@/configs/database/redis';
 import { getKey, setKey } from '@/repo/redis';
 
 export default class SpeechToTextController {
