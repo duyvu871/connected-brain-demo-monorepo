@@ -8,7 +8,9 @@ import { MessageSquareQuote,
 	Settings,
 	Bookmark,
 	SquarePen,
-	LayoutGrid
+	LayoutGrid,
+    Split,
+    Fingerprint
 } from 'lucide-react';
 
 import { TbChartBubble, TbTextScan2 } from "react-icons/tb";
@@ -92,6 +94,20 @@ export function getMenuList(pathname: string): Group[] {
 					icon: BsTranslate,
 					submenus: []
 				},
+				{
+					href: 'https://14.224.188.206:8887/',
+					label: "Voice Separation",
+					active: false,
+					icon: Split,
+					submenus: []
+				},
+				{
+					href: 'https://14.224.188.206:8886/',
+					label: "Voice Identification",
+					active: false,
+					icon: Fingerprint,
+					submenus: []
+				}
 			]
 		},
 		{

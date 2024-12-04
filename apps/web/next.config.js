@@ -27,6 +27,10 @@ module.exports = {
         source: "/api/v1/t2s",
         destination: "http://localhost:8502/api/v1/t2s",
       },
+      // {
+      //   source: "/app/separate/:path",
+      //   destination: "http://14.224.188.206:8886/:path",
+      // },
     ]
   }
 };
