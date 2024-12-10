@@ -46,6 +46,9 @@ function AppS2T({id}: {id?: string}) {
 					reconnectionAttempts: 5, // retry 5 times
 					reconnectionDelay: 3000, // delay 3 seconds
 					path: "/socket/socket.io",
+					query: {
+						sessionId: currentSection
+					}
 				});
 			socket.on("connect", () => {
 				socket.emit("get-s2t-status", { id: currentSection });

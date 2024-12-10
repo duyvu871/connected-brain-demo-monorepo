@@ -120,6 +120,11 @@ export const PlayerProvider = ({ children }: {children: React.ReactNode}): React
   };
 
   useEffect(() => {
+    handleSeek(currentTime);
+    console.log('seek in,', currentTime);
+  }, [audioInstance, currentFile, currentTime]);
+  
+  useEffect(() => {
     if (currentTime >= duration) {
       stopInterval();
       setIsPlaying(false);

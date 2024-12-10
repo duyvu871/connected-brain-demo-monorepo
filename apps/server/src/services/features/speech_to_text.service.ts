@@ -6,7 +6,7 @@ import ApiError from '@/helpers/ApiError';
 import { HttpStatusCode } from '@/helpers/http_status_code';
 import { MakeRequired } from '@/types/helper';
 import { Request } from 'express';
-import { Server } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 import { constants } from '@repo/utils';
 import path from 'path';
 import * as http from 'node:http';
@@ -14,6 +14,8 @@ import { getRedis, initRedis } from '@/configs/database/redis';
 import Redis from 'ioredis';
 
 const {api_route} = constants;
+
+const clientConnect = new Map<string, Socket>();
 
 initRedis();
 const RedisInstance = getRedis().instanceRedis;
@@ -23,12 +25,35 @@ export default class SpeechToTextService {
 		console.log('S2T socket connected', api_route.API.feature.SPEECH_TO_TEXT.socket);
 		const namespace = io.of(api_route.API.feature.SPEECH_TO_TEXT.socket);
 		namespace.on('connection', async (socket) => {
-			console.log('user connected to speech to text');
+
+			const sessionId = socket.handshake.query.sessionId instanceof Array
+				? socket.handshake.query.sessionId[0]
+				: socket.handshake.query.sessionId;
+
+			if (!sessionId) {
+				socket.emit('error', 'session id not found');
+				socket.disconnect(true);
+				return;
+			}
+
+			console.log(`user ${sessionId} connected to speech to text`);
+
+			if (clientConnect.has(sessionId)) {
+				socket.emit('error', 'session id already connected');
+				// socket.disconnect(true);
+				clientConnect.delete(sessionId);
+				return;
+			}
+
+			clientConnect.set(sessionId, socket);
+
 			socket.on('disconnect', () => {
 				console.log('user disconnected');
 			});
 
 			socket.on('error', (error) => {
+				clientConnect.delete(sessionId);
+				socket.disconnect(true);
 				console.error('error', error);
 			});
 
@@ -53,6 +78,7 @@ export default class SpeechToTextService {
 					} catch (e: any) {
 						console.log(e);
 						socket.emit("error", e.message);
+						socket.disconnect(true);
 					}
 			})
 		});
