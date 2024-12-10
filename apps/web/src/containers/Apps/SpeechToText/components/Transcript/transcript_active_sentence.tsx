@@ -46,7 +46,7 @@ export default function TranscriptActiveSentence() {
 
 	return (
 		<Box className="p-5 sm:p-8 relative h-fit bg-zinc-900 w-full" >
-			<Box className="w-[inherit] max-h-[90px] overflow-hidden" ref={viewRef}>
+			<Box className="w-[inherit] max-h-[90px] overflow-hidden overflow-y-auto" ref={viewRef}>
 				{/*<div className="w-full">*/}
 				{/*	a*/}
 				{/*</div>*/}

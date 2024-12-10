@@ -11,6 +11,7 @@ import {
 } from '@/containers/Apps/SpeechToText/states/jotai';
 import { activeTranscriptSentence, audioPlayerInstance, enableTranscriptEdit, transcript } from '@/containers/Apps/SpeechToText/states/transcript';
 import { useInterval } from '@/hooks/client/useInterval';
+import { useAtomCallback } from 'jotai/utils';
 
 export type PlayerContextType = {
   currentTime: number;
@@ -82,11 +83,12 @@ export const PlayerProvider = ({ children }: {children: React.ReactNode}): React
   }, [currentFile, setAudioPlayerInstance, setCurrentTime, setIsPlaying, startInterval, stopInterval]);
 
   useEffect(() => {
-    document.addEventListener('click', initializeAudio, { once: true });
-    return () => {
-      document.removeEventListener('click', initializeAudio);
-    };
-  }, [initializeAudio]);
+    initializeAudio();
+    // document.addEventListener('click', initializeAudio, { once: true });
+    // return () => {
+    //   document.removeEventListener('click', initializeAudio);
+    // };
+  }, []);
 
   const togglePause = () => {
     if (audioInstance) {
@@ -113,16 +115,20 @@ export const PlayerProvider = ({ children }: {children: React.ReactNode}): React
     audioInstance?.seek(newTime / 1000);
   };
 
-  const handleSeek = (value: number) => {
+  const handleSeek = useAtomCallback((get, set, value: number) => {
+    const audioInstance = get(audioPlayerInstance);
+    console.log('handle seek', value);
     if (audioInstance) {
+      // console.log('seeked to ', value);
       audioInstance.seek(value / 1000);
+      console.log('seeked to ', value);
     }
-  };
+  });
 
-  useEffect(() => {
-    handleSeek(currentTime);
-    console.log('seek in,', currentTime);
-  }, [audioInstance, currentFile, currentTime]);
+  // useEffect(() => {
+  //   handleSeek(currentTime);
+  //   console.log('seek in,', currentTime);
+  // }, [audioInstance, currentFile, currentTime]);
   
   useEffect(() => {
     if (currentTime >= duration) {

@@ -4,17 +4,32 @@ import { useAtom } from 'jotai';
 import { audioCurrentTime, audioDuration, audioFile } from '@/containers/Apps/SpeechToText/states/jotai';
 import {Slider, Button} from '@nextui-org/react';
 import { Box } from '@mantine/core';
+import { usePlayer } from '@/providers/speech-to-text/player-provider.tsx';
 
 const { formatMillisecondsToMinutesSeconds } = time;
 
 function TranscriptPlayerTimeline() {
-	const [value, setValue] = useAtom<number | number[]>(audioCurrentTime);
-	const [maxValue, setMaxValue] = useAtom<number>(audioDuration);
+	const {handleSeek} = usePlayer();
+	const [value, setValue] = useAtom(audioCurrentTime);
+	const [maxValue, setMaxValue] = useAtom(audioDuration);
 	const [file, setCurrentFile] = useAtom(audioFile);
 
 	const convertToPercentage = (value: number, maxValue: number) => {
 		return ((value / maxValue) * 100).toFixed(2);
 	}
+
+	const seek = (value: number | number[]) => {
+		let registedValue!: number;
+		if (Array.isArray(value)) {
+			registedValue = value[0];
+		} else {
+			registedValue = value;
+		}
+		console.log('registedValue', registedValue, value);
+		setValue(registedValue);
+		handleSeek(registedValue);
+	}
+
 	return (
 		<Box className="flex flex-col justify-center items-center w-full gap-1">
 			<Box className="w-full flex justify-between items-center max-w-md">
@@ -45,7 +60,7 @@ function TranscriptPlayerTimeline() {
 					hideThumb
 					maxValue={maxValue}
 					minValue={0}
-					onChange={setValue}
+					onChange={seek}
 					renderValue={(children, ...props) => (
 						<output {...props}>
 							{/*<Button*/}

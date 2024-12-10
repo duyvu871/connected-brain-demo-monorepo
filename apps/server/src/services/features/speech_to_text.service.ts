@@ -42,7 +42,7 @@ export default class SpeechToTextService {
 				socket.emit('error', 'session id already connected');
 				// socket.disconnect(true);
 				clientConnect.delete(sessionId);
-				return;
+				// return;
 			}
 
 			clientConnect.set(sessionId, socket);
