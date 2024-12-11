@@ -35,50 +35,49 @@ function AppS2T({id}: {id?: string}) {
 		}
 	}, [id, isSectionLoad, setCurrentSection]);
 
-	useLayoutEffect(() => {
-		if (currentSection) {
-			const socketConnectEndpoint =
-				`${process.env.NEXT_PUBLIC_API_BASE_URL}${api_route.API.feature.SPEECH_TO_TEXT.socket}`
-			console.log("socket place:", socketConnectEndpoint);
-			const socket = io(socketConnectEndpoint,
-				{
-					transports: ["websocket"], // use websocket only
-					addTrailingSlash: false, // remove trailing slash
-					timeout: 20000, // 20 seconds timeout
-					reconnectionAttempts: 5, // retry 5 times
-					reconnectionDelay: 3000, // delay 3 seconds
-					path: "/socket/socket.io",
-					query: {
-						sessionId: currentSection
-					}
+	useEffect(() => {
+		if (!id) return;
+		const socketConnectEndpoint =
+			`${process.env.NEXT_PUBLIC_API_BASE_URL}${api_route.API.feature.SPEECH_TO_TEXT.socket}`
+		console.log("socket place:", socketConnectEndpoint);
+		const socket = io(socketConnectEndpoint,
+			{
+				transports: ["websocket"], // use websocket only
+				addTrailingSlash: false, // remove trailing slash
+				timeout: 20000, // 20 seconds timeout
+				reconnectionAttempts: 5, // retry 5 times
+				reconnectionDelay: 3000, // delay 3 seconds
+				path: "/socket/socket.io",
+				query: {
+					sessionId: id
+				}
+			});
+		socket.on("connect", () => {
+			socket.emit("get-s2t-status", { id });
+			console.log("socket connected");
+			socket.on("s2t:transcript", (data) => {
+				// console.log(data);
+				const transcriptData = JSON.parse(data);
+				console.log("transcriptData", transcriptData);
+				setTranscriptData(transcriptData);
+				setCurrentFile({
+					url: transcriptData.cloudPath,
+					name: transcriptData.originName,
 				});
-			socket.on("connect", () => {
-				socket.emit("get-s2t-status", { id: currentSection });
-				console.log("socket connected");
-				socket.on("s2t:transcript", (data) => {
-					// console.log(data);
-					const transcriptData = JSON.parse(data);
-					console.log("transcriptData", transcriptData);
-					setTranscriptData(transcriptData);
-					setCurrentFile({
-						url: transcriptData.cloudPath,
-						name: transcriptData.originName,
-					});
-				})
-			});
-			socket.on('disconnect', () => {
-				console.log("socket dis connected");
-			});
-			socket.on("connect_error", (error) => {
-				console.error("Socket connection error:", error);
-			});
-			setIOSocket(socket);
-			return () => {
-				console.log("socket disconnect");
-				if (socket) socket.disconnect();
-			}
+			})
+		});
+		socket.on('disconnect', () => {
+			console.log("socket dis onnected");
+		});
+		socket.on("connect_error", (error) => {
+			console.error("Socket connection error:", error);
+		});
+		setIOSocket(socket);
+		return () => {
+			console.log("socket disconnect");
+			if (socket) socket.disconnect();
 		}
-	}, [currentSection]);
+	}, [id]);
 
 	useLayoutEffect(() => {
 		if (currentSection) {
