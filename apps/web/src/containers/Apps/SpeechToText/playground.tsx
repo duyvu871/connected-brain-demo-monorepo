@@ -74,6 +74,7 @@ function AppS2T({id}: {id?: string}) {
 			});
 			setIOSocket(socket);
 			return () => {
+				console.log("socket disconnect");
 				if (socket) socket.disconnect();
 			}
 		}
