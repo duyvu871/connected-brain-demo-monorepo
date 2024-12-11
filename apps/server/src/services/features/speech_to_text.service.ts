@@ -41,6 +41,7 @@ export default class SpeechToTextService {
 			if (clientConnect.has(sessionId)) {
 				socket.emit('error', 'session id already connected');
 				// socket.disconnect(true);
+				clientConnect.get(sessionId)?.disconnect(true);
 				clientConnect.delete(sessionId);
 				// return;
 			}
@@ -49,12 +50,22 @@ export default class SpeechToTextService {
 
 			socket.on('disconnect', () => {
 				console.log('user disconnected');
+				clientConnect.delete(sessionId);
+
+				if (RedisInstance) {
+					RedisInstance.unsubscribe();
+				}
 			});
 
 			socket.on('error', (error) => {
-				clientConnect.delete(sessionId);
-				socket.disconnect(true);
-				console.error('error', error);
+				console.error('Error occurred:', error);
+				// @ts-ignore
+				if (error.critical) {
+					clientConnect.delete(sessionId);
+					socket.disconnect(true);
+				} else {
+					socket.emit('error', error.message);
+				}
 			});
 
 			socket.on("get-s2t-status", async (data: {id: string}) => {
@@ -66,14 +77,18 @@ export default class SpeechToTextService {
 							socket.emit("s2t:transcript", JSON.stringify(auditData));
 						} else if (auditData.status === 'processing') {
 							const channel = `s2t:transcript:${data.id.toString()}`;
-							// @ts-ignore
-							RedisInstance && await RedisInstance.subscribe(channel);
-							RedisInstance && RedisInstance.on('message', (channel: string, message:string) => {
-								console.log("channel: ", channel);
-								console.log("redis subscribe s2t message: ", message ? 'ok' : 'no message');
-								socket.emit("s2t:transcript", message);
-							})
 
+							if (RedisInstance) {
+								await RedisInstance.subscribe(channel);
+								if (!RedisInstance.listenerCount('message')) {
+									RedisInstance.on('message', (channel: string, message:string) => {
+										console.log("channel: ", channel);
+										if (clientConnect.has(sessionId)) {
+											clientConnect.get(sessionId)?.emit("s2t:transcript", message);
+										}
+									})
+								}
+							}
 						}
 					} catch (e: any) {
 						console.log(e);
