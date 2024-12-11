@@ -129,7 +129,7 @@ export default class SpeechToTextService {
 			"path": relativePath,
 			"auditPath": `${relativePath}/audit.json`,
 			"audio": {
-				"path": `${relativePath}/audio.mp3`,
+				"path": `${relativePath}/audio.wav`,
 				"duration": 0
 			},
 			"transcript": []

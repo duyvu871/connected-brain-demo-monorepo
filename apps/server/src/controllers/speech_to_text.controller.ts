@@ -133,13 +133,14 @@ export default class SpeechToTextController {
 			const file = req.file as Express.Multer.File;
 			const file_data = file.buffer;
 			const file_name = file.originalname;
+			const file_ext = file_name.split('.').pop();
 			// @ts-ignore
 			const user = req.user as string;
 			const db_repo = await SpeechToTextService.create_database_repo(file_name, user);
 			const audit = await SpeechToTextService.create_audit(db_repo._id ?? 'error_audit_created');
 			const audio_file = await SpeechToTextService.create_audio_stream(req, audit);
 			const absolute_path = path.join(process.cwd(), audit.audio.path);
-			process.env.NODE_ENV === "development" && await BackgroundTaskService.add_task<WorkerJob> (
+			file_ext !== 'wav' && await BackgroundTaskService.add_task<WorkerJob> (
 				'background_task',
 				'convert_to_wav', {
 					type: 'convert_to_wav',
