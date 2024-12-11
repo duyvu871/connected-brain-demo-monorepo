@@ -17,6 +17,7 @@ import { io } from 'socket.io-client';
 import { constants } from '@repo/utils';
 import RotateLoader from '@ui/resource-ui/Loader/spinner.tsx';
 import TranscriptPanel from '@/containers/Apps/SpeechToText/components/playground/transcript-panel.tsx';
+import { PlayerProvider } from '@/providers/speech-to-text/player-provider.tsx';
 
 function AppS2T({id}: {id?: string}) {
 	const {api_route} = constants;
@@ -103,10 +104,11 @@ function AppS2T({id}: {id?: string}) {
 		}
 	}, [currentSection]);
 	return (
-		<DynamicContentLoaded>
-			<Center className="bg-zinc-950 h-[calc(100vh_-_59px)]">
-				<Flex align="center" className="gap-0" direction="row" h="100%" justify="center" w="100%">
-					{(isSectionLoad) ? !transcript_data?.transcript.length && (
+		<PlayerProvider>
+			<DynamicContentLoaded>
+				<Center className="bg-zinc-950 h-[calc(100vh_-_59px)]">
+					<Flex align="center" className="gap-0" direction="row" h="100%" justify="center" w="100%">
+						{(isSectionLoad) ? !transcript_data?.transcript.length && (
 							<Flex align="center" className="gap-8 flex-col">
 								<RotateLoader
 									classNames={{
@@ -119,30 +121,30 @@ function AppS2T({id}: {id?: string}) {
 								</span>
 							</Flex>
 						) : null}
-					<>
+						<>
 
-								{
-									(isSectionLoad)
-										? Boolean(transcript_data?.transcript.length) && (
-										<Flex align="center" className="rounded-[2rem] gap-5 flex-grow-[7]" direction="column" h="100%"
-													justify="center">
-											<Flex align="center"
-														className="flex-grow w-full h-full gap-5"
-														direction="column"
-														justify="center"
-											>
-												<Flex align="center" className="gap-5 flex-grow w-full h-full"
-															direction="row"
-															justify="center">
-													<Flex className="w-full h-full bg-zinc-950 rounded-xl ">
-														<TranscriptWrapper />
-													</Flex>
+							{
+								(isSectionLoad)
+									? Boolean(transcript_data?.transcript.length) && (
+									<Flex align="center" className="rounded-[2rem] gap-5 flex-grow-[7]" direction="column" h="100%"
+												justify="center">
+										<Flex align="center"
+													className="flex-grow w-full h-full gap-5"
+													direction="column"
+													justify="center"
+										>
+											<Flex align="center" className="gap-5 flex-grow w-full h-full"
+														direction="row"
+														justify="center">
+												<Flex className="w-full h-full bg-zinc-950 rounded-xl ">
+													<TranscriptWrapper />
 												</Flex>
 											</Flex>
 										</Flex>
-									)
-										: (<StarterScreen />)
-								}
+									</Flex>
+								)
+									: (<StarterScreen />)
+							}
 
 							{
 								(isSectionLoad && Boolean(transcript_data?.transcript.length)) ?
@@ -150,10 +152,10 @@ function AppS2T({id}: {id?: string}) {
 									: null
 							}
 						</>
-				</Flex>
-			</Center>
-
-		</DynamicContentLoaded>
+					</Flex>
+				</Center>
+			</DynamicContentLoaded>
+		</PlayerProvider>
 	);
 }
 

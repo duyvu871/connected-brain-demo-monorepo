@@ -56,41 +56,47 @@ export const PlayerProvider = ({ children }: {children: React.ReactNode}): React
 
   const initializeAudio = useCallback(() => {
     if (currentFile && !audioInstance) {
-      setAudioPlayerInstance(
-        new Howl({
-          src: [currentFile.url],
-          autoplay: false,
-          html5: true,
-          onload: () => {
-          },
-          onplay: () => {
-            setIsPlaying(true);
-            startInterval();
-          },
-          onpause: () => {
-            setIsPlaying(false);
-            stopInterval();
-          },
-          onend: () => {
-            setIsPlaying(false);
-            stopInterval();
-            setCurrentTime(0);
-          },
-          onseek: () => {
-          },
-        }));
+      console.log('initialize audio', currentFile.url);
+      const audio = new Howl({
+        src: [currentFile.url],
+        autoplay: false,
+        html5: true,
+        format: ['mp3', 'aac', 'wav'],
+        onload: () => {
+        },
+        onplay: () => {
+          console.log('onplay');
+          setIsPlaying(true);
+          startInterval();
+        },
+        onpause: () => {
+          console.log('onpause');
+          setIsPlaying(false);
+          stopInterval();
+        },
+        onend: () => {
+          setIsPlaying(false);
+          stopInterval();
+          setCurrentTime(0);
+        },
+        onseek: () => {
+        },
+      })
+      setAudioPlayerInstance(audio);
     }
-  }, [currentFile, setAudioPlayerInstance, setCurrentTime, setIsPlaying, startInterval, stopInterval]);
+  }, [audioInstance, currentFile, setAudioPlayerInstance, setCurrentTime, setIsPlaying, startInterval, stopInterval]);
 
   useEffect(() => {
     document.addEventListener('click', initializeAudio, { once: true });
     return () => {
       document.removeEventListener('click', initializeAudio);
     };
-  }, []);
+  }, [initializeAudio]);
 
   const togglePause = () => {
     if (audioInstance) {
+      console.log('toggle pause');
+      console.log('audioInstance', audioInstance);
       if (isPlaying) {
         audioInstance.pause();
       } else {

@@ -18,8 +18,8 @@ import { useHotkeys } from '@mantine/hooks';
 
 
 function TranscriptPlayer() {
-	const [enableEdit] = useAtom<boolean>(enableTranscriptEdit);
-	const [isPlaying] = useAtom<boolean>(audioPlaying);
+	const [enableEdit] = useAtom(enableTranscriptEdit);
+	const [isPlaying] = useAtom(audioPlaying);
 
 	const {
 		togglePause,

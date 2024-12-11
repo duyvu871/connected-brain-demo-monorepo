@@ -9,9 +9,9 @@ export default function Page({ params }: { params: { recordId: string } }): Reac
     return (
       <AppLayout>
           <MainSidebarLayout customHeader={<><VisibleDrawerPanel /></>}>
-            <PlayerProvider>
+            {/*<PlayerProvider>*/}
               <Playground id={params.recordId}/>
-            </PlayerProvider>
+            {/*</PlayerProvider>*/}
           </MainSidebarLayout>
       </AppLayout>
     )
