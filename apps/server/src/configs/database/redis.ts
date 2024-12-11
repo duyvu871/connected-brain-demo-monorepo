@@ -24,7 +24,8 @@ const REDIS_CONNECT_TIMEOUT = 10000,
 
 const handleConnectTimeout = () => {
 	connectedTimeout = setTimeout(() => {
-		throw new Error(JSON.stringify(REDIS_CONNECT_MESSAGE));
+		// throw new Error(JSON.stringify(REDIS_CONNECT_MESSAGE));
+		console.log('Redis connect timeout');
 	}, REDIS_CONNECT_TIMEOUT);
 };
 

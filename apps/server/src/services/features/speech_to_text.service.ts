@@ -54,6 +54,8 @@ export default class SpeechToTextService {
 
 				if (RedisInstance) {
 					RedisInstance.unsubscribe();
+					RedisInstance.quit();
+					console.log('redis unsubscribe');
 				}
 			});
 
@@ -74,7 +76,7 @@ export default class SpeechToTextService {
 						const auditData = await this.get_audit(data.id);
 						console.log('status:', auditData.status);
 						if (auditData.status === 'done') {
-							socket.emit("s2t:transcript", JSON.stringify(auditData));
+							clientConnect.get(sessionId)?.emit("s2t:transcript", JSON.stringify(auditData));
 						} else if (auditData.status === 'processing') {
 							const channel = `s2t:transcript:${data.id.toString()}`;
 
@@ -83,10 +85,14 @@ export default class SpeechToTextService {
 								if (!RedisInstance.listenerCount('message')) {
 									RedisInstance.on('message', (channel: string, message:string) => {
 										console.log("channel: ", channel);
-										if (clientConnect.has(sessionId)) {
-											clientConnect.get(sessionId)?.emit("s2t:transcript", message);
+										if (channel === `s2t:transcript:${data.id.toString()}`) {
+											if (clientConnect.has(sessionId)) {
+												clientConnect.get(sessionId)?.emit("s2t:transcript", message);
+											}
 										}
 									})
+								} else {
+									await RedisInstance.unsubscribe(channel);
 								}
 							}
 						}

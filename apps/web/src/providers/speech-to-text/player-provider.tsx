@@ -88,7 +88,7 @@ export const PlayerProvider = ({ children }: {children: React.ReactNode}): React
     // return () => {
     //   document.removeEventListener('click', initializeAudio);
     // };
-  }, []);
+  }, [initializeAudio]);
 
   const togglePause = () => {
     if (audioInstance) {
