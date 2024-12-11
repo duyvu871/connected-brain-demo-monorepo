@@ -30,12 +30,13 @@ function AppS2T({id}: {id?: string}) {
 
 	useLayoutEffect(() => {
 		if (!isSectionLoad && id) {
+			console.log("id", id);
 			setCurrentSection(id);
 		}
 	}, [id, isSectionLoad, setCurrentSection]);
 
 	useLayoutEffect(() => {
-		if (isSectionLoad) {
+		if (currentSection) {
 			const socketConnectEndpoint =
 				`${process.env.NEXT_PUBLIC_API_BASE_URL}${api_route.API.feature.SPEECH_TO_TEXT.socket}`
 			console.log("socket place:", socketConnectEndpoint);
@@ -76,7 +77,7 @@ function AppS2T({id}: {id?: string}) {
 				if (socket) socket.disconnect();
 			}
 		}
-	}, [isSectionLoad])
+	}, [currentSection]);
 
 	useLayoutEffect(() => {
 		if (currentSection) {

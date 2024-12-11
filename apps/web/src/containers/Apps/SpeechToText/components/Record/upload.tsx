@@ -7,7 +7,7 @@ import { useAudioUpload } from '@/containers/Apps/SpeechToText/hooks/useSpeechTo
 import { APIs } from '@/global/contants/route.ts';
 import { useAtom } from 'jotai';
 import { sectionId } from '@/containers/Apps/SpeechToText/states/jotai';
-import { useRouter } from 'next/navigation';
+import { permanentRedirect, redirect, useRouter, RedirectType } from 'next/navigation';
 import { Box } from '@mantine/core';
 import { CiFileOn } from 'react-icons/ci';
 import { IoCloseSharp } from 'react-icons/io5';
@@ -64,11 +64,15 @@ const UploadAudio: React.FC<UploadAudioProps> = ({
 				const uploadResponse = await uploadAudio(selectedFile);
 				if (!uploadResponse) return;
 				success('Audio uploaded successfully!');
+				console.log('uploadResponse', uploadResponse);
 				setSectionId(uploadResponse.id);
 				if (uploadResponse.id) {
-					router.push('/app/speech-to-text/' + uploadResponse.id);
+					const directURL = `/app/speech-to-text/${uploadResponse.id}`;
+					// router.replace(directURL);
+					window.location.href = directURL;
 				}
 				setSelectedFile(null);
+				
 			} catch (uploadError) {
 				error('Upload failed. Please try again.');
 				console.error(uploadError);
