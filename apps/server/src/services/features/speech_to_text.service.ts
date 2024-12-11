@@ -84,16 +84,16 @@ export default class SpeechToTextService {
 								await RedisInstance.subscribe(channel);
 								console.log('redis subscribe to channel:', channel);
 								if (!RedisInstance.listenerCount('message')) {
-									RedisInstance.on('message', (channel: string, message:string) => {
-										console.log("channel: ", channel);
-										if (channel === `s2t:transcript:${data.id.toString()}`) {
+									RedisInstance.on('message', (channelMessage: string, message:string) => {
+										console.log("channel: ", channelMessage);
+										if (channelMessage === channel) {
 											if (clientConnect.has(sessionId)) {
 												clientConnect.get(sessionId)?.emit("s2t:transcript", message);
 											}
 										}
 									})
 								} else {
-									await RedisInstance.unsubscribe(channel);
+									// await RedisInstance.unsubscribe(channel);
 								}
 							}
 						}
