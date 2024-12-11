@@ -5,6 +5,7 @@ import SpeechToTextService from '@/services/features/speech_to_text.service';
 import { SentencesResponse } from 'assemblyai';
 import mongoLoader from '@/loaders/mongo.loader';
 import { getRedis, initRedis } from '@/configs/database/redis';
+import path from 'path';
 
 export default async function SpeechToText(data: ConvertToWavJob['job_data']) {
 	try {
@@ -15,6 +16,7 @@ export default async function SpeechToText(data: ConvertToWavJob['job_data']) {
 		const channel = `s2t:transcript:${data.id.toString()}`;
 
 		const file_path = data.file_name;
+		const basename = path.basename(file_path); // 'audio.mp3'
 		// const file_content = FileStorageService.read_file(file_path);
 		// const convert_buffer = Buffer.from(file_content, 'base64');
 		// const upload_to_google_cloud = isDevelopment ?
@@ -30,7 +32,8 @@ export default async function SpeechToText(data: ConvertToWavJob['job_data']) {
 		// 	filePath: file_path
 		// });
 		const audio_storage_url =
-			isDevelopment ? `http://localhost:3001/storage/Assets/s2t/${data.id.toString()}/audio.mp3` : `https://api.connectedbrain.com.vn/storage/Assets/s2t/${data.id.toString()}/audio.mp3`;
+			isDevelopment ? `http://localhost:3001/storage/Assets/s2t/${data.id.toString()}/audio.wav`
+				: `https://api.connectedbrain.com.vn/storage/Assets/s2t/${data.id.toString()}/audio.wav`;
 		// const transcripts = await CloudSpeech.recognizeAudio(
 		// 	audio_storage_url
 		// );
