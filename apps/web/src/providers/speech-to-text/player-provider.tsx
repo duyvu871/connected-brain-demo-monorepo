@@ -83,12 +83,11 @@ export const PlayerProvider = ({ children }: {children: React.ReactNode}): React
   }, [currentFile, setAudioPlayerInstance, setCurrentTime, setIsPlaying, startInterval, stopInterval]);
 
   useEffect(() => {
-    initializeAudio();
-    // document.addEventListener('click', initializeAudio, { once: true });
-    // return () => {
-    //   document.removeEventListener('click', initializeAudio);
-    // };
-  }, [initializeAudio]);
+    document.addEventListener('click', initializeAudio, { once: true });
+    return () => {
+      document.removeEventListener('click', initializeAudio);
+    };
+  }, []);
 
   const togglePause = () => {
     if (audioInstance) {
