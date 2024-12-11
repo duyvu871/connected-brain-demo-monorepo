@@ -83,7 +83,7 @@ export default class SpeechToTextService {
 							if (RedisInstance) {
 								await RedisInstance.subscribe(channel);
 								console.log('redis subscribe to channel:', channel);
-								if (!RedisInstance.listenerCount('message')) {
+								// if (!RedisInstance.listenerCount('message')) {
 									RedisInstance.on('message', (channelMessage: string, message:string) => {
 										console.log("channel: ", channelMessage);
 										if (channelMessage === channel) {
@@ -92,15 +92,15 @@ export default class SpeechToTextService {
 											}
 										}
 									})
-								} else {
-									// await RedisInstance.unsubscribe(channel);
-								}
+								// } else {
+								// 	// await RedisInstance.unsubscribe(channel);
+								// }
 							}
 						}
 					} catch (e: any) {
 						console.log(e);
 						socket.emit("error", e.message);
-						socket.disconnect(true);
+						// socket.disconnect(true);
 					}
 			})
 		});
