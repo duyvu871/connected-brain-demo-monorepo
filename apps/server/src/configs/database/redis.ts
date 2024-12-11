@@ -82,8 +82,20 @@ const closeRedis = () => {
 	}
 };
 
+const initNewRedis = () => {
+	const instanceRedis = new Redis({
+		enableAutoPipelining: true,
+		host: process.env.REDIS_HOST,
+		port: parseInt(process.env.REDIS_PORT||'6379'),
+		...(process.env.REDIS_PASSWORD ? { password: process.env.REDIS_PASSWORD } : {}),
+		...(process.env.REDIS_USERNAME ? { username: process.env.REDIS_USERNAME } : {}),
+	});
+	handleEventConnect(instanceRedis);
+	return instanceRedis;
+}
+
 process.on('exit', function () {
 	closeRedis();
 });
 
-export { initRedis, getRedis, closeRedis, retryConnect };
+export { initRedis, getRedis, closeRedis, retryConnect, initNewRedis };

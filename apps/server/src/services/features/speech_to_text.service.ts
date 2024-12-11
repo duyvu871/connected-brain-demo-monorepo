@@ -10,7 +10,7 @@ import { Server, Socket } from 'socket.io';
 import { constants } from '@repo/utils';
 import path from 'path';
 import * as http from 'node:http';
-import { getRedis, initRedis } from '@/configs/database/redis';
+import { getRedis, initNewRedis, initRedis } from '@/configs/database/redis';
 import Redis from 'ioredis';
 
 const {api_route} = constants;
@@ -18,7 +18,7 @@ const {api_route} = constants;
 const clientConnect = new Map<string, Socket>();
 
 initRedis();
-const RedisInstance = getRedis().instanceRedis;
+// const RedisInstance = getRedis().instanceRedis;
 
 export default class SpeechToTextService {
 	public static connection(io: Server) {
@@ -45,7 +45,7 @@ export default class SpeechToTextService {
 				clientConnect.delete(sessionId);
 				// return;
 			}
-
+			const RedisInstance = initNewRedis();
 			clientConnect.set(sessionId, socket);
 
 			socket.on('disconnect', () => {
