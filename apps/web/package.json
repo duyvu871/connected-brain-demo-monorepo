@@ -67,7 +67,10 @@
     "usehooks-ts": "^3.1.0",
     "uuid": "^10.0.0",
     "worker-timers": "^8.0.3",
-    "zod": "^3.23.7"
+    "zod": "^3.23.7",
+    "gsap": "^3.12.5",
+    "wavesurfer.js": "^7.8.11",
+    "react-type-animation": "^3.2.0"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^14.2.3",

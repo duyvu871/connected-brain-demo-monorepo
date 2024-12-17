@@ -188,7 +188,7 @@ export default class SpeechToTextController {
 
 	public static update_transcript = AsyncMiddleware.asyncHandler(async (req: Request, res: Response) => {
 		try {
-			const transcript = req.body as z.infer < typeof S2TValidation.updateTranscriptBody > ;
+			const transcript = req.body as z.infer<typeof S2TValidation.updateTranscriptBody>;
 			const transcript_id = transcript.id;
 			const parsed_transcript = S2TValidation.transcript.parse(deFlattenObject(transcript.data).transcript);
 			const current_audit = await SpeechToTextService.get_audit(transcript_id);

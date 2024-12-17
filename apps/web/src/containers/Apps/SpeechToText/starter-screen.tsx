@@ -3,6 +3,7 @@ import { Center, Flex, Title } from '@mantine/core';
 import VoiceRecord from '@/containers/Apps/SpeechToText/components/Record/stream_record';
 import UploadAudio from '@/containers/Apps/SpeechToText/components/Record/upload';
 import { Tab, Tabs } from '@nextui-org/react';
+import WaveformVisualizer from '@/containers/Apps/SpeechToText/components/Record/waveform_visualiser.tsx';
 
 function StarterScreen() {
 	const [activeTab, setActiveTab] = useState<'Upload' | 'Record'>('Upload');
@@ -26,14 +27,15 @@ function StarterScreen() {
 					selectedKey={activeTab}
 					size="lg"
 				>
-					{/*<Tab key="Record" title="Recording">*/}
-					{/*	<Center className="p-5 w-full h-60">*/}
-					{/*		<VoiceRecord size={{*/}
-					{/*			wrapper: 'xl',*/}
-					{/*			icon: 'xl',*/}
-					{/*		}} />*/}
-					{/*	</Center>*/}
-					{/*</Tab>*/}
+					<Tab key="Record" title="Recording">
+						<Center className="p-5 w-full h-fit">
+							{/*<VoiceRecord size={{*/}
+							{/*	wrapper: 'xl',*/}
+							{/*	icon: 'xl',*/}
+							{/*}} />*/}
+							<WaveformVisualizer />
+						</Center>
+					</Tab>
 					<Tab key="Upload" title="Upload">
 						<Center className="p-5 w-full h-60">
 							<UploadAudio
