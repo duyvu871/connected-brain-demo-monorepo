@@ -274,7 +274,7 @@ export default function AudioTranscription() {
 
 	return (
 		<div
-			className="container w-full h-[calc(100vh_-_57px)] mx-auto flex flex-col justify-between items-center p-5 pb-0">
+			className="container w-full h-[calc(100svh_-_57px)] mx-auto flex flex-col justify-start items-center p-5 pb-0">
 			{/*<div className="w-full flex-grow flex flex-col items-center gap-6" />*/}
 			<div className="flex items-center gap-2">
 				<Mic size={32} />
@@ -283,7 +283,7 @@ export default function AudioTranscription() {
 				</span>
 			</div>
 			<Spacer y={5} />
-			<Card className="shadow-none w-full max-w-xl flex flex-grow mx-auto border-0 overflow-hidden rounded-none relative">
+			<Card className="shadow-none w-full max-w-xl flex mx-auto border-0 overflow-hidden rounded-none relative">
 				<CardContent className="p-0 flex-grow flex flex-col relative">
 					<div className="relative">
 						<Button
