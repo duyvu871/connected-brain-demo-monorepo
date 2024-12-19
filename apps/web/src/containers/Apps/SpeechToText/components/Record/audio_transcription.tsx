@@ -397,11 +397,11 @@ export default function AudioTranscription() {
 						className={cn('relative w-fit flex justify-center items-center w-24 h-24', {})}
 					>
 						<div
-							className={cn('absolute z-[800] rounded-full transition-all bg-zinc-600 w-16 h-16')}
+							className={cn('absolute z-[100] rounded-full transition-all bg-zinc-600 w-16 h-16')}
 							ref={animationMicRef}
 						/>
 						<div
-							className={cn('record-mic relative z-[801] rounded-full bg-zinc-800 shadow-[inset_0_0_20px_1px] flex justify-center items-center cursor-pointer')}
+							className={cn('record-mic relative z-[101] rounded-full bg-zinc-800 shadow-[inset_0_0_20px_1px] flex justify-center items-center cursor-pointer')}
 							data-start-record={isRecording}
 							onClick={handleRecordingToggle}
 						>
