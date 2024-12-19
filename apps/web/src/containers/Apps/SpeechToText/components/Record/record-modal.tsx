@@ -65,6 +65,7 @@ export function RecordModal() {
 					onClose={() => handleCloseModal()}
 					onOpenChange={() => {}}
 					placement="auto"
+					size="3xl"
 				>
 					<ModalContent className="m-0 px-2 rounded-none sm:rounded-md border-none sm:border sm:border-zinc-800 sm:p-2.5 bg-zinc-950" >
 						{(onClose) => (

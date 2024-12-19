@@ -105,6 +105,18 @@ function AppS2T({id}: {id?: string}) {
 			})();
 		}
 	}, [currentSection]);
+
+	useEffect(() => {
+		document.addEventListener("DOMContentLoaded", () => {
+			document.addEventListener('hide.bs.modal', (event) => {
+				if (document.activeElement) {
+					// @ts-ignore
+					document.activeElement.blur();
+				}
+			});
+		});
+	}, []);
+
 	return (
 		<PlayerProvider>
 			<DynamicContentLoaded>

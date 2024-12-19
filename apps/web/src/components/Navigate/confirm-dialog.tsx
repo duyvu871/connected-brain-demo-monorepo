@@ -35,7 +35,7 @@ const ConfirmDialog = forwardRef<
 			<AlertDialogTrigger asChild>
 				{children || <Button variant="outline">Show Dialog</Button>}
 			</AlertDialogTrigger>
-			<AlertDialogContent className={cn(theme, 'border-zinc-700 bg-zinc-950 w-fit min-w-[80vw] sm:min-w-[400px]')} ref={ref}>
+			<AlertDialogContent className={cn(theme, 'z-[400] border-zinc-700 bg-zinc-950 w-fit min-w-[80vw] sm:min-w-[400px]')} ref={ref}>
 				<AlertDialogHeader>
 					<AlertDialogTitle className="dark:text-zinc-100">{title}</AlertDialogTitle>
 					<AlertDialogDescription className="dark:text-zinc-100">{description}</AlertDialogDescription>

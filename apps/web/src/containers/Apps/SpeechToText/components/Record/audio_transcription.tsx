@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, useCallback } from 'react'
 import { Button } from "@ui/shadcn-ui/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@ui/shadcn-ui/ui/card"
 import { Mic, Square, Sun, Moon, CheckIcon } from 'lucide-react'
@@ -20,7 +20,8 @@ import {
 import { Popover, PopoverContent, PopoverTrigger, Spacer } from '@nextui-org/react'
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden'
 import { DialogDescription, DialogTitle } from '@ui/shadcn-ui/ui/dialog.tsx';
-
+import axios from '@/libs/axios/v1/axios.ts';
+import "./audio_transcipt.css";
 
 const CLOSE_SIGNAL = "CLOSE"
 
@@ -29,6 +30,17 @@ interface TranscriptionItem {
 	end_time: number;
 	text: string;
 }
+
+const Cursor = () => (
+	<svg
+		className="cursor"
+		viewBox="8 4 8 16"
+		xmlns="http://www.w3.org/2000/svg"
+	>
+		<rect fill="#fff" height="12" width="4" x="10" y="6" />
+	</svg>
+)
+
 
 export default function AudioTranscription() {
 	const [isRecording, setIsRecording] = useState<boolean>(false)
@@ -46,9 +58,12 @@ export default function AudioTranscription() {
 	const analyserRef = useRef<AnalyserNode | null>(null);
 
 	const [cumulativeText , setCumulativeText] = useState<string>('')
+	const [translatedText, setTranslatedText] = useState<string>('')
+	const [sourceLang, setSourceLang] = useState<string>('vi')
+	const [toLanguage, setToLanguage] = useState<string>('en')
 
 	const addTranscription = (text: string) => {
-		setCumulativeText(prev => prev + " " + text)
+		setCumulativeText(prev => prev + ". " + text)
 	}
 
 	const languages = [
@@ -73,28 +88,36 @@ export default function AudioTranscription() {
 		{ name: 'Bengali', code: 'bn' },
 		{ name: 'Filipino', code: 'fil' },
 		{ name: 'Urdu', code: 'ur' },
-	]
-	const [selectedLanguage, setSelectedLanguage] = useState<string>('vi');
+	] as const;
+	const [selectedLanguage, setSelectedLanguage] = useState<string>('en');
 	const [isOpenSelectLanguage, setIsOpenSelectLanguage] = useState<boolean>(false);
 
-	useEffect(() => {
-		return () => {
-			stopRecording()
-		}
-	}, [])
+	const [displayResponse, setDisplayResponse] = useState<string>("");
+	const [completedTyping, setCompletedTyping] = useState<boolean>(false);
 
-	useEffect(() => {
-		if (transcriptionRef.current && viewWrapperRef.current) {
-			console.log(transcriptionRef.current.offsetTop, viewWrapperRef.current.clientHeight);
-			if (transcriptionRef.current.offsetTop > viewWrapperRef.current.clientHeight) {
-				transcriptionRef.current.scrollIntoView({
-					behavior: "smooth",
-					block: "end",
-					inline: "nearest",
-				})
-			}
+	const getCompletion = useCallback(async (text: string) => {
+		if (!text.trim().length) {
+			setTranslatedText("");
+			return;
 		}
-	}, [transcription])
+
+		try {
+			const fromLanguage = sourceLang;
+			const toLanguage = selectedLanguage;
+			console.log(fromLanguage, toLanguage);
+			const response = await axios.v1.translate({
+				text,
+				from: fromLanguage.toString(),
+				to: toLanguage.toString(),
+			});
+			if (response) {
+				console.log(response);
+				setTranslatedText(response);
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	}, [sourceLang, selectedLanguage]);
 
 	const resetAnimationMic = () => {
 		if (animationMicRef.current) {
@@ -217,162 +240,168 @@ export default function AudioTranscription() {
 		}
 	};
 
+	useEffect(() => {
+		return () => {
+			stopRecording()
+		}
+	}, [])
+
+	useEffect(() => {
+		if (transcriptionRef.current && viewWrapperRef.current) {
+			console.log(transcriptionRef.current.offsetTop, viewWrapperRef.current.clientHeight);
+			if (transcriptionRef.current.offsetTop > viewWrapperRef.current.clientHeight) {
+				transcriptionRef.current.scrollIntoView({
+					behavior: "smooth",
+					block: "end",
+					inline: "nearest",
+				})
+			}
+		}
+	}, [transcription])
+
+	useEffect(() => {
+		if (cumulativeText) {
+			void getCompletion(cumulativeText);
+		}
+	}, [cumulativeText, getCompletion]);
 
 	return (
-		<Card className="w-full max-w-xl h-fit mx-auto border-0 overflow-hidden rounded-none relative">
-			<div className="relative">
-				{/*<Select*/}
-				{/*	data={languages.map(lang => ({value: lang.code, label:lang.name}))}*/}
-				{/*	onChange={(code) => code && setSelectedLanguage(code)}*/}
-				{/*	role="combobox"*/}
-				{/*	styles={{*/}
-				{/*		dropdown: {*/}
-				{/*			position: 'absolute',*/}
-				{/*			zIndex: 1000,*/}
-				{/*		}*/}
-				{/*	}}*/}
-				{/*	value={selectedLanguage}*/}
-				{/*/>*/}
-				<Button
-					className="w-full justify-between dark:text-zinc-400 text-zinc-700 bg-zinc-100 dark:bg-zinc-900 border-zinc-300 dark:border-zinc-700"
-					onClick={() => setIsOpenSelectLanguage(true)}
-					role="combobox"
-					variant="outline"
-				>
-					{languages.find(lang => lang.code === selectedLanguage)?.name || "Select language..."}
-				</Button>
-				<Popover isOpen={isOpenSelectLanguage} onOpenChange={(open) => setIsOpenSelectLanguage(open)} placement="bottom-start">
-					<PopoverTrigger >
-						<div />
-					</PopoverTrigger>
-					<PopoverContent className="z-[600] rounded-lg overflow-hidden p-0">
-						{/*<DialogOverlay className="z-[240]" />*/}
-						{/*<DialogPrimitive.Content*/}
-						{/*	className={cn(*/}
-						{/*		"fixed left-[50%] top-[50%] z-[250] grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg",*/}
-						{/*		"p-5 md:w-[320px] md:p-0 bg-opacity-0 border-0"*/}
-						{/*	)}*/}
-						{/*	*/}
-						{/*>*/}
-						{/*	<VisuallyHidden.Root asChild>*/}
-						{/*		<DialogTitle>Choose a model</DialogTitle>*/}
-						{/*	</VisuallyHidden.Root>*/}
-						{/*	<VisuallyHidden.Root asChild>*/}
-						{/*		<DialogDescription>Choose a model</DialogDescription>*/}
-						{/*	</VisuallyHidden.Root>*/}
-						<Command className="bg-zinc-100 dark:bg-zinc-900 border-zinc-300 dark:border-zinc-700">
-							<CommandInput className="h-9 border-zinc-300 dark:border-zinc-700 text-zinc-700 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-400" placeholder="Search model..." />
-							<CommandList className="border-zinc-300 dark:border-zinc-700">
-								<CommandEmpty>No language found.</CommandEmpty>
-								<CommandGroup>
-									{languages.map((language, index) => (
-										<CommandItem
-											className={cn(
-												"flex items-center p-2 cursor-pointer hover:bg-zinc-200 dark:hover:bg-zinc-800",
-												selectedLanguage === language.code && "bg-zinc-200 dark:bg-zinc-800 text-muted-foreground",
-												index !== languages.length - 1 && "mb-0.5"
-											)}
-											key={`model-${language.code}`}
-											onSelect={(currentValue) => {
-												setSelectedLanguage(language.code);
-												setIsOpenSelectLanguage(false)
-											}}
-											value={language.name}
-										>
-											{language.name}
-											<CheckIcon
-												className={cn(
-													"ml-auto h-4 w-4",
-													selectedLanguage === language.code ? "opacity-100" : "opacity-0"
-												)}
-											/>
-										</CommandItem>
-									))}
-								</CommandGroup>
-							</CommandList>
-						</Command>
-						{/*<DialogPrimitive.Close className="absolute right-7 top-7 sm:right-2 sm:top-2 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">*/}
-						{/*	<Cross2Icon className="h-4 w-4" />*/}
-						{/*	<span className="sr-only">Close</span>*/}
-						{/*</DialogPrimitive.Close>*/}
-						{/*</DialogPrimitive.Content>*/}
-					</PopoverContent>
-				</Popover>
+		<div
+			className="container w-full h-[calc(100vh_-_57px)] mx-auto flex flex-col justify-between items-center p-5 pb-0">
+			{/*<div className="w-full flex-grow flex flex-col items-center gap-6" />*/}
+			<div className="flex items-center gap-2">
+				<Mic size={32} />
+				<span className="text-xl text-zinc-700 dark:text-zinc-100">
+					Real-time Transcript
+				</span>
 			</div>
 			<Spacer y={5} />
-			<CardContent className="p-0 relative">
-				<div className="h-96 sm:rounded-md bg-zinc-900 overflow-y-auto border-b border-zinc-700" ref={viewWrapperRef}>
-					{/*<h2 className="text-xl font-semibold mb-2">Transcription</h2>*/}
-					<div className="p-4 h-fit mb-4 gap-0.5">
-						<p className="break-words">
-							{cumulativeText}
-						</p>
-
-						{/*{transcription.map((item, transcriptIndex) => (*/}
-						{/*	<>*/}
-						{/*		/!*{transcriptIndex === transcription.length - 1 ? (*!/*/}
-						{/*		/!*	<TypeAnimation*!/*/}
-						{/*		/!*		omitDeletionAnimation*!/*/}
-						{/*		/!*		ref={transcriptionRef}*!/*/}
-						{/*		/!*		repeat={1}*!/*/}
-						{/*		/!*		sequence={[*!/*/}
-						{/*		/!*			item.text,*!/*/}
-						{/*		/!*			3000,*!/*/}
-						{/*		/!*		]}*!/*/}
-						{/*		/!*		// sequence={[cumulativeText, 3000]}*!/*/}
-						{/*		/!*		speed={{ type: 'keyStrokeDelayInMs', value: 30 }}*!/*/}
-						{/*		/!*		splitter={(str) => str.split(/(?= )/)} // 'Lorem ipsum dolor' -> ['Lorem', ' ipsum', ' dolor']*!/*/}
-						{/*		/!*		style={{ fontSize: '1em', display: 'block', minHeight: '30px' }}*!/*/}
-						{/*		/!*		wrapper="span"*!/*/}
-						{/*		/!*	/>*!/*/}
-						{/*		/!*) : (*!/*/}
-						{/*		/!*	item.text.split(' ').map((word, index) => (*!/*/}
-						{/*		/!*		<span key={`${word}-${transcriptIndex}-${index}`}>{word}</span>*!/*/}
-						{/*		/!*	))*!/*/}
-						{/*		/!*)}*!/*/}
-						{/*		<span>{item.text}</span>*/}
-						{/*	</>*/}
-						{/*))}*/}
-					</div>
-				</div>
-				{/*<p className="text-center my-4">Click "Start Recording" to begin transcribing your audio in real-time.</p>*/}
-				<div className="flex flex-col justify-center items-center gap-10 my-5">
-					<div className="relative flex flex-col justify-center items-center p-2 gap-4">
-						<div className="absolute transform-x-[-50%] transform-y-[-50%]">
-							<Loader
-								className="transition-all"
-								scale={2}
-								size="lg"
-								style={{
-									'--mantine-scale': !isRecording ? '3' : '0',
-								}}
-								type="ring"
-							/>
-						</div>
-						<div
-							className={cn('relative w-fit flex justify-center items-center w-24 h-24', {})}
+			<Card className="w-full max-w-xl flex-grow h-fit mx-auto border-0 overflow-hidden rounded-none relative">
+				<CardContent className="p-0 h-full flex flex-col relative">
+					<div className="relative">
+						<Button
+							className="w-full justify-between dark:text-zinc-400 text-zinc-700 bg-zinc-100 dark:bg-zinc-900 border-zinc-300 dark:border-zinc-700"
+							onClick={() => setIsOpenSelectLanguage(true)}
+							role="combobox"
+							variant="outline"
 						>
-							<div
-								className={cn('absolute z-[800] rounded-full transition-all bg-zinc-600 w-16 h-16')}
-								ref={animationMicRef}
-							/>
-							<div
-								className={cn('record-mic relative z-[801] rounded-full bg-zinc-800 shadow-[inset_0_0_20px_1px] flex justify-center items-center cursor-pointer',)}
-								data-start-record={isRecording}
-								onClick={handleRecordingToggle}
-							>
-								<IoMicSharp
-									className={cn('text-white transition-all', {
-										'text-red-500': isRecording,
-									})}
-									size={42}
-								/>
+							{languages.find(lang => lang.code === selectedLanguage)?.name || "Select language..."}
+						</Button>
+						<Popover isOpen={isOpenSelectLanguage} onOpenChange={(open) => setIsOpenSelectLanguage(open)}
+										 placement="bottom-start">
+							<PopoverTrigger>
+								<div />
+							</PopoverTrigger>
+							<PopoverContent className="z-[600] rounded-lg overflow-hidden p-0">
+								<Command className="bg-zinc-100 dark:bg-zinc-900 border-zinc-300 dark:border-zinc-700">
+									<CommandInput
+										className="h-9 border-zinc-300 dark:border-zinc-700 text-zinc-700 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-400"
+										placeholder="Search model..." />
+									<CommandList className="border-zinc-300 dark:border-zinc-700">
+										<CommandEmpty>No language found.</CommandEmpty>
+										<CommandGroup>
+											{languages.map((language, index) => (
+												<CommandItem
+													className={cn(
+														"flex items-center p-2 cursor-pointer hover:bg-zinc-200 dark:hover:bg-zinc-800",
+														selectedLanguage === language.code && "bg-zinc-200 dark:bg-zinc-800 text-muted-foreground",
+														index !== languages.length - 1 && "mb-0.5"
+													)}
+													key={`model-${language.code}`}
+													onSelect={(currentValue) => {
+														setSelectedLanguage(language.code);
+														setIsOpenSelectLanguage(false)
+													}}
+													value={language.name}
+												>
+													{language.name}
+													<CheckIcon
+														className={cn(
+															"ml-auto h-4 w-4",
+															selectedLanguage === language.code ? "opacity-100" : "opacity-0"
+														)}
+													/>
+												</CommandItem>
+											))}
+										</CommandGroup>
+									</CommandList>
+								</Command>
+							</PopoverContent>
+						</Popover>
+					</div>
+					<Spacer y={5} />
+
+					<div className="flex flex-grow gap-5 flex-col sm:flex-row">
+						<div className="flex-grow h-full">
+							<div className="w-full px-1 bg-zinc-800">
+								<span className="text-sm font-medium mb-2">
+									{languages.find(lang => lang.code === 'vi')?.name || 'Select language...'}
+								</span>
+							</div>
+							<div className="h-36 sm:h-96 sm:rounded-md bg-zinc-900 overflow-y-auto border-b border-zinc-700"
+									 ref={viewWrapperRef}>
+								<div className="p-4 h-fit mb-4 gap-0.5">
+									<p className="break-words">
+										{cumulativeText}
+										<Cursor />
+									</p>
+								</div>
+							</div>
+						</div>
+						<div className="flex-grow h-full">
+							<div className="w-full px-1 bg-zinc-800">
+								<span className="text-sm font-medium mb-2">
+									{languages.find(lang => lang.code === selectedLanguage)?.name || 'Select language...'}
+								</span>
+							</div>
+							<div className="h-36 sm:h-96 sm:rounded-md bg-zinc-900 overflow-y-auto border-b border-zinc-700">
+								<div className="p-4 h-fit mb-4 gap-0.5">
+									<p className="break-words">
+										{translatedText}
+									</p>
+								</div>
 							</div>
 						</div>
 					</div>
+					{/*<p className="text-center my-4">Click "Start Recording" to begin transcribing your audio in real-time.</p>*/}
+				</CardContent>
+			</Card>
+			<div className="flex flex-col justify-center items-center gap-10 my-5">
+				<div className="relative flex flex-col justify-center items-center p-2 gap-4">
+					<div className="absolute transform-x-[-50%] transform-y-[-50%]">
+						<Loader
+							className="transition-all"
+							scale={2}
+							size="lg"
+							style={{
+								'--mantine-scale': !isRecording ? '3' : '0',
+							}}
+							type="ring"
+						/>
+					</div>
+					<div
+						className={cn('relative w-fit flex justify-center items-center w-24 h-24', {})}
+					>
+						<div
+							className={cn('absolute z-[800] rounded-full transition-all bg-zinc-600 w-16 h-16')}
+							ref={animationMicRef}
+						/>
+						<div
+							className={cn('record-mic relative z-[801] rounded-full bg-zinc-800 shadow-[inset_0_0_20px_1px] flex justify-center items-center cursor-pointer')}
+							data-start-record={isRecording}
+							onClick={handleRecordingToggle}
+						>
+							<IoMicSharp
+								className={cn('text-white transition-all', {
+									'text-red-500': isRecording,
+								})}
+								size={42}
+							/>
+						</div>
+					</div>
 				</div>
-			</CardContent>
-		</Card>
-)
+			</div>
+		</div>
+	)
 }
 

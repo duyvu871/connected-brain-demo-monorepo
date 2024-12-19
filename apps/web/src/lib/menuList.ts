@@ -71,7 +71,18 @@ export function getMenuList(pathname: string): Group[] {
 					label: "Speech to Text",
 					active: pathname.includes("/app/speech-to-text"),
 					icon: Voicemail,
-					submenus: []
+					submenus: [
+						{
+							href: "/app/speech-to-text/realtime-transcript",
+							label: "Realtime Transcript",
+							active: pathname.includes("/app/speech-to-text/realtime-transcript")
+						},
+						{
+							href: "/app/speech-to-text/transcribe",
+							label: "Transcribe",
+							active: pathname.includes("/app/speech-to-text/transcribe")
+						},
+					]
 				},
 				{
 					href: "/app/text-to-speech",
