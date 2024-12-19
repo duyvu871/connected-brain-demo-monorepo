@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import type { LucideIcon } from "lucide-react";
-import { ChevronDown, Dot } from "lucide-react";
+import { ChevronDown, CornerDownRight } from "lucide-react";
 
 import { cn } from "@repo/utils";
 import { Button } from "@ui/shadcn-ui/ui/button";
@@ -120,7 +120,7 @@ export function CollapseMenuButton({
 					>
 						<Link href={href}>
               <span className="mr-4 ml-2">
-                <Dot size={18} />
+                <CornerDownRight size={18} />
               </span>
 							<p
 								className={cn(

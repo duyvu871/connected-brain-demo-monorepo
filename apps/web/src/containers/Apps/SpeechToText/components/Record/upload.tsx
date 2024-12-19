@@ -67,7 +67,7 @@ const UploadAudio: React.FC<UploadAudioProps> = ({
 				console.log('uploadResponse', uploadResponse);
 				setSectionId(uploadResponse.id);
 				if (uploadResponse.id) {
-					const directURL = `/app/speech-to-text/${uploadResponse.id}`;
+					const directURL = `/app/speech-to-text/transcribe/${uploadResponse.id}`;
 					router.replace(directURL);
 					// window.location.href = directURL;
 				}
