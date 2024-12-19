@@ -18,6 +18,7 @@ import { constants } from '@repo/utils';
 import RotateLoader from '@ui/resource-ui/Loader/spinner.tsx';
 import TranscriptPanel from '@/containers/Apps/SpeechToText/components/playground/transcript-panel.tsx';
 import { PlayerProvider } from '@/providers/speech-to-text/player-provider.tsx';
+import { RecordModal } from '@/containers/Apps/SpeechToText/components/Record/record-modal.tsx';
 
 function AppS2T({id}: {id?: string}) {
 	const {api_route} = constants;
@@ -155,6 +156,7 @@ function AppS2T({id}: {id?: string}) {
 						</>
 					</Flex>
 				</Center>
+				<RecordModal />
 			</DynamicContentLoaded>
 		</PlayerProvider>
 	);

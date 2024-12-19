@@ -57,3 +57,5 @@ export const PLAYER_DEFAULT_SETTINGS: PlaybackSettings = {
 };
 
 export const PLAYER_SPEED_OPTIONS = {};
+
+export const recordModalVisible = atom<boolean>(false);

@@ -21,7 +21,7 @@ interface VoiceRecordModalProps {
 function VoiceRecord({ setTextContent, size = { wrapper: 'sm', icon: 'sm' } }: VoiceRecordModalProps) {
 	const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
 	const [audioBase64, setAudioBase64] = useState<string | null>(null);
-	const [isRecording, setIsRecording] = useState(false);
+	const [isRecording, setIsRecording] = useState<boolean>(false);
 	const [blobUrl, setBlobUrl] = useState<string | null>(null);
 
 	const router = useRouter();

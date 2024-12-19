@@ -93,7 +93,7 @@ const UploadAudio: React.FC<UploadAudioProps> = ({
 			className={cn('flex flex-col items-center justify-center gap-5', {
 				'w-96 h-[320px]': size === 'xl',
 				'w-72 h-72': size === 'lg',
-				'w-5 h-52': size === 'md',
+				'w-52 h-52': size === 'md',
 				'w-40 h-40': size === 'sm',
 				'w-32 h-32': size === 'xs',
 			}, classNames.container)}
