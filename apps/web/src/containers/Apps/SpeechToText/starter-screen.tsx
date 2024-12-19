@@ -18,37 +18,46 @@ function StarterScreen() {
 				</Title>
 			</Flex>
 			<Flex align="center" direction="column" justify="center">
-				<Tabs
-					aria-label="Dynamic tabs"
-					classNames={{
-						tabList: 'bg-zinc-900',
-						cursor: 'dark:bg-zinc-700',
-					}}
-					onSelectionChange={setActiveTab as any}
-					selectedKey={activeTab}
-					size="lg"
-				>
-					<Tab key="Record" title="Recording">
-						<Center className="p-5 w-full h-fit">
-							{/*<VoiceRecord size={{*/}
-							{/*	wrapper: 'xl',*/}
-							{/*	icon: 'xl',*/}
-							{/*}} />*/}
-							<RecordModalTrigger />
-						</Center>
-					</Tab>
-					<Tab key="Upload" title="Upload">
-						<Center className="p-5 w-full h-60">
-							<UploadAudio
-								classNames={{
-									container: 'h-fit',
-									label: 'border border-zinc-700 rounded-full p-1',
-								}}
-								size="lg"
-							/>
-						</Center>
-					</Tab>
-				</Tabs>
+				<Center className="p-5 w-full h-60">
+					<UploadAudio
+						classNames={{
+							container: 'h-fit',
+							label: 'border border-zinc-700 rounded-full p-1',
+						}}
+						size="lg"
+					/>
+				</Center>
+				{/*<Tabs*/}
+				{/*	aria-label="Dynamic tabs"*/}
+				{/*	classNames={{*/}
+				{/*		tabList: 'bg-zinc-900',*/}
+				{/*		cursor: 'dark:bg-zinc-700',*/}
+				{/*	}}*/}
+				{/*	onSelectionChange={setActiveTab as any}*/}
+				{/*	selectedKey={activeTab}*/}
+				{/*	size="lg"*/}
+				{/*>*/}
+				{/*	<Tab key="Record" title="Recording">*/}
+				{/*		<Center className="p-5 w-full h-fit">*/}
+				{/*			/!*<VoiceRecord size={{*!/*/}
+				{/*			/!*	wrapper: 'xl',*!/*/}
+				{/*			/!*	icon: 'xl',*!/*/}
+				{/*			/!*}} />*!/*/}
+				{/*			<RecordModalTrigger />*/}
+				{/*		</Center>*/}
+				{/*	</Tab>*/}
+				{/*	<Tab key="Upload" title="Upload">*/}
+				{/*		<Center className="p-5 w-full h-60">*/}
+				{/*			<UploadAudio*/}
+				{/*				classNames={{*/}
+				{/*					container: 'h-fit',*/}
+				{/*					label: 'border border-zinc-700 rounded-full p-1',*/}
+				{/*				}}*/}
+				{/*				size="lg"*/}
+				{/*			/>*/}
+				{/*		</Center>*/}
+				{/*	</Tab>*/}
+				{/*</Tabs>*/}
 			</Flex>
 		</Flex>
 	);

@@ -5,7 +5,7 @@ import MainSidebarLayout from '@/layouts/main-sidebar.tsx';
 import { getServerAuthSession } from '@/lib/nextauthOptions';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-import DirectPage from '@/containers/Apps/SpeechToText/direct-page.tsx';
+import HeaderNavigateItem from '@/components/Chatbot/HeaderNavigateItem.tsx';
 // import Starter from '@/containers/Apps_v1/SpeechToText/starter.tsx';
 
 async function Page() {
@@ -18,7 +18,7 @@ async function Page() {
     return (
       <AppLayout>
         <MainSidebarLayout customHeader={<></>}>
-          <DirectPage />
+          <Playground />
         </MainSidebarLayout>
       </AppLayout>
     );

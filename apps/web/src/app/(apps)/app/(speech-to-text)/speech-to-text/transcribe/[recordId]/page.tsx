@@ -4,11 +4,15 @@ import MainSidebarLayout from '@/layouts/main-sidebar.tsx';
 import Playground from '@/containers/Apps/SpeechToText/playground.tsx';
 import { PlayerProvider } from '@/providers/speech-to-text/player-provider.tsx';
 import VisibleDrawerPanel from '@/containers/Apps/SpeechToText/components/Header/visible-drawer-panel.tsx';
+import HeaderNavigateItem from '@/components/Chatbot/HeaderNavigateItem.tsx';
 
 export default function Page({ params }: { params: { recordId: string } }): React.ReactNode {
     return (
       <AppLayout>
-          <MainSidebarLayout customHeader={<><VisibleDrawerPanel /></>}>
+          <MainSidebarLayout customHeader={
+            <>
+              <VisibleDrawerPanel />
+            </>}>
             {/*<PlayerProvider>*/}
               <Playground id={params.recordId}/>
             {/*</PlayerProvider>*/}

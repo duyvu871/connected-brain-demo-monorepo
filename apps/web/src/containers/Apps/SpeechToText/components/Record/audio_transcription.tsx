@@ -1,14 +1,16 @@
 'use client'
 
-import React, { useState, useRef, useEffect, useCallback } from 'react'
+import React, { useState, useRef, useEffect, useCallback, forwardRef } from 'react'
 import { Button } from "@ui/shadcn-ui/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@ui/shadcn-ui/ui/card"
-import { Mic, Square, Sun, Moon, CheckIcon } from 'lucide-react'
-import { TypeAnimation } from 'react-type-animation';
-import { Loader , Select, Space } from '@mantine/core'
+import { Card, CardContent} from "@ui/shadcn-ui/ui/card"
+import { Mic, CheckIcon, Download, Pencil, PencilOff } from 'lucide-react'
+import { Loader } from '@mantine/core'
 import { cn } from '@repo/utils';
 import { IoMicSharp } from 'react-icons/io5'
-// import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@ui/shadcn-ui/ui/select';
+import { Popover, PopoverContent, PopoverTrigger, Spacer } from '@nextui-org/react'
+import axios from '@/libs/axios/v1/axios.ts';
+import "./audio_transcipt.css";
+
 import {
 	Command,
 	CommandEmpty,
@@ -17,11 +19,6 @@ import {
 	CommandItem,
 	CommandList,
 } from '@ui/shadcn-ui/ui/command.tsx';
-import { Popover, PopoverContent, PopoverTrigger, Spacer } from '@nextui-org/react'
-import * as VisuallyHidden from '@radix-ui/react-visually-hidden'
-import { DialogDescription, DialogTitle } from '@ui/shadcn-ui/ui/dialog.tsx';
-import axios from '@/libs/axios/v1/axios.ts';
-import "./audio_transcipt.css";
 
 const CLOSE_SIGNAL = "CLOSE"
 
@@ -31,15 +28,17 @@ interface TranscriptionItem {
 	text: string;
 }
 
-const Cursor = () => (
+const Cursor = forwardRef<SVGSVGElement, {isHidden?: boolean}>(({isHidden = true}, ref) => (
 	<svg
-		className="cursor"
+		className={cn("cursor", isHidden ? "invisible" : "")}
+		ref={ref}
 		viewBox="8 4 8 16"
 		xmlns="http://www.w3.org/2000/svg"
 	>
-		<rect fill="#fff" height="12" width="4" x="10" y="6" />
+		<rect className="dark:fill-zinc-300 fill-zinc-500"  height="12" width="4" x="10" y="6" />
 	</svg>
-)
+))
+Cursor.displayName = 'Cursor'
 
 
 export default function AudioTranscription() {
@@ -57,13 +56,20 @@ export default function AudioTranscription() {
 	const animationMicRef = useRef<HTMLDivElement | null>(null);
 	const analyserRef = useRef<AnalyserNode | null>(null);
 
+	const boxWrappedTextRef = useRef<HTMLDivElement | null>(null);
+	const boxWrappedTranslatedTextRef = useRef<HTMLDivElement | null>(null);
+	const boxWrappedTranscriptTextRef = useRef<HTMLDivElement | null>(null);
+	const indicatorRef = useRef<SVGSVGElement | null>(null);
+	
 	const [cumulativeText , setCumulativeText] = useState<string>('')
 	const [translatedText, setTranslatedText] = useState<string>('')
 	const [sourceLang, setSourceLang] = useState<string>('vi')
 	const [toLanguage, setToLanguage] = useState<string>('en')
 
+	const [enableEdit, setEnableEdit] = useState<boolean>(false)
+
 	const addTranscription = (text: string) => {
-		setCumulativeText(prev => prev + ". " + text)
+		setCumulativeText(prev => prev + text + ". ")
 	}
 
 	const languages = [
@@ -89,6 +95,7 @@ export default function AudioTranscription() {
 		{ name: 'Filipino', code: 'fil' },
 		{ name: 'Urdu', code: 'ur' },
 	] as const;
+
 	const [selectedLanguage, setSelectedLanguage] = useState<string>('en');
 	const [isOpenSelectLanguage, setIsOpenSelectLanguage] = useState<boolean>(false);
 
@@ -247,10 +254,10 @@ export default function AudioTranscription() {
 	}, [])
 
 	useEffect(() => {
-		if (transcriptionRef.current && viewWrapperRef.current) {
-			console.log(transcriptionRef.current.offsetTop, viewWrapperRef.current.clientHeight);
-			if (transcriptionRef.current.offsetTop > viewWrapperRef.current.clientHeight) {
-				transcriptionRef.current.scrollIntoView({
+		if (indicatorRef.current && viewWrapperRef.current) {
+			console.log(indicatorRef.current.clientTop, viewWrapperRef.current.clientHeight);
+			if (indicatorRef.current.clientTop > viewWrapperRef.current.clientHeight) {
+				indicatorRef.current.scrollIntoView({
 					behavior: "smooth",
 					block: "end",
 					inline: "nearest",
@@ -276,8 +283,8 @@ export default function AudioTranscription() {
 				</span>
 			</div>
 			<Spacer y={5} />
-			<Card className="w-full max-w-xl flex-grow h-fit mx-auto border-0 overflow-hidden rounded-none relative">
-				<CardContent className="p-0 h-full flex flex-col relative">
+			<Card className="shadow-none w-full max-w-xl flex flex-grow mx-auto border-0 overflow-hidden rounded-none relative">
+				<CardContent className="p-0 flex-grow flex flex-col relative">
 					<div className="relative">
 						<Button
 							className="w-full justify-between dark:text-zinc-400 text-zinc-700 bg-zinc-100 dark:bg-zinc-900 border-zinc-300 dark:border-zinc-700"
@@ -331,33 +338,35 @@ export default function AudioTranscription() {
 					</div>
 					<Spacer y={5} />
 
-					<div className="flex flex-grow gap-5 flex-col sm:flex-row">
-						<div className="flex-grow h-full">
-							<div className="w-full px-1 bg-zinc-800">
-								<span className="text-sm font-medium mb-2">
+					<div className="flex flex-grow gap-5 flex-col justify-start sm:flex-row" ref={boxWrappedTextRef}>
+						<div className="w-full flex flex-col rounded-md overflow-hidden">
+							<div className="w-full flex items-center h-8 px-1 bg-zinc-200 dark:bg-zinc-800">
+								<span className="text-md font-medium dark:text-zinc-200 text-zinc-500">
 									{languages.find(lang => lang.code === 'vi')?.name || 'Select language...'}
 								</span>
 							</div>
-							<div className="h-36 sm:h-96 sm:rounded-md bg-zinc-900 overflow-y-auto border-b border-zinc-700"
-									 ref={viewWrapperRef}>
-								<div className="p-4 h-fit mb-4 gap-0.5">
-									<p className="break-words">
+							<div className="h-32 sm:h-72 bg-zinc-100 dark:bg-zinc-900 overflow-y-auto sm:border-none border-b border-zinc-300 dark:border-zinc-700"
+									 ref={boxWrappedTranscriptTextRef}>
+								<div className="p-4 mb-4 h-fit gap-0.5 min-h-0">
+									<p className="text-sm break-words dark:text-zinc-100 text-zinc-700">
 										{cumulativeText}
-										<Cursor />
+										<Cursor isHidden={false} ref={indicatorRef}/>
 									</p>
 								</div>
 							</div>
 						</div>
-						<div className="flex-grow h-full">
-							<div className="w-full px-1 bg-zinc-800">
-								<span className="text-sm font-medium mb-2">
+						<div className="w-full flex flex-col rounded-md overflow-hidden">
+							<div className="w-full flex items-center h-8 px-1 bg-zinc-200 dark:bg-zinc-800">
+								<span className="text-md font-medium dark:text-zinc-200 text-zinc-500">
 									{languages.find(lang => lang.code === selectedLanguage)?.name || 'Select language...'}
 								</span>
 							</div>
-							<div className="h-36 sm:h-96 sm:rounded-md bg-zinc-900 overflow-y-auto border-b border-zinc-700">
-								<div className="p-4 h-fit mb-4 gap-0.5">
-									<p className="break-words">
+							<div className="h-32 sm:h-72  bg-zinc-100 dark:bg-zinc-900 overflow-y-auto"
+									 ref={boxWrappedTranslatedTextRef}>
+								<div className="p-4 mb-4 h-fit gap-0.5 min-h-0">
+									<p className="text-sm break-words dark:text-zinc-100 text-zinc-700">
 										{translatedText}
+										<Cursor isHidden />
 									</p>
 								</div>
 							</div>
@@ -366,7 +375,12 @@ export default function AudioTranscription() {
 					{/*<p className="text-center my-4">Click "Start Recording" to begin transcribing your audio in real-time.</p>*/}
 				</CardContent>
 			</Card>
-			<div className="flex flex-col justify-center items-center gap-10 my-5">
+			<div className="flex gap-10 justify-center items-center my-5">
+				<div>
+					<div className={cn('w-10 h-10 flex justify-center items-center rounded-full bg-background dark:bg-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors')}>
+						<Download size={20} />
+					</div>
+				</div>
 				<div className="relative flex flex-col justify-center items-center p-2 gap-4">
 					<div className="absolute transform-x-[-50%] transform-y-[-50%]">
 						<Loader
@@ -398,6 +412,16 @@ export default function AudioTranscription() {
 								size={42}
 							/>
 						</div>
+					</div>
+				</div>
+				<div>
+					<div
+						className={cn('w-10 h-10 flex justify-center items-center rounded-full bg-background dark:bg-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors')}
+						onClick={() => {
+							setEnableEdit(!enableEdit)
+						}}
+					>
+						{enableEdit ? <PencilOff size={20} /> : <Pencil size={20} />}
 					</div>
 				</div>
 			</div>
