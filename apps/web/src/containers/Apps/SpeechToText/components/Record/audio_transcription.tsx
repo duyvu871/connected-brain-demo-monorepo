@@ -69,7 +69,7 @@ export default function AudioTranscription() {
 	const [enableEdit, setEnableEdit] = useState<boolean>(false)
 
 	const addTranscription = (text: string) => {
-		setCumulativeText(prev => prev + text + ". ")
+		setCumulativeText(prev => prev + text)
 	}
 
 	const languages = [
