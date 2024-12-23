@@ -1,4 +1,5 @@
 const path = require('node:path');
+const process = require('node:process');
 
 /** @type {import('next').NextConfig} */
 module.exports = {
@@ -24,8 +25,12 @@ module.exports = {
   async rewrites() {
     return [
       {
+        source: "/api/v1/t2s/:path",
+        destination: "http://14.224.188.206:8502/api/v1/t2s/:path"//process.env.NODE_ENV === "development" ? "http://14.224.188.206:8502/api/v1/t2s/:path" : "http://localhost:8502/api/v1/t2s/:path",
+      },
+      {
         source: "/api/v1/t2s",
-        destination: "http://localhost:8502/api/v1/t2s",
+        destination: "http://14.224.188.206:8502/api/v1/t2s/:path"//process.env.NODE_ENV === "development" ? "http://14.224.188.206:8502/api/v1/t2s/:path" : "http://localhost:8502/api/v1/t2s/:path",
       },
       // {
       //   source: "/app/separate/:path",

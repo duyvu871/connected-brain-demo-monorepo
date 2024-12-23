@@ -14,6 +14,7 @@ import {WaveFile} from 'wavefile';
 
 interface ExternalVoice {
 	name: string;
+	speaker: string;
 	apiUrl: string;
 }
 interface APIResponse {
@@ -40,20 +41,29 @@ export default function Starter() {
 	const audioContext = useRef<AudioContext | null>(null)
 	const audioRef = useRef<HTMLAudioElement | null>(null)
 
+	const BASE_PATH = '/api/v1/t2s'
+
 	useEffect(() => {
 		if (typeof window !== "undefined" && "speechSynthesis" in window) {
 			synth.current = window.speechSynthesis
 			audioContext.current = new (window.AudioContext || (window as any).webkitAudioContext)()
-			const updateVoices = () => {
-				// const systemVoices = synth.current!.getVoices()
-				const externalVoice: ExternalVoice = {
-					name: "Giọng miền bắc",
-					apiUrl: "/api/v1/feature/t2s"
-				}
-				setVoices([externalVoice])
+			const updateVoices = async () => {
+				const getVoicesList = await fetch(`${BASE_PATH}/speakers`)
+				const voicesList = await getVoicesList.json() as {message: string, data: string[], success: boolean}
+				const voices: ExternalVoice[] = voicesList.data.map((v) => ({
+					name: v,
+					speaker: v,
+					apiUrl: BASE_PATH
+				}))
+				// const externalVoice: ExternalVoice[] = [{
+				// 	name: "Giọng miền bắc",
+				// 	speaker: "Nam",
+				// 	apiUrl: "/api/v1/feature/t2s"
+				// }];
+				setVoices([...voices])
 			}
 			// synth.current.onvoiceschanged = updateVoices
-			updateVoices()
+			void updateVoices()
 		}
 	}, [])
 
@@ -75,15 +85,16 @@ export default function Starter() {
 					setAudioUrl(null);
 				}
 				try {
+					const formData = new URLSearchParams();
+					formData.append('text', text);
+					formData.append('speaker', voice.speaker);
 					const response = await fetch(voice.apiUrl, {
 						method: 'POST',
 						headers: {
 							'accept': 'application/json',
-							'Content-Type': 'application/json',
+							'Content-Type': 'application/x-www-form-urlencoded',
 						},
-						body: JSON.stringify({
-							text
-						})
+						body: formData
 					});
 					const data: APIResponse = await response.json();
 					if (data.success) {
