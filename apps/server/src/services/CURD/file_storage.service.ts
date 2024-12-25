@@ -124,7 +124,7 @@ export default class FileStorageService {
 		}
 	}
 	// convert to wav
-	public static async convert_to_wav(file_name: string) {
+	public static async convert_to_wav(file_name: string): Promise<boolean> {
 			const file = ffmpeg(file_name);
 			const output_file = file_name.replace('.mp3', '.wav');
 			return new Promise((resolve, reject) => {
@@ -137,7 +137,8 @@ export default class FileStorageService {
 						resolve(true);
 					})
 					.on('error', (err) => {
-						reject(false);
+						console.log('Error converting to wav:', err);
+						resolve(false);
 					}).run();
 			});
 	}

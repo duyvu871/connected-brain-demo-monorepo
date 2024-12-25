@@ -5,6 +5,7 @@ import type { Page as TesseractPage} from "tesseract.js"
 import type { UploadPDFResponse } from 'types/apps/ocr/api.type.ts';
 import axiosWithAuth from '@/libs/axios/v1/axiosWithAuth.ts';
 import type { GetAvailableModelsResponse } from 'types/apps/chatbot/api.type.ts';
+import type { VoiceSeparationApiSeparateResponse } from 'types/apps/voice-separation/api.type.ts';
 
 // Interface to define the shape of the `api.v1` object 
 // This improves code clarity and type checking 
@@ -27,6 +28,9 @@ interface ApiV1 {
 		// uploadAndExtract: (file: File, callback?: (error: AxiosError | null, text?: string) => void) => Promise<string | undefined>;
 		extractWithoutAuth: (file: File, options: AxiosRequestConfig, callback?: (error: AxiosError | null, data?: TesseractPage) => void)
 			=> Promise<TesseractPage | undefined>;
+	};
+	voiceSeparation: {
+		upload: (file: File, callback?: (error: AxiosError | null, data?: VoiceSeparationApiSeparateResponse) => void) => Promise<VoiceSeparationApiSeparateResponse | undefined>;
 	}
 	// ... Other methods for API v1 (products, ...) 
 }
@@ -177,6 +181,28 @@ api.v1 = {
 			return response?.data;
 		},
 	},
+	voiceSeparation: {
+		upload: async (file, callback) => {
+			const formData = new FormData();
+			formData.append('file', file);
+			const config = {
+				method: 'post',
+				configs: {
+					headers: {
+						'Content-Type': 'multipart/form-data',
+					},
+				}
+			} as const;
+			const response = await apiTemplate<VoiceSeparationApiSeparateResponse>(
+				api,
+				'/feature/voice-separation/separate',
+				formData,
+				config,
+				callback
+			);
+			return response?.data;
+		}
+	}
 };
 
 export default api;

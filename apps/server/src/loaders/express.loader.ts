@@ -29,6 +29,7 @@ export default ({app}: {app: Express}) => {
     app.enable('trust proxy'); // trust first proxy
     app.use(cors({
         origin: "*",
+        methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     })); // enable cors
     app.use(bodyParser.json({
         limit: '10mb'

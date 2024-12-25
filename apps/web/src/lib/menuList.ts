@@ -106,16 +106,16 @@ export function getMenuList(pathname: string): Group[] {
 					submenus: []
 				},
 				{
-					href: 'https://14.224.188.206:8887/',
+					href: '/app/voice-separation',
 					label: "Voice Separation",
-					active: false,
+					active: pathname.includes("/app/voice-separation"),
 					icon: Split,
 					submenus: []
 				},
 				{
-					href: 'https://14.224.188.206:8886/',
+					href: '/app/voice-identification',
 					label: "Voice Identification",
-					active: false,
+					active: pathname.includes("/app/voice-identification"),
 					icon: Fingerprint,
 					submenus: []
 				}

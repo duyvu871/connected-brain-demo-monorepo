@@ -3,11 +3,13 @@ import { validateHeader } from '@/middlewares/validate';
 import UserValidation from '@/validations/user.validation';
 import { authenticate } from '@/middlewares/auth';
 import upload from '@/configs/upload';
+import { VoiceSeparationController } from '@/controllers/voice_separation.controller';
 
 export const voiceSeparationRoute: Router = Router();
 
 voiceSeparationRoute.route('/separate').post(
-	validateHeader(UserValidation.getUserHeaders),
-	authenticate,
-	upload({mimetype: /^audio\//}, {fileSize:1024 * 1024 * 100}).single('file')
+	// validateHeader(UserValidation.getUserHeaders),
+	// authenticate,
+	upload({mimetype: /^audio\//}, {fileSize:1024 * 1024 * 100}).single('file'),
+	VoiceSeparationController.upload
 )
