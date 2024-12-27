@@ -8,7 +8,7 @@ import '@ui/styles/UnderlineAnimate.css';
 import * as NavigationMenuRadix from '@radix-ui/react-navigation-menu';
 import { HiOutlineChatBubbleLeftRight } from 'react-icons/hi2';
 import { FaMicrophone } from 'react-icons/fa';
-import { LuPenLine, LuUserCheck2 } from 'react-icons/lu';
+import { LuPenLine, LuUserCheck  } from 'react-icons/lu';
 import { motion } from 'framer-motion';
 import { RiRobot3Line } from 'react-icons/ri';
 import { cn } from '@repo/utils';
@@ -66,7 +66,7 @@ const featureList2: { title: string; href: string; description: string, icon: Re
 		title: 'identify the speaker',
 		href: '/app/identify-speaker',
 		description: 'Identify the speaker in a conversation via audio file.',
-		icon: <LuUserCheck2 className={iconClass} />,
+		icon: <LuUserCheck  className={iconClass} />,
 	},
 ];
 

@@ -1,4 +1,4 @@
-import { File } from '@google-cloud/storage';
+
 import Tesseract, { createScheduler, createWorker, OEM, RecognizeResult } from 'tesseract.js';
 import { fromBuffer } from 'pdf2pic';
 import { CloudStorage } from '@repo/cloud-storage';
@@ -85,7 +85,7 @@ export class OCR {
 	): Promise<RecognizeResult['data'] | null> {
 		try {
 			const bucket = CloudStorage.storage.bucket(bucketName);
-			const pdfFile: File = bucket.file(pdfFileName);
+			const pdfFile = bucket.file(pdfFileName);
 
 			// download PDF file from storage
 			const [buffer] = await pdfFile.download();
@@ -127,7 +127,7 @@ export class OCR {
 			const storage = CloudStorage.getInstanceOfGCS();
 			// console.log('storage', storage);
 			const bucket = storage.bucket(bucketName);
-			const imageFile: File = bucket.file(imageFileName);
+			const imageFile = bucket.file(imageFileName);
 
 			// download image file from storage
 			const [buffer] = await imageFile.download();

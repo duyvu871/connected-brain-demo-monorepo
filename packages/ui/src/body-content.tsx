@@ -1,7 +1,7 @@
 import type { FC} from 'react';
 import React, { useEffect } from 'react';
 import { cn , colorsTheme } from '@repo/utils';
-import { SiIbm, SiNetflix, SiTencentqq, SiTesla } from 'react-icons/si';
+import { SiNetflix, SiTencentqq, SiTesla } from 'react-icons/si';
 import { GrGoogle } from 'react-icons/gr';
 import { FaAmazon, FaFacebook } from 'react-icons/fa';
 import { TfiMicrosoftAlt } from 'react-icons/tfi';
@@ -38,9 +38,6 @@ const sponsorsList = [{
 }, {
     title: 'Meta',
     icon: <FaMeta />,
-}, {
-    title: 'IBM',
-    icon: <SiIbm />,
 }, {
     title: 'Nvidia',
     icon: <BsNvidia />,
