@@ -113,7 +113,8 @@ export function getMenuList(pathname: string): Group[] {
 					submenus: []
 				},
 				{
-					href: '/app/voice-identification',
+					// href: '/app/voice-identification',
+					href: "https://14.224.188.206:8886/",
 					label: "Voice Identification",
 					active: pathname.includes("/app/voice-identification"),
 					icon: Fingerprint,
