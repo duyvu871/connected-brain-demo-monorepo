@@ -36,13 +36,13 @@ const Message = ({ role, content, referenceLink, isStreaming }: MessageProps) =>
 
     return (
         <div className={cn(
-            'flex w-full mb-4',
+            'flex w-full mb-4 my-10',
             isAssistant ? 'justify-start' : 'justify-end'
         )}>
             <div className={cn(
                 'max-w-[80%] rounded-lg p-4',
                 isAssistant
-                    ? 'bg-zinc-200 dark:bg-zinc-800 text-black dark:text-white'
+                    ? 'hidden:bg-zinc-200 hidden:dark:bg-zinc-800 text-black dark:text-white'
                     : 'bg-zinc-600 text-white'
             )}>
                 {content ? (
@@ -60,7 +60,7 @@ const Message = ({ role, content, referenceLink, isStreaming }: MessageProps) =>
                         </div>
                     </div>
                 </div>
-                <div className="w-full flex justify-start items-center gap-2">
+                <div className="w-full flex justify-start items-center gap-2 mt-5">
                     {isAssistant ? <>
                         <Tooltip title="Like this response">
                             <div
@@ -123,7 +123,7 @@ const MessageList = () => {
                     messages.map((message) => (
                         <Message
                             content={message.content}
-                            referenceLink={message.contentMedia}
+                            referenceLink={message.referenceLink}
                             id={message.id}
                             isStreaming={message.isStreaming}
                             key={message.id}

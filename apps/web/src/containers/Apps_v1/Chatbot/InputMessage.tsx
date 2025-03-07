@@ -14,7 +14,7 @@ import { AiOutlinePaperClip } from 'react-icons/ai';
 import UploadWrapped from '@/components/Upload/upload-wrapped.tsx';
 
 export default function InputMessage() {
-    const { contentMedia, setContentMedia, sendMessage, setMediaFiles } = useChatbot();
+    const { contentMedia, setContentMedia, sendMessage, setMediaFiles, uploadPDFContext } = useChatbot();
     const [promptText, setPromptText] = useState<string>('');
     const [isTooLong, setIsTooLong] = useState<boolean>(false);
     const [isSendMessage, setIsSendMessage] = useState<boolean>(false);
@@ -42,8 +42,9 @@ export default function InputMessage() {
     }, [promptText, sendMessage, contentMedia, setContentMedia, updateInputValue]);
 
     const handleSelectFiles = useCallback((files: File[] | File) => {
-        setMediaFiles([...(Array.isArray(files) ? files : [files])]);
-    }, [setMediaFiles]);
+        // setMediaFiles([...(Array.isArray(files) ? files : [files])]);
+        uploadPDFContext([...(Array.isArray(files) ? files : [files])])
+    }, [setMediaFiles,uploadPDFContext]);
 
     const handleDragOver = useCallback((e: React.DragEvent) => {
         e.preventDefault();

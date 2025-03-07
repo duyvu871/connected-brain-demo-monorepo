@@ -5,9 +5,11 @@ import { useAuth } from '@/hooks/useAuth';
 import type { UserInterface } from 'types/user.type';
 import useUID from '@/hooks/useUID';
 import { useToast } from '@/hooks/useToast';
-import { MessageHistoryType } from '@/types/apps/chatbot/api.type';
+import type { MessageHistoryType } from '@/types/apps/chatbot/api.type';
 import { TEXT_CUT_TOKEN } from '@/helpers/streamTextProcessor';
-import { log } from 'console';
+import { log } from 'node:console';
+import { extractFileName } from '@/helpers/url';
+import UploadStatusModal from '@/components/Chatbot/Modals/UploadStatusModal';
 
 interface Message {
     id: string;
@@ -16,6 +18,13 @@ interface Message {
     contentMedia?: string[];
     referenceLink?: MessageHistoryType['reference_link'];
     isStreaming?: boolean;
+}
+
+interface UploadStatus {
+    id: string,
+    file: File,
+    status: "uploading" | "success" | "error" | "canceled" | "pending",
+    progress: number
 }
 
 interface ChatbotContextType {
@@ -56,7 +65,9 @@ function ChatbotProvider({ children }: { children: React.ReactNode }) {
     const [messages, setMessages] = useState<Message[]>([]);
     const [contentMedia, setContentMedia] = useState<string[]>([]);
     const [mediaFiles, setMediaFiles] = useState<File[]>([]);
-    
+    const [uploadStatuses, setUploadStatuses] = useState<UploadStatus[]>([]);
+    const [showUploadStatus, setShowUploadStatus] = useState<boolean>(false);
+
     const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle'); // ['idle', 'loading', 'success', 'error']
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -120,7 +131,7 @@ function ChatbotProvider({ children }: { children: React.ReactNode }) {
             const decoder = new TextDecoder();
             let accumulatedContent = '';
             let endOfChat = false;
-            let refString: string = "";
+            let refString = "";
             // Read the stream
             // eslint-disable-next-line no-constant-condition
             while (true) {
@@ -130,19 +141,21 @@ function ChatbotProvider({ children }: { children: React.ReactNode }) {
 
                 // Decode the chunk and append to accumulated content
                 const chunk = decoder.decode(value, { stream: true });
-                
-                console.log('chunk', chunk);
+
+                // console.log('chunk', chunk);
                 const cutTextIndex = chunk.indexOf(TEXT_CUT_TOKEN);
                 if (cutTextIndex !== -1 || endOfChat) {
                     endOfChat = true;
-                    if (chunk.indexOf(TEXT_CUT_TOKEN) !== -1) {
+
+                    if (chunk.includes(TEXT_CUT_TOKEN)) {
                         const remainContent = chunk.slice(0, chunk.indexOf(TEXT_CUT_TOKEN));
                         if (remainContent) {
                             accumulatedContent += remainContent;
                             // Update the message with the accumulated content
+                            // eslint-disable-next-line @typescript-eslint/no-loop-func
                             setMessages(prev => prev.map(msg =>
                                 msg.id === assistantMessageId
-                                    ? {...msg, content: accumulatedContent }
+                                    ? { ...msg, content: accumulatedContent }
                                     : msg
                             ));
                         }
@@ -151,23 +164,33 @@ function ChatbotProvider({ children }: { children: React.ReactNode }) {
                     }
                 } else {
                     accumulatedContent += chunk;
-                
+
                     // Update the message with the accumulated content
+                    // eslint-disable-next-line @typescript-eslint/no-loop-func
                     setMessages(prev => prev.map(msg =>
                         msg.id === assistantMessageId
                             ? { ...msg, content: accumulatedContent }
                             : msg
                     ));
-                }               
+                }
             }
 
-            console.log('refs', refString.split('/media/cbrain/').filter(Boolean).map((item) => `https://api.connectedbrain.com.vn/assets/cbrain/${item}`));
-            
+            const RAGAssets = refString.split('/media/cbrain/').filter(Boolean).map((item) => `https://api.connectedbrain.com.vn/assets/cbrain/${item}`)
+            console.log('refs', RAGAssets);
 
             // Mark streaming as complete
             setMessages(prev => prev.map(msg =>
                 msg.id === assistantMessageId
-                    ? { ...msg, isStreaming: false }
+                    ? {
+                        ...msg,
+                        isStreaming: false,
+                        referenceLink: RAGAssets.map((asset, index) => ({
+                            // base name of link
+                            name: extractFileName(asset) || `preview_${index}`,
+                            link: asset,
+                            type: "application/pdf"
+                        }))
+                    }
                     : msg
             ));
 
@@ -189,28 +212,90 @@ function ChatbotProvider({ children }: { children: React.ReactNode }) {
 
     const uploadPDFContext = useCallback(async (files: File[]) => {
         if (!files.length) return;
-        const formData = new FormData();
-        files.forEach((file, index) => {
-            formData.append(`files`, file);
-        });
         setIsLoading(true);
+
+        // Initialize upload statuses for new files
+        const newUploadStatuses = files.map(file => ({
+            id: generateUID(),
+            file,
+            status: 'pending' as const,
+            progress: 0
+        }));
+        setUploadStatuses(prev => [...prev, ...newUploadStatuses]);
+        setShowUploadStatus(true);
+
+        // Create upload promises for each file
+        const uploadPromises = files.map(async (file, index) => {
+            const statusId = newUploadStatuses[index].id;
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                setUploadStatuses(prev => prev.map(status =>
+                    status.id === statusId
+                        ? { ...status, status: 'uploading' as const, progress: 0 }
+                        : status
+                ));
+
+                const response = await fetch('/api/v1/feature/chatbot/upload', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (!response.ok) {
+                    throw new Error("upload failed");
+                }
+
+                const data = await response.json();
+                if (data.status === 200) {
+                    setContentMedia(prev => [...prev, data.data]);
+                    setUploadStatuses(prev => prev.map(status =>
+                        status.id === statusId
+                            ? { ...status, status: 'success' as const, progress: 100 }
+                            : status
+                    ));
+                    return { success: true, data: data.data };
+                } else {
+                    throw new Error("upload failed")
+                }
+            } catch (error) {
+                console.error('Error uploading file:', error);
+                setUploadStatuses(prev => prev.map(status =>
+                    status.id === statusId
+                        ? { ...status, status: 'error' as const, error: error instanceof Error ? error.message : 'Upload failed' }
+                        : status
+                ));
+                return { success: false, error };
+            }
+        });
+
         try {
-            const response = await fetch('/api/v1/feature/chatbot/upload', {
-                method: 'POST',
-                body: formData,
-            });
-            if (!response.ok) {
-                throw new Error(`Error: ${response.status}`);
-            }
-            const data = await response.json();
-            if (data.status === 'success') {
-                setContentMedia(prev => [...prev, data.data]);
-            }
-        } catch (error) {
-            console.error('Error uploading file:', error);
+            setIsLoading(true);
+            await Promise.all(uploadPromises);
         } finally {
             setIsLoading(false);
+            // Clear completed uploads after a delay
+            setTimeout(() => {
+                setUploadStatuses(prev => prev.filter(status => status.status === 'uploading'));
+            }, 3000);
         }
+        // try {
+        //     const response = await fetch('/api/v1/feature/chatbot/upload', {
+        //         method: 'POST',
+        //         body: formData,
+        //     });
+        //     if (!response.ok) {
+        //         throw new Error(`Error: ${response.status}`);
+        //     }
+        //     const data = await response.json();
+        //     if (data.status === 'success') {
+        //         setContentMedia(prev => [...prev, data.data]);
+        //     }
+        // } catch (error) {
+        //     console.error('Error uploading file:', error);
+        // } finally {
+        //     setIsLoading(false);
+        // }
     }, []);
 
     return (
@@ -229,6 +314,16 @@ function ChatbotProvider({ children }: { children: React.ReactNode }) {
             }}
         >
             {children}
+            {showUploadStatus && uploadStatuses.length > 0 && (
+                <UploadStatusModal
+                    uploadStatuses={uploadStatuses}
+                    // upload={uploadPDFContext}
+                    onClose={() => {
+                        // setShowUploadStatus(false);
+                        // setUploadStatuses([]);
+                    }}
+                />
+            )}
         </ChatbotContext.Provider>
     );
 }
