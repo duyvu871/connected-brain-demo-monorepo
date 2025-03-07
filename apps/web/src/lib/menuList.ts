@@ -59,11 +59,16 @@ export function getMenuList(pathname: string): Group[] {
 					active: pathname.includes("/app/chatbot"),
 					icon: MessageSquareQuote,
 					submenus: [
-						// {
-						// 	href: "/app/chatbot",
-						// 	label: "New Session",
-						// 	active: false
-						// },
+						{
+							href: "/app/chatbot",
+							label: "Connected Brain",
+							active: pathname.includes("/app/chatbot")
+						},
+						{
+							href: "/app/chatbot-v1",
+							label: "Connected Brain V1",
+							active: pathname.includes("/app/chatbot")
+						},
 					]
 				},
 				{
