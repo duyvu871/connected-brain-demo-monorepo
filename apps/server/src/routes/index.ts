@@ -5,6 +5,7 @@ import { authRouter } from '@/routes/auth.route';
 import { s2tRouter } from '@/routes/speech_to_text.route';
 import { translateRouter } from '@/routes/translate.route';
 import { ocrRouter } from '@/routes/ocr.route';
+import { llmRouter } from '@/routes/llm.route';
 import { voiceSeparationRoute } from '@/routes/voice-separation.route';
 
 export function LoadRoutes({app}: {app: Express}) {
@@ -16,5 +17,6 @@ export function LoadRoutes({app}: {app: Express}) {
     app.use('/api/v1/feature/s2t', s2tRouter);
     app.use('/api/v1/feature/translate', translateRouter);
     app.use('/api/v1/feature/ocr', ocrRouter);
+    app.use('/api/v1/feature/llm', llmRouter);
     app.use('/api/v1/feature/voice-separation', voiceSeparationRoute);
 }

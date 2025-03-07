@@ -25,14 +25,14 @@ type Props = {
 };
 
 const AutoResizeQuill = ({
-													 placeholder, className,
-													 onContentChange,
-													 setIsTooLong,
-													 value,
-													 isDisabled,
-													 event,
-													 isClear,
-												 }: Props) => {
+	placeholder, className,
+	onContentChange,
+	setIsTooLong,
+	value,
+	isDisabled,
+	event,
+	isClear,
+}: Props) => {
 	const { inputValue } = useSelector((state: RootState) => state.inputMessage);
 	const [plainText, setPlainText] = useState<string>('');
 	const quillRef = useRef<ReactQuill | any>(null);

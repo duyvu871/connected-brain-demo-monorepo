@@ -13,9 +13,10 @@ export function serveStaticOverSSH(configName: string, remoteBasePath: string, s
 		if (relativePath.includes('..') || relativePath.startsWith('/.')) {
 			return res.status(403).send('Forbidden');
 		}
+		const uriPathDecode = decodeURI(relativePath);
 
 		// create remote path with base path and relative path
-		const remotePath = path.posix.join(remoteBasePath, relativePath);
+		const remotePath = path.posix.join(remoteBasePath, uriPathDecode);
 		console.log('Remote path:', remotePath);
 		try {
 			// check if file exists

@@ -52,7 +52,7 @@ function Markdown({ children, isTyping }: MarkdownProps) {
 	}, [isTyping, children]);
 	return (
 		<ReactMarkdown className="markdown-body bg-opacity-0 [&_a]:!text-blue-700 [&_code]:!bg-zinc-200 [&_pre]:!bg-zinc-200 [&_*]:!text-sm [&_*]:!text-zinc-700 dark:[&_pre]:!bg-zinc-800 dark:[&_code]:!bg-zinc-800 dark:[&_*]:!text-zinc-100 text-sm md:text-base"
-									 remarkPlugins={[remarkGfm]}>
+			remarkPlugins={[remarkGfm]}>
 			{displayResponse}
 		</ReactMarkdown>
 	);
