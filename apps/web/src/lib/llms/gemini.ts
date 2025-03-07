@@ -73,7 +73,8 @@ export class GeminiChatService extends ChatbotService {
 		super();
 		this.genAI = new GoogleGenerativeAI(apiKey);
 		this.model = this.genAI.getGenerativeModel({
-			model: 'gemini-1.5-flash-latest',
+			model: 'gemini-2.0-flash',
+			systemInstruction: this.defaultResponse
 		});
 		this.generationConfig = {
 			temperature: 1,
