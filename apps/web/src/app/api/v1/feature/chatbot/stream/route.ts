@@ -3,7 +3,6 @@ import { NextResponse } from 'next/server';
 import { getServerAuthSession } from '@/lib/nextauthOptions';
 import { dataTemplate } from '@/helpers/returned_response_template';
 import { TEXT_CUT_TOKEN } from '@/helpers/streamTextProcessor';
-import { e } from '@repo/utils/object-utils-DgKP8euw';
 
 export const maxDuration = 60;
 const referencePrefix = "/media/";
@@ -33,7 +32,7 @@ export async function POST(req: NextRequest) {
         const controller = new AbortController();
         const timeout = setTimeout(() => controller.abort(), 20000); // Timeout sau 20 giây
         // Forward the request to the external API
-        const apiUrl = 'http://localhost:8000/stream'//'https://api.connectedbrain.com.vn/api/v1/chatbot/stream';
+        const apiUrl = 'https://api.connectedbrain.com.vn/api/v1/chatbot/stream';
         const externalResponse = await fetch(`${apiUrl}?prompt=${encodeURIComponent(message)}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -85,22 +84,11 @@ export async function POST(req: NextRequest) {
                     //     console.log('afterToken: ', afterToken);
                     //     console.log("buffer: ", buffer);
                         
-
-                    //     // if (afterToken) {
-                    //     //     references.push(afterToken);
-                    //     //     const markedReferences = "\n\nReferences:\n" + references.join("\n");
+                            // console.log("buffer: ", buffer);
+                            // console.log('afterToken: ', afterToken);
                     //     //     controller.enqueue(encoder.encode(markedReferences));
 
                     //     //     buffer = TEXT_CUT_TOKEN;
-                    //     // } else {
-
-                    //     //     buffer = '';
-                    //     // }
-                    //     controller.enqueue(encoder.encode(buffer));
-                    // } else {
-                    //     // Nếu chưa gặp token, gửi hết nội dung buffer ra và reset lại buffer
-                    //     controller.enqueue(encoder.encode(buffer));
-                    //     buffer = '';
                     // }
                 } catch (error) {
                     console.error('Error in transform stream:', error);
