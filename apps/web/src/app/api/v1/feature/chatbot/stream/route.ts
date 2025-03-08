@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
+import type { NextRequest} from 'next/server';
+import { NextResponse } from 'next/server';
 import { getServerAuthSession } from '@/lib/nextauthOptions';
 import { dataTemplate } from '@/helpers/returned_response_template';
 import { TEXT_CUT_TOKEN } from '@/helpers/streamTextProcessor';
@@ -30,9 +31,9 @@ export async function POST(req: NextRequest) {
         }
 
         const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 5000); // Timeout sau 5 giây
+        const timeout = setTimeout(() => controller.abort(), 20000); // Timeout sau 20 giây
         // Forward the request to the external API
-        const apiUrl = 'https://api.connectedbrain.com.vn/api/v1/chatbot/stream';
+        const apiUrl = 'http://localhost:8000/stream'//'https://api.connectedbrain.com.vn/api/v1/chatbot/stream';
         const externalResponse = await fetch(`${apiUrl}?prompt=${encodeURIComponent(message)}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -62,6 +63,7 @@ export async function POST(req: NextRequest) {
                     const decoder = new TextDecoder();
                     const text = decoder.decode(chunk);
                     buffer += text;
+                    console.log('text: ', text);
                     controller.enqueue(encoder.encode(buffer));
                     buffer = '';
 
