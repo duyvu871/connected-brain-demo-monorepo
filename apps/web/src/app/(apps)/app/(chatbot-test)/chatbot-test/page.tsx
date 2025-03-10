@@ -1,7 +1,10 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import React from 'react';
-import AppChatbot from '@/containers/Apps_v1/Chatbot/AppChatbot';
+const AppChatbot = dynamic(() => import('@/containers/Apps_v1/Chatbot/AppChatbot'), {
+	ssr: false
+});
 import { ToastContainer, type ToastContainerProps } from 'react-toastify';
 import { Toaster } from 'global/contants/defaultComponentProps.ts';
 import NextuiProvider from '@/providers/nextui-provider';

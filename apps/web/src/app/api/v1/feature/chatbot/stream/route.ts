@@ -1,4 +1,4 @@
-import type { NextRequest } from 'next/server';
+import { NextRequest } from 'next/server';
 import { getServerAuthSession } from '@/lib/nextauthOptions';
 import { dataTemplate } from '@/helpers/returned_response_template';
 import { TEXT_CUT_TOKEN } from '@/helpers/streamTextProcessor';
@@ -8,19 +8,19 @@ export const maxDuration = 60;
 // This API route supports streaming responses
 export async function POST(req: NextRequest) {
     try {
-        // // Authenticate the user
-        // const session = await getServerAuthSession();
-        // const user = session?.user;
-        // if (!user) {
-        //     return dataTemplate({
-        //         error: 'Unauthorized',
-        //     }, 400);
-        // }
+        // Authenticate the user
+        const session = await getServerAuthSession();
+        const user = session?.user;
+        if (!user) {
+            return dataTemplate({
+                error: 'Unauthorized',
+            }, 400);
+        }
 
         // Parse the request body
-        const { prompt, messageMedia } = await req.json();
+        const { message, messageMedia } = await req.json();
 
-        if (!prompt) {
+        if (!message) {
             return dataTemplate({
                 error: 'Message is required',
             }, 400);
@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
         const apiUrl = 'https://api.connectedbrain.com.vn/api/v1/chatbot/stream';
         
         // Create a request to the external API
-        const externalResponse = await fetch(`${apiUrl}?prompt=${encodeURIComponent(prompt)}`, {
+        const externalResponse = await fetch(`${apiUrl}?prompt=${encodeURIComponent(message)}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -85,22 +85,11 @@ export async function POST(req: NextRequest) {
                             }
                             controller.enqueue(TEXT_CUT_TOKEN);
                             // Process the paths after the token
-                            console.log("Full buffer content:", buffer);
-                            console.log('Token position:', endTokenIndex);
-                            console.log('Token length:', TEXT_CUT_TOKEN.length);
-                            console.log('Raw afterToken:', afterToken);
+                            console.log("buffer: ", buffer);
+                            console.log('afterToken: ', afterToken);
                             
                             if (afterToken) {
                                 try {
-                                    // Trim and validate the afterToken content
-                                    const trimmedAfterToken = afterToken.trim();
-                                    console.log('Trimmed afterToken:', trimmedAfterToken);
-                                    
-                                    if (!trimmedAfterToken) {
-                                        console.log('afterToken is empty after trimming');
-                                        return;
-                                    }
-                                    
                                     // Split by spaces or newlines to get individual paths
                                     const paths = afterToken.trim().split(/\s+/);
                                     // Clean and format each path to ensure proper URL structure
