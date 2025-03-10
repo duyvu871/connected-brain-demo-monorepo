@@ -105,16 +105,20 @@ function ChatbotProvider({ children }: { children: React.ReactNode }) {
             const controller = new AbortController();
             const signal = controller.signal;
 
-            const response = await fetch('/api/v1/feature/chatbot/stream', {
+            const urlSearchParams = new URLSearchParams();
+            urlSearchParams.append('prompt', text);
+
+            const response = await fetch('https://api.connectedbrain.com.vn/api/v1/chatbot/stream', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    message: text,
-                    messageMedia: mediaContent,
-                    user_id: user?.id,
-                }),
+               /* body: JSON.stringify({
+                    prompt: text,
+                    // messageMedia: mediaContent,
+                    // user_id: user?.id,
+                }),*/
+                body: urlSearchParams,
                 signal,
             });
 
@@ -255,9 +259,9 @@ function ChatbotProvider({ children }: { children: React.ReactNode }) {
                             : status
                     ));
                     return { success: true, data: data.data };
-                } else {
+                } 
                     throw new Error("upload failed")
-                }
+                
             } catch (error) {
                 console.error('Error uploading file:', error);
                 setUploadStatuses(prev => prev.map(status =>
@@ -314,16 +318,14 @@ function ChatbotProvider({ children }: { children: React.ReactNode }) {
             }}
         >
             {children}
-            {showUploadStatus && uploadStatuses.length > 0 && (
-                <UploadStatusModal
+            {showUploadStatus && uploadStatuses.length > 0 ? <UploadStatusModal
                     uploadStatuses={uploadStatuses}
                     // upload={uploadPDFContext}
                     onClose={() => {
                         // setShowUploadStatus(false);
                         // setUploadStatuses([]);
                     }}
-                />
-            )}
+                /> : null}
         </ChatbotContext.Provider>
     );
 }

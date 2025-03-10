@@ -8,6 +8,8 @@ import NextuiProvider from '@/providers/nextui-provider';
 import { MantineProviderClient } from '@/providers/mantine-provider';
 import { Provider as JotaiProvider } from 'jotai';
 import ReduxProviders from '@/providers/ReduxProviders.tsx';
+import { cn } from '@repo/utils';
+import 'react-toastify/dist/ReactToastify.css'
 
 function Page() {
 	return (
@@ -15,13 +17,19 @@ function Page() {
 			<MantineProviderClient>
 				<JotaiProvider>
 					<ReduxProviders>
-						<AppChatbot />
-						<ToastContainer {...(Toaster as ToastContainerProps)} />
+						<main
+							className={cn(
+								"min-h-[100svh] bg-white dark:bg-zinc-950 transition-[margin-left] ease-in-out duration-300",
+							)}
+						>
+							<AppChatbot />
+							<ToastContainer {...(Toaster as ToastContainerProps)} />
+						</main>
 					</ReduxProviders>
 				</JotaiProvider>
 			</MantineProviderClient>
 		</NextuiProvider>
-	);
+);
 }
 
 export default Page;

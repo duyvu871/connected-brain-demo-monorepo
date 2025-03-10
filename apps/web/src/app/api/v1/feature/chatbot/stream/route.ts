@@ -18,9 +18,9 @@ export async function POST(req: NextRequest) {
         // }
 
         // Parse the request body
-        const { message, messageMedia } = await req.json();
+        const { prompt, messageMedia } = await req.json();
 
-        if (!message) {
+        if (!prompt) {
             return dataTemplate({
                 error: 'Message is required',
             }, 400);
@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
         const apiUrl = 'https://api.connectedbrain.com.vn/api/v1/chatbot/stream';
         
         // Create a request to the external API
-        const externalResponse = await fetch(`${apiUrl}?prompt=${encodeURIComponent(message)}`, {
+        const externalResponse = await fetch(`${apiUrl}?prompt=${encodeURIComponent(prompt)}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
