@@ -241,7 +241,7 @@ function ChatbotProvider({ children }: { children: React.ReactNode }) {
                         : status
                 ));
 
-                const response = await fetch('/api/v1/feature/chatbot/upload', {
+                const response = await fetch('https://api.connectedbrain.com.vn/api/v1/chatbot/extract-content', {
                     method: 'POST',
                     body: formData,
                 });
