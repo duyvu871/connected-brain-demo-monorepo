@@ -105,20 +105,20 @@ function ChatbotProvider({ children }: { children: React.ReactNode }) {
             const controller = new AbortController();
             const signal = controller.signal;
 
-            const urlSearchParams = new URLSearchParams();
-            urlSearchParams.append('prompt', text);
+            // const urlSearchParams = new URLSearchParams();
+            // urlSearchParams.append('prompt', text);
 
-            const response = await fetch('https://api.connectedbrain.com.vn/api/v1/chatbot/stream', {
+            const response = await fetch(`https://api.connectedbrain.com.vn/api/v1/chatbot/stream?prompt=${encodeURIComponent(text)}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-               /* body: JSON.stringify({
-                    prompt: text,
-                    // messageMedia: mediaContent,
-                    // user_id: user?.id,
-                }),*/
-                body: urlSearchParams,
+               // /* body: JSON.stringify({
+               //      prompt: text,
+               //      // messageMedia: mediaContent,
+               //      // user_id: user?.id,
+               //  }),*/
+               //  body: urlSearchParams,
                 signal,
             });
 
