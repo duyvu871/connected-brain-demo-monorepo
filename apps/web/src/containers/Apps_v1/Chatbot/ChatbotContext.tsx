@@ -241,7 +241,7 @@ function ChatbotProvider({ children }: { children: React.ReactNode }) {
                         : status
                 ));
 
-                const response = await fetch('https://api.connectedbrain.com.vn/api/v1/chatbot/extract-content', {
+                const response = await fetch('/api/v1/feature/chatbot/upload', {
                     method: 'POST',
                     body: formData,
                 });
@@ -259,8 +259,8 @@ function ChatbotProvider({ children }: { children: React.ReactNode }) {
                             : status
                     ));
                     return { success: true, data: data.data };
-                } 
-                    throw new Error("upload failed")
+                }
+                throw new Error("upload failed")
                 
             } catch (error) {
                 console.error('Error uploading file:', error);
