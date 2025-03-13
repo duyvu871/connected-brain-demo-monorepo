@@ -2,9 +2,6 @@
 
 import dynamic from 'next/dynamic';
 import React from 'react';
-const AppChatbot = dynamic(() => import('@/containers/Apps_v1/Chatbot-bac-ninh/AppChatbot'), {
-	ssr: false
-});
 import { ToastContainer, type ToastContainerProps } from 'react-toastify';
 import { Toaster } from 'global/contants/defaultComponentProps.ts';
 import NextuiProvider from '@/providers/nextui-provider';
@@ -13,6 +10,10 @@ import { Provider as JotaiProvider } from 'jotai';
 import ReduxProviders from '@/providers/ReduxProviders.tsx';
 import { cn } from '@repo/utils';
 import 'react-toastify/dist/ReactToastify.css'
+
+const AppChatbot = dynamic(() => import('@/containers/Apps_v1/Chatbot-bac-ninh/AppChatbot'), {
+	ssr: false
+});
 
 function Page() {
 	return (

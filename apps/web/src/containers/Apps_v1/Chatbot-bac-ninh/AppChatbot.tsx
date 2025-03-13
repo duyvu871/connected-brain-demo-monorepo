@@ -30,7 +30,7 @@ function AppChatbot() {
     return (
         <ChatbotProvider>
             <div className="w-full h-full relative bg-zinc-50 dark:bg-zinc-950">
-                <div className="w-full h-[100dvh] flex">
+                <div className="w-full h-[100svh] flex">
                     <div className="flex-grow w-0">
                         <div className="w-full h-full hidden:md:border border-zinc-800 md:rounded-xl">
                             <Suspense fallback={<div>Loading...</div>}>
