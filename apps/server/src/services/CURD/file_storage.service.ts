@@ -1,8 +1,11 @@
 import fs from 'fs';
 import * as fsPromise from "fs/promises";
-import ffmpeg, {ffprobe} from 'fluent-ffmpeg';
+import ffmpeg, { ffprobe } from 'fluent-ffmpeg';
 import { path as ffprobePath } from '@ffprobe-installer/ffprobe'
 import schedule from 'node-schedule';
+import path from 'path';
+import { v4 as uuidv4 } from 'uuid';
+import fsPromises from 'fs/promises';
 
 ffmpeg.setFfprobePath(ffprobePath);
 
@@ -14,7 +17,7 @@ export default class FileStorageService {
 		expiryDate: Date
 	): Promise<string> {
 		try {
-			await fsPromise.writeFile(path, data, {encoding: 'base64'});
+			await fsPromise.writeFile(path, data, { encoding: 'base64' });
 
 			console.log(`Created temp file: ${path} (expire in ${expiryDate})`);
 
@@ -44,7 +47,7 @@ export default class FileStorageService {
 		}) {
 		const stream = fs.createWriteStream(file_name);
 		if (action) {
-			const {onOpen, onDrain, onClose, onError} = action;
+			const { onOpen, onDrain, onClose, onError } = action;
 			if (onOpen) stream.on('open', onOpen);
 			if (onDrain) stream.on('drain', onDrain);
 			if (onClose) stream.on('close', onClose);
@@ -75,7 +78,7 @@ export default class FileStorageService {
 	// create directory
 	public static async create_directory(directory_name: string) {
 		return await new Promise((resolve, reject) => {
-			fs.mkdir(directory_name, {recursive: true}, (err) => {
+			fs.mkdir(directory_name, { recursive: true }, (err) => {
 				this.file_system_callback(err, directory_name, resolve, reject);
 			});
 		})
@@ -125,42 +128,59 @@ export default class FileStorageService {
 	}
 	// convert to wav
 	public static async convert_to_wav(file_name: string): Promise<boolean> {
-			const file = ffmpeg(file_name);
-			const output_file = file_name.replace('.mp3', '.wav');
-			return new Promise((resolve, reject) => {
-				file
-					.inputFormat('mp3')
-					.audioCodec('pcm_s16le')
-					.format('wav')
-					.save(output_file)
-					.on('end', () => {
-						resolve(true);
-					})
-					.on('error', (err) => {
-						console.log('Error converting to wav:', err);
-						resolve(false);
-					}).run();
-			});
+		const file = ffmpeg(file_name);
+		const output_file = file_name.replace('.mp3', '.wav');
+		return new Promise((resolve, reject) => {
+			file
+				.inputFormat('mp3')
+				.audioCodec('pcm_s16le')
+				.format('wav')
+				.save(output_file)
+				.on('end', () => {
+					resolve(true);
+				})
+				.on('error', (err) => {
+					console.log('Error converting to wav:', err);
+					resolve(false);
+				}).run();
+		});
+	}
+
+	public static async process_file_to_wav(file: Express.Multer.File, save_file_path: string, storage_path?: string) {
+		const file_type = file.mimetype;
+		const base_path = storage_path || path.dirname(save_file_path);
+		if (file_type !== 'audio/wav') {
+			// sendSSEEvent(res, "processing", "Converting file to wav...");
+			const convert_to_wav = await FileStorageService.convert_to_wav(save_file_path);
+			console.log('convert_to_wav', convert_to_wav);
+			if (!convert_to_wav) {
+				throw new Error('Failed to convert file to wav');
+			}
+			// sendSSEEvent(res, "processing", "Converted file to wav successfully");
+		}
+		const convertedFilePath = path.join(base_path, 'source.wav');
+
+		return convertedFilePath;
 	}
 	//convert mp3 to any format
-public static async convert_to_flac(file_name: string) {
-	const file = ffmpeg(file_name);
-	const output_file = file_name.replace('.mp3', '.flac');
-	return await new Promise((resolve, reject) => {
-		file
-			.inputFormat('mp3')
-			.audioCodec('flac')
-			.format('flac')
-			.save(output_file)
-			.on('end', () => {
-				resolve(true);
-			})
-			.on('error', (err) => {
-				reject(false);
-			}).run();
-	});
+	public static async convert_to_flac(file_name: string) {
+		const file = ffmpeg(file_name);
+		const output_file = file_name.replace('.mp3', '.flac');
+		return await new Promise((resolve, reject) => {
+			file
+				.inputFormat('mp3')
+				.audioCodec('flac')
+				.format('flac')
+				.save(output_file)
+				.on('end', () => {
+					resolve(true);
+				})
+				.on('error', (err) => {
+					reject(false);
+				}).run();
+		});
 
-}
+	}
 	// cut audio
 	public static async cut_audio(file_name: string, start_time: number, duration: number) {
 		const file = ffmpeg(file_name);
@@ -183,7 +203,7 @@ public static async convert_to_flac(file_name: string) {
 		});
 	}
 	// get audio duration
-	public static async get_audio_duration(filePath: string): Promise<number|undefined> {
+	public static async get_audio_duration(filePath: string): Promise<number | undefined> {
 		return new Promise((resolve, reject) => {
 			ffprobe(filePath, (err, metadata) => {
 				if (err) {
@@ -193,5 +213,36 @@ public static async convert_to_flac(file_name: string) {
 				}
 			});
 		});
+	}
+
+	public static async processServiceStoragePlace(service_place: string) {
+		// validate service place:
+		// service must be in format: <service_name>/<service_type>/<service_id>
+		// or <service_name>
+		const servicePlacePathRegex = /^[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+$/;
+		const serviceTypePathRegex = /^[a-zA-Z0-9_-]+$/;
+		if (!service_place && !servicePlacePathRegex.test(service_place)) throw new Error('Service place is required');
+		// if (!service_type &&!serviceTypePathRegex.test(service_type)) throw new Error('Service type is required');
+	
+		const storagePath = path.join(process.cwd(), 'storage', "Assets", service_place);
+		try {
+			const createStoragePalace = await fsPromises.mkdir(storagePath, { recursive: true });
+			if (createStoragePalace) {
+				console.log('Created storage palace:', storagePath);
+			}
+			const uniqueId = uuidv4();
+			const dataStorePath = path.join(storagePath, uniqueId);
+			const createDataStore = await fsPromises.mkdir(dataStorePath, { recursive: true });
+			if (createDataStore) {
+				console.log('Created data store:', dataStorePath);
+			}
+			return {
+				id: uniqueId,
+				storagePath: dataStorePath
+			};
+		} catch (error: any) {
+			console.error('Error creating storage info:', error.message);
+			throw new Error('Failed to create storage info');
+		}
 	}
 }

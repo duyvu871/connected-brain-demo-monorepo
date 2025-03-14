@@ -7,6 +7,7 @@ import { translateRouter } from '@/routes/translate.route';
 import { ocrRouter } from '@/routes/ocr.route';
 import { llmRouter } from '@/routes/llm.route';
 import { voiceSeparationRoute } from '@/routes/voice-separation.route';
+import { voiceIdentificationRoute } from "@/routes/voice_identification.route";
 
 export function LoadRoutes({app}: {app: Express}) {
     app.get(AppConfig.api.api_test, (req, res) => {
@@ -19,4 +20,5 @@ export function LoadRoutes({app}: {app: Express}) {
     app.use('/api/v1/feature/ocr', ocrRouter);
     app.use('/api/v1/feature/llm', llmRouter);
     app.use('/api/v1/feature/voice-separation', voiceSeparationRoute);
+    app.use('/api/v2/feature/voice-identification', voiceIdentificationRoute);
 }
