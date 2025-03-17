@@ -42,8 +42,8 @@ const Message = ({ role, content, referenceLink, isStreaming }: MessageProps) =>
             <div className={cn(
                 'max-w-[80%] rounded-lg p-4',
                 isAssistant
-                    ? 'hidden:bg-zinc-200 bg-zinc-200 hidden:dark:bg-zinc-800 text-black dark:text-white'
-                    : 'bg-zinc-600 text-white'
+                    ? 'hidden:bg-zinc-200 hidden:dark:bg-zinc-800 text-black dark:text-white'
+                    : 'bg-zinc-200 dark:bg-zinc-600 text-white'
             )}>
                 {content ? (
                     <Markdown>{content || ""}</Markdown>
