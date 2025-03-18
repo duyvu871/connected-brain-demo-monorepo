@@ -182,8 +182,12 @@ function ChatbotProvider({ children }: { children: React.ReactNode }) {
                 }
             }
 
-            if (accumulatedContent.includes(TEXT_CUT_TOKEN)) {
+            // console.log('assistantContent', assistantContent);
+            
+            if (assistantContent.includes(TEXT_CUT_TOKEN)) {
                 refString = assistantContent.slice(assistantContent.indexOf(TEXT_CUT_TOKEN) + TEXT_CUT_TOKEN.length);
+                // console.log('refString', refString);
+                
             }
 
             const RAGAssets = refString.split('/media/cbrain/').filter(Boolean).map((item) => `https://api.connectedbrain.com.vn/assets/cbrain/${item}`)
