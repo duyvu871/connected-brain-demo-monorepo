@@ -108,7 +108,7 @@ function ChatbotProvider({ children }: { children: React.ReactNode }) {
             // const urlSearchParams = new URLSearchParams();
             // urlSearchParams.append('prompt', text);
 
-            const response = await fetch(`https://api.connectedbrain.com.vn/api/v1/chatbot/bacninh?prompt=${encodeURIComponent(text)}`, {
+            const response = await fetch(`https://api.connectedbrain.com.vn/api/v1/chatbot/stream?prompt=${encodeURIComponent(text)}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
