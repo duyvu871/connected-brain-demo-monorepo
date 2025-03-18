@@ -108,7 +108,7 @@ function ChatbotProvider({ children }: { children: React.ReactNode }) {
             // const urlSearchParams = new URLSearchParams();
             // urlSearchParams.append('prompt', text);
 
-            const response = await fetch(`https://api.connectedbrain.com.vn/api/v1/chatbot/stream?prompt=${encodeURIComponent(text)}`, {
+            const response = await fetch(`https://api.connectedbrain.com.vn/api/v1/chatbot/bacninh?prompt=${encodeURIComponent(text)}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -136,6 +136,7 @@ function ChatbotProvider({ children }: { children: React.ReactNode }) {
             let accumulatedContent = '';
             let endOfChat = false;
             let refString = "";
+            let assistantContent = "";
             // Read the stream
             // eslint-disable-next-line no-constant-condition
             while (true) {
@@ -145,9 +146,10 @@ function ChatbotProvider({ children }: { children: React.ReactNode }) {
 
                 // Decode the chunk and append to accumulated content
                 const chunk = decoder.decode(value, { stream: true });
-
+                assistantContent += chunk;
                 // console.log('chunk', chunk);
                 const cutTextIndex = chunk.indexOf(TEXT_CUT_TOKEN);
+                
                 if (cutTextIndex !== -1 || endOfChat) {
                     endOfChat = true;
 
@@ -162,9 +164,10 @@ function ChatbotProvider({ children }: { children: React.ReactNode }) {
                                     ? { ...msg, content: accumulatedContent }
                                     : msg
                             ));
+
                         }
-                        const remainRef = chunk.slice(cutTextIndex + TEXT_CUT_TOKEN.length);
-                        refString += remainRef;
+                        // const remainRef = chunk.slice(cutTextIndex + TEXT_CUT_TOKEN.length);
+                        // refString += remainRef;
                     }
                 } else {
                     accumulatedContent += chunk;
@@ -177,6 +180,10 @@ function ChatbotProvider({ children }: { children: React.ReactNode }) {
                             : msg
                     ));
                 }
+            }
+
+            if (accumulatedContent.includes(TEXT_CUT_TOKEN)) {
+                refString = assistantContent.slice(assistantContent.indexOf(TEXT_CUT_TOKEN) + TEXT_CUT_TOKEN.length);
             }
 
             const RAGAssets = refString.split('/media/cbrain/').filter(Boolean).map((item) => `https://api.connectedbrain.com.vn/assets/cbrain/${item}`)
