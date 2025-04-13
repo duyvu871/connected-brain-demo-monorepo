@@ -2,9 +2,9 @@
 
 import React, { useState, useRef, useEffect, useCallback, forwardRef } from 'react'
 import { Button } from "@ui/shadcn-ui/ui/button"
-import { Card, CardContent} from "@ui/shadcn-ui/ui/card"
+import { Card, CardContent } from "@ui/shadcn-ui/ui/card"
 import { Mic, CheckIcon, Download, Pencil, PencilOff } from 'lucide-react'
-import { Loader } from '@mantine/core'
+import { Group, Loader } from '@mantine/core'
 import { cn } from '@repo/utils';
 import { IoMicSharp } from 'react-icons/io5'
 import { Popover, PopoverContent, PopoverTrigger, Spacer } from '@nextui-org/react'
@@ -19,6 +19,7 @@ import {
 	CommandItem,
 	CommandList,
 } from '@ui/shadcn-ui/ui/command.tsx';
+import { LanguagePicker } from '@/components/Picker/language.tsx';
 
 const CLOSE_SIGNAL = "CLOSE"
 
@@ -28,14 +29,14 @@ interface TranscriptionItem {
 	text: string;
 }
 
-const Cursor = forwardRef<SVGSVGElement, {isHidden?: boolean}>(({isHidden = true}, ref) => (
+const Cursor = forwardRef<SVGSVGElement, { isHidden?: boolean }>(({ isHidden = true }, ref) => (
 	<svg
 		className={cn("cursor", isHidden ? "invisible" : "")}
 		ref={ref}
 		viewBox="8 4 8 16"
 		xmlns="http://www.w3.org/2000/svg"
 	>
-		<rect className="dark:fill-zinc-300 fill-zinc-500"  height="12" width="4" x="10" y="6" />
+		<rect className="dark:fill-zinc-300 fill-zinc-500" height="12" width="4" x="10" y="6" />
 	</svg>
 ))
 Cursor.displayName = 'Cursor'
@@ -60,8 +61,8 @@ export default function AudioTranscription() {
 	const boxWrappedTranslatedTextRef = useRef<HTMLDivElement | null>(null);
 	const boxWrappedTranscriptTextRef = useRef<HTMLDivElement | null>(null);
 	const indicatorRef = useRef<SVGSVGElement | null>(null);
-	
-	const [cumulativeText , setCumulativeText] = useState<string>('')
+
+	const [cumulativeText, setCumulativeText] = useState<string>('')
 	const [translatedText, setTranslatedText] = useState<string>('')
 	const [sourceLang, setSourceLang] = useState<string>('vi')
 	const [toLanguage, setToLanguage] = useState<string>('en')
@@ -96,8 +97,29 @@ export default function AudioTranscription() {
 		{ name: 'Urdu', code: 'ur' },
 	] as const;
 
+	const targetLanguageList = [
+		{ "name": 'Vietnamese', "code": 'vi' },
+		{ "name": "Dutch", "code": "nl" },
+		{ "name": "Spanish", "code": "es" },
+		{ "name": "Korean", "code": "ko" },
+		{ "name": "Italian", "code": "it" },
+		{ "name": "German", "code": "de" },
+		{ "name": "Thai", "code": "th" },
+		{ "name": "Russian", "code": "ru" },
+		{ "name": "Portuguese", "code": "pt" },
+		{ "name": "Polish", "code": "pl" },
+		{ "name": "Indonesian", "code": "id" },
+		{ "name": "Mandarin (TW)", "code": "zh-TW" },
+		{ "name": "Swedish", "code": "sv" },
+		{ "name": "Czech", "code": "cs" },
+		{ "name": "English", "code": "en" },
+		{ "name": "Japanese", "code": "ja" }
+	]
+
+
 	const [selectedLanguage, setSelectedLanguage] = useState<string>('en');
-	const [isOpenSelectLanguage, setIsOpenSelectLanguage] = useState<boolean>(false);
+	const [targetLanguage, setTargetLanguage] = useState<string>('vi');
+	// const [isOpenSelectLanguage, setIsOpenSelectLanguage] = useState<boolean>(false);
 
 	const [displayResponse, setDisplayResponse] = useState<string>("");
 	const [completedTyping, setCompletedTyping] = useState<boolean>(false);
@@ -134,15 +156,15 @@ export default function AudioTranscription() {
 	};
 
 	const animateMic = () => {
-			intervalRef.current = setInterval(() => {
-				if (analyserRef.current && animationMicRef.current) {
-					const dataArray = new Uint8Array(analyserRef.current.frequencyBinCount);
-					analyserRef.current.getByteTimeDomainData(dataArray);
-					const average = dataArray.reduce((sum, value) => sum + value, 0) / dataArray.length;
-					const scaleValue = 1 + (average - 126) / 5
-					animationMicRef.current.style.transform = `scale(${Math.min(Math.max(scaleValue,0.8),1.3)})`; // Giới hạn scale trong khoảng 0.8 -> 1.3
-				}
-			}, 100);
+		intervalRef.current = setInterval(() => {
+			if (analyserRef.current && animationMicRef.current) {
+				const dataArray = new Uint8Array(analyserRef.current.frequencyBinCount);
+				analyserRef.current.getByteTimeDomainData(dataArray);
+				const average = dataArray.reduce((sum, value) => sum + value, 0) / dataArray.length;
+				const scaleValue = 1 + (average - 126) / 5
+				animationMicRef.current.style.transform = `scale(${Math.min(Math.max(scaleValue, 0.8), 1.3)})`; // Giới hạn scale trong khoảng 0.8 -> 1.3
+			}
+		}, 100);
 	};
 
 	const startRecording = async () => {
@@ -168,7 +190,7 @@ export default function AudioTranscription() {
 			websocketRef.current.onopen = () => {
 				if (websocketRef.current && websocketRef.current.readyState === WebSocket.OPEN) {
 					websocketRef.current.send(JSON.stringify({
-						target_language: selectedLanguage,
+						target_language: targetLanguage,
 					}))
 				}
 				console.log("WebSocket connection opened.")
@@ -286,16 +308,36 @@ export default function AudioTranscription() {
 			<Card className="shadow-none w-full max-w-xl flex mx-auto border-0 overflow-hidden rounded-none relative">
 				<CardContent className="p-0 flex-grow flex flex-col relative">
 					<div className="relative">
-						<Button
-							className="w-full justify-between dark:text-zinc-400 text-zinc-700 bg-zinc-100 dark:bg-zinc-900 border-zinc-300 dark:border-zinc-700"
-							onClick={() => setIsOpenSelectLanguage(true)}
-							role="combobox"
-							variant="outline"
-						>
-							{languages.find(lang => lang.code === selectedLanguage)?.name || "Select language..."}
-						</Button>
+						<Group wrap='nowrap' className="" w={"100%"} >
+							<Group gap={10} w={"100%"}>
+								<p>Ngôn ngữ</p>
+								<LanguagePicker
+									defaultlang={'vi'}
+									select={(code) => {
+										setTargetLanguage(code)
+									}}
+									customLanguage={targetLanguageList}
+								/>
+							</Group>
+							<Group gap={10} w={"100%"}>
+								<p>Ngôn ngữ dịch</p>
+								<LanguagePicker select={(code) => {
+									setSelectedLanguage(code)
+								}} />
+							</Group>
+						</Group>
+						{/* <Group wrap='nowrap'>
+							<Button
+								className="w-full justify-between dark:text-zinc-400 text-zinc-700 bg-zinc-100 dark:bg-zinc-900 border-zinc-300 dark:border-zinc-700"
+								onClick={() => setIsOpenSelectLanguage(true)}
+								role="combobox"
+								variant="outline"
+							>
+								{languages.find(lang => lang.code === selectedLanguage)?.name || "Select language..."}
+							</Button>
+						</Group>
 						<Popover isOpen={isOpenSelectLanguage} onOpenChange={(open) => setIsOpenSelectLanguage(open)}
-										 placement="bottom-start">
+							placement="bottom-start">
 							<PopoverTrigger>
 								<div />
 							</PopoverTrigger>
@@ -334,7 +376,7 @@ export default function AudioTranscription() {
 									</CommandList>
 								</Command>
 							</PopoverContent>
-						</Popover>
+						</Popover> */}
 					</div>
 					<Spacer y={5} />
 
@@ -342,15 +384,15 @@ export default function AudioTranscription() {
 						<div className="w-full flex flex-col rounded-md overflow-hidden">
 							<div className="w-full flex items-center h-8 px-1 bg-zinc-200 dark:bg-zinc-800">
 								<span className="text-md font-medium dark:text-zinc-200 text-zinc-500">
-									{languages.find(lang => lang.code === 'vi')?.name || 'Select language...'}
+									{targetLanguageList.find(lang => lang.code === targetLanguage)?.name || 'Select language...'}
 								</span>
 							</div>
 							<div className="h-32 sm:h-72 bg-zinc-100 dark:bg-zinc-900 overflow-y-auto sm:border-none border-b border-zinc-300 dark:border-zinc-700"
-									 ref={boxWrappedTranscriptTextRef}>
+								ref={boxWrappedTranscriptTextRef}>
 								<div className="p-4 mb-4 h-fit gap-0.5 min-h-0">
 									<p className="text-sm break-words dark:text-zinc-100 text-zinc-700">
 										{cumulativeText}
-										<Cursor isHidden={false} ref={indicatorRef}/>
+										<Cursor isHidden={false} ref={indicatorRef} />
 									</p>
 								</div>
 							</div>
@@ -362,7 +404,7 @@ export default function AudioTranscription() {
 								</span>
 							</div>
 							<div className="h-32 sm:h-72  bg-zinc-100 dark:bg-zinc-900 overflow-y-auto"
-									 ref={boxWrappedTranslatedTextRef}>
+								ref={boxWrappedTranslatedTextRef}>
 								<div className="p-4 mb-4 h-fit gap-0.5 min-h-0">
 									<p className="text-sm break-words dark:text-zinc-100 text-zinc-700">
 										{translatedText}
