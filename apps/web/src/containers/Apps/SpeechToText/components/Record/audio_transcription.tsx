@@ -64,8 +64,8 @@ export default function AudioTranscription() {
 
 	const [cumulativeText, setCumulativeText] = useState<string>('')
 	const [translatedText, setTranslatedText] = useState<string>('')
-	const [sourceLang, setSourceLang] = useState<string>('vi')
-	const [toLanguage, setToLanguage] = useState<string>('en')
+	// const [sourceLang, setSourceLang] = useState<string>('vi')
+	// const [toLanguage, setToLanguage] = useState<string>('en')
 
 	const [enableEdit, setEnableEdit] = useState<boolean>(false)
 
@@ -131,7 +131,7 @@ export default function AudioTranscription() {
 		}
 
 		try {
-			const fromLanguage = sourceLang;
+			const fromLanguage = targetLanguage;
 			const toLanguage = selectedLanguage;
 			console.log(fromLanguage, toLanguage);
 			const response = await axios.v1.translate({
@@ -146,7 +146,7 @@ export default function AudioTranscription() {
 		} catch (error) {
 			console.error(error);
 		}
-	}, [sourceLang, selectedLanguage]);
+	}, [targetLanguage, selectedLanguage]);
 
 	const resetAnimationMic = () => {
 		if (animationMicRef.current) {
@@ -185,7 +185,7 @@ export default function AudioTranscription() {
 			source.connect(analyserRef.current);
 			// animated mic after create source and processor nodes
 
-			websocketRef.current = new WebSocket("wss://14.224.188.206:8100/record")
+			websocketRef.current = new WebSocket("wss://api.connectedbrain.com.vn/api/v1/speech-to-text/realtime/record")
 
 			websocketRef.current.onopen = () => {
 				if (websocketRef.current && websocketRef.current.readyState === WebSocket.OPEN) {
@@ -199,8 +199,8 @@ export default function AudioTranscription() {
 			websocketRef.current.onmessage = (event) => {
 				try {
 					const message = JSON.parse(event.data) as TranscriptionItem;
-					setTranscription(prev => [...prev, message])
-					addTranscription(message.text)
+					setTranscription(prev => [...prev, message]);
+					addTranscription(message.text);
 				} catch (error) {
 					console.error("Error parsing JSON:", error)
 				}
