@@ -10,6 +10,7 @@ import Copy from '@/components/CopyToClipboard';
 import { markdownToTxt } from 'markdown-to-txt';
 import { MessageHistoryType, ReferenceLinkType } from '@/types/apps/chatbot/api.type';
 import DocViewer from '@/components/Chatbot/ChatSection/doc-viewer';
+import useUID from '@/hooks/useUID';
 
 interface MessageProps {
     id: string;
@@ -29,6 +30,8 @@ const TypingIndicator = () => (
 
 const Message = ({ role, content, referenceLink, isStreaming }: MessageProps) => {
     const isAssistant = role === 'assistant';
+
+    const [genid] = useUID();
 
     const docs = referenceLink ? referenceLink.map(({link, name, type}) => {
 		return { uri: link, fileType: type, fileName: name };
@@ -56,7 +59,7 @@ const Message = ({ role, content, referenceLink, isStreaming }: MessageProps) =>
                     <div className="w-full overflow-auto overflow-y-hidden">
                         <div className="flex gap-4 w-fit">
                             {(isAssistant && docs.length) ?
-                                docs.map((doc, index) => <DocViewer doc={doc} key={`doc-${useId()}`} />) : null}
+                                docs.map((doc, index) => <DocViewer doc={doc} key={`doc-${genid()}`} />) : null}
                         </div>
                     </div>
                 </div>
