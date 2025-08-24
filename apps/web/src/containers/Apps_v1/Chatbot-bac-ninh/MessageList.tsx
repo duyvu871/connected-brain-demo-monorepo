@@ -33,9 +33,9 @@ const Message = ({ role, content, referenceLink, isStreaming }: MessageProps) =>
 
     const [genid] = useUID();
 
-    const docs = referenceLink ? referenceLink.map(({link, name, type}) => {
-		return { uri: link, fileType: type, fileName: name };
-	}) : [];
+    const docs = referenceLink ? referenceLink.map(({ link, name, type }) => {
+        return { uri: link, fileType: type, fileName: name };
+    }) : [];
 
     return (
         <div className={cn(
