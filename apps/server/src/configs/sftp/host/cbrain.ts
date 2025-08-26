@@ -6,7 +6,7 @@ export const sftpHostCbrain = {
 	username: env_mode === "development" ? 'brainx' : "cbrain",
 	privateKey: env_mode === "development"
 		? fs.readFileSync('C:\\Users\\ASUS\\.ssh\\id_ed25519_brainx')
-		: fs.readFileSync('/home/brainx/.ssh/id_ed25519_cbrain'),
+		: fs.readFileSync('~/.ssh/id_ed25519_cbrain'),
 	...(env_mode === "development" ? {
 		proxy: {
 			sourceIP: '127.0.0.1',
